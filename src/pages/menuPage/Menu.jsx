@@ -4,7 +4,6 @@ import { FaFilter } from "react-icons/fa";
 import { useTheme } from "../../hooks/ThemeContext";
 
 const Menu = () => {
-  const { isDarkMode } = useTheme();
   const [menu, setMenu] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -87,7 +86,7 @@ const Menu = () => {
   return (
     <div>
       {/* menu banner */}
-      <div className={`max-w-screen-2xl container mx-auto xl:px-24 px-4 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100% ${isDarkMode ? "dark" : ""}`}>
+      <div className={`max-w-screen-2xl container mx-auto xl:px-24 px-4 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%`}>
         <div className="py-48 flex flex-col items-center justify-center">
           {/* content */}
           <div className=" text-center px-4 space-y-7">
@@ -184,9 +183,9 @@ const Menu = () => {
           <button
             key={index + 1}
             onClick={() => paginate(index + 1)}
-            className={`mx-1 px-3 py-1 rounded-full ${
+            className={`mx-1 px-3 py-1 rounded-full Rs.{
               currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
-            }  ${isDarkMode ? "dark border" : ""}`}
+            } `}
           >
             {index + 1}
           </button>

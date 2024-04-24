@@ -12,7 +12,6 @@ const Navbar = () => {
   const [isSticky, setSticky] = useState(false);
   const {user, loading} = useContext(AuthContext);
   const [cart, refetch] = useCart();
-  const { isDarkMode } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -63,7 +62,7 @@ const Navbar = () => {
       className={`bg-darkgreen max-w-screen-2xl h-22 mb-6 container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out`}
     >
       <div
-        className={`navbar xl:px-24 ${
+        className={`navbar xl:px-24 Rs.{
           isSticky
             ? "shadow-md bg-darkgreen transition-all duration-300 ease-in-out text-white"
             : ""

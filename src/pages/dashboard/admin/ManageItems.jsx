@@ -30,13 +30,13 @@ const indexOfLastItem = currentPage * items_Per_Page;
         confirmButtonText: "Yes, delete it!"
     }).then(async (result) => {
         if (result.isConfirmed) {
-            const res = await axiosSecure.delete(`/menu/${item._id}`);
+            const res = await axiosSecure.delete(`/menu/Rs.{item._id}`);
             // console.log(res.data);
             refetch();
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
-                    title: `${item.name} has been deleted`,
+                    title: `Rs.{item.name} has been deleted`,
                     showConfirmButton: false,
                     timer: 1500
             });
@@ -83,9 +83,9 @@ const indexOfLastItem = currentPage * items_Per_Page;
                     </div>
                   </td>
                   <td>{item.name}</td>
-                  <td>${item.price}</td>
+                  <td>Rs.{item.price}</td>
                   <td>
-                    <Link to={`/dashboard/update-menu/${item._id}`}>
+                    <Link to={`/dashboard/update-menu/Rs.{item._id}`}>
                       <button className="btn btn-ghost btn-xs bg-orange-500">
                         <FaEdit
                           className="text-white 

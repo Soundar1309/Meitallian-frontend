@@ -95,7 +95,7 @@ const router = createBrowserRouter([
         {
           path: 'update-menu/:id',
           element: <UpdateMenu/>,
-          loader: ({ params }) => fetch(`http://localhost:5000/menu/${params.id}`)
+          loader: ({ params }) => fetch(`http://localhost:5000/menu/Rs.{params.id}`)
         },
         {
           path: 'bookings',

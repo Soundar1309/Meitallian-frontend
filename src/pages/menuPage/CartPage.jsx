@@ -8,7 +8,6 @@ import axios from "axios";
 import { useTheme } from "../../hooks/ThemeContext";
 
 const CartPage = () => {
-  const { isDarkMode } = useTheme();
   const { user } = useContext(AuthContext);
   const [cart, refetch] = useCart();
   const [cartItems, setCartItems] = useState([]);
@@ -21,7 +20,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`http://localhost:5000/carts/${item._id}`, {
+      const response = await fetch(`http://localhost:5000/carts/Rs.{item._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +52,7 @@ const CartPage = () => {
     if (item.quantity > 1) {
       try {
         const response = await fetch(
-          `http://localhost:5000/carts/${item._id}`,
+          `http://localhost:5000/carts/Rs.{item._id}`,
           {
             method: "PUT",
             headers: {
@@ -106,7 +105,7 @@ const CartPage = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:5000/carts/${item._id}`).then(response => {
+        axios.delete(`http://localhost:5000/carts/Rs.{item._id}`).then(response => {
           if (response) {
             refetch();
              Swal.fire("Deleted!", "Your file has been deleted.", "success");
@@ -122,7 +121,7 @@ const CartPage = () => {
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
       {/* banner */}
-      <div className={`bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100% ${isDarkMode ? "dark" : ""}`}>
+      <div className={`bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%`}>
         <div className="py-28 flex flex-col items-center justify-center">
           {/* content */}
           <div className=" text-center px-4 space-y-7">
@@ -177,7 +176,7 @@ const CartPage = () => {
                         type="number"
                         value={item.quantity}
                         onChange={() => console.log(item.quantity)}
-                        className={`w-10 mx-2 text-center overflow-hidden appearance-none ${isDarkMode ? "dark" : ""}`}
+                        className={`w-10 mx-2 text-center overflow-hidden appearance-none`}
                       />
                       <button
                         className="btn btn-xs"
@@ -186,7 +185,7 @@ const CartPage = () => {
                         +
                       </button>
                     </td>
-                    <td>${calculateTotalPrice(item).toFixed(2)}</td>
+                    <td>Rs.{calculateTotalPrice(item).toFixed(2)}</td>
                     <td>
                       <button
                         className="btn btn-sm border-none text-red bg-transparent"
@@ -217,7 +216,7 @@ const CartPage = () => {
             <p>Total Items: {cart.length}</p>
             <p>
               Total Price:{" "}
-              <span id="total-price">${orderTotal.toFixed(2)}</span>
+              <span id="total-price">Rs.{orderTotal.toFixed(2)}</span>
             </p>
             <Link to="/process-checkout" className="btn btn-md bg-green text-white px-8 py-1">
               Procceed to Checkout

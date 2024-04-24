@@ -11,10 +11,10 @@ const Order = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:5000/payments?email=${user?.email}`,
+        `http://localhost:5000/payments?email=Rs.{user?.email}`,
         {
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: `Bearer Rs.{token}`,
           },
         }
       );
@@ -67,7 +67,7 @@ const Order = () => {
                         <td>{index + 1}</td>
                         <td>{formatDate(item.createdAt)}</td>
                         <td className="font-medium">{item.transitionId}</td>
-                        <td>${item.price}</td>
+                        <td>Rs.{item.price}</td>
                         <td>{item.status}</td>
                         <td>
                           <button className="btn btn-sm border-none text-orange-400 bg-transparent">
