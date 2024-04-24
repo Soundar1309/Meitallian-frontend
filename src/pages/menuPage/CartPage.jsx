@@ -20,7 +20,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`http://localhost:5000/carts/Rs.{item._id}`, {
+      const response = await fetch(`http://localhost:5000/carts/${item._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@ const CartPage = () => {
     if (item.quantity > 1) {
       try {
         const response = await fetch(
-          `http://localhost:5000/carts/Rs.{item._id}`,
+          `http://localhost:5000/carts/${item._id}`,
           {
             method: "PUT",
             headers: {
@@ -105,7 +105,7 @@ const CartPage = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:5000/carts/Rs.{item._id}`).then(response => {
+        axios.delete(`http://localhost:5000/carts/${item._id}`).then(response => {
           if (response) {
             refetch();
              Swal.fire("Deleted!", "Your file has been deleted.", "success");
@@ -185,7 +185,7 @@ const CartPage = () => {
                         +
                       </button>
                     </td>
-                    <td>Rs.{calculateTotalPrice(item).toFixed(2)}</td>
+                    <td>${calculateTotalPrice(item).toFixed(2)}</td>
                     <td>
                       <button
                         className="btn btn-sm border-none text-red bg-transparent"
@@ -216,7 +216,7 @@ const CartPage = () => {
             <p>Total Items: {cart.length}</p>
             <p>
               Total Price:{" "}
-              <span id="total-price">Rs.{orderTotal.toFixed(2)}</span>
+              <span id="total-price">${orderTotal.toFixed(2)}</span>
             </p>
             <Link to="/process-checkout" className="btn btn-md bg-green text-white px-8 py-1">
               Procceed to Checkout

@@ -19,7 +19,7 @@ const ManageBookings = () => {
         `http://localhost:5000/payments/all`,
         {
           headers: {
-            authorization: `Bearer Rs.{token}`,
+            authorization: `Bearer ${token}`,
           },
         }
       );
@@ -44,7 +44,7 @@ const ManageBookings = () => {
     // confirm order
     const confiremedOrder = async(item) => {
       console.log(item)
-    await  axiosSecure.patch(`/payments/Rs.{item._id}`)
+    await  axiosSecure.patch(`/payments/${item._id}`)
       .then(res =>{
           console.log(res.data)
           Swal.fire({

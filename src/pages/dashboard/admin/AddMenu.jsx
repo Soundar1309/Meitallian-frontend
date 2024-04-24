@@ -11,7 +11,7 @@ const AddMenu = () => {
 
   // image hosting keys
   const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
-  const image_hosting_api = `https://api.imgbb.com/1/upload?key=Rs.{image_hosting_key}`;
+  const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
   // on submit form
   const onSubmit = async (data) => {
@@ -44,7 +44,7 @@ const AddMenu = () => {
           Swal.fire({
               position: "top-end",
               icon: "success",
-              title: `Rs.{data.name} is added to the menu.`,
+              title: `${data.name} is added to the menu.`,
               showConfirmButton: false,
               timer: 1500
             });

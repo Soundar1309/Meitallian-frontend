@@ -183,7 +183,7 @@ const Menu = () => {
           <button
             key={index + 1}
             onClick={() => paginate(index + 1)}
-            className={`mx-1 px-3 py-1 rounded-full Rs.{
+            className={`mx-1 px-3 py-1 rounded-full ${
               currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
             } `}
           >

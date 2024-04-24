@@ -11,10 +11,10 @@ const Order = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:5000/payments?email=Rs.{user?.email}`,
+        `http://localhost:5000/payments?email=${user?.email}`,
         {
           headers: {
-            authorization: `Bearer Rs.{token}`,
+            authorization: `Bearer ${token}`,
           },
         }
       );

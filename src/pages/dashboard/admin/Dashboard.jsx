@@ -47,13 +47,13 @@ const Dashboard = () => {
 
   // custom shape for the bar chart
   const getPath = (x, y, width, height) => {
-    return `MRs.{x},Rs.{y + height}CRs.{x + width / 3},Rs.{y + height} Rs.{
+    return `M${x},${y + height}C${x + width / 3},${y + height} ${
       x + width / 2
-    },Rs.{y + height / 3}
-    Rs.{x + width / 2}, Rs.{y}
-    CRs.{x + width / 2},Rs.{y + height / 3} Rs.{x + (2 * width) / 3},Rs.{y + height} Rs.{
+    },${y + height / 3}
+    ${x + width / 2}, ${y}
+    C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${
       x + width
-    }, Rs.{y + height}
+    }, ${y + height}
     Z`;
   };
 
@@ -85,7 +85,7 @@ const Dashboard = () => {
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {`Rs.{(percent * 100).toFixed(0)}%`}
+        {`${(percent * 100).toFixed(0)}%`}
       </text>
     );
   };
@@ -196,7 +196,7 @@ const Dashboard = () => {
             dataKey="value"
           >
             {pieChartData.map((entry, index) => (
-              <Cell key={`cell-Rs.{index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
           <Legend/>

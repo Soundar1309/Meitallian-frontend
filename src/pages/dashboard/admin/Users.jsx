@@ -16,13 +16,13 @@ const Users = () => {
     })
 
     const handleMakeAdmin = user =>{
-      axiosSecure.patch(`/users/admin/Rs.{user._id}`)
+      axiosSecure.patch(`/users/admin/${user._id}`)
       .then(res =>{
           console.log(res.data)
           Swal.fire({
               position: "top-end",
               icon: "success",
-              title: `Rs.{user.name} is an Admin Now!`,
+              title: `${user.name} is an Admin Now!`,
               showConfirmButton: false,
               timer: 1500
             });
@@ -42,7 +42,7 @@ const Users = () => {
     }).then((result) => {
         if (result.isConfirmed) {
 
-            axiosSecure.delete(`/users/Rs.{user._id}`)
+            axiosSecure.delete(`/users/${user._id}`)
                 .then(res => {
                   console.log(res)
                   Swal.fire({

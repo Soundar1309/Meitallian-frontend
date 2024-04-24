@@ -17,7 +17,7 @@ const UpdateMenu = () => {
 
   // image hosting keys
   const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
-  const image_hosting_api = `https://api.imgbb.com/1/upload?key=Rs.{image_hosting_key}`;
+  const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
   // on submit form
   const onSubmit = async (data) => {
@@ -42,7 +42,7 @@ const UpdateMenu = () => {
         image: hostingImg.data.data.display_url,
       };
       //
-      const menuRes = await axiosSecure.patch(`menu/Rs.{item._id}`, menuItem);
+      const menuRes = await axiosSecure.patch(`menu/${item._id}`, menuItem);
       console.log(menuRes);
       if (menuRes.status === 200) {
         // show success popup

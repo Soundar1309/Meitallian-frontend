@@ -84,7 +84,7 @@ const CheckoutForm = ({price, cart}) => {
 
     if(paymentIntent.status ==="succeeded") {
       const transitionId =paymentIntent.id;
-      setcardError(`Your transitionId is: Rs.{transitionId}`)
+      setcardError(`Your transitionId is: ${transitionId}`)
 
       // save payment info to server
       const paymentInfo ={email: user.email, transitionId: paymentIntent.id, price, quantity: cart.length,
@@ -110,7 +110,7 @@ const CheckoutForm = ({price, cart}) => {
         <p>Total Price: Rs.{price}</p>
         <p>Number of Items: {cart.length}</p>
       </div>
-      <div className={`md:w-1/3 w-full border space-y-5  card shrink-0 max-w-sm shadow-2xl bg-base-100 px-4 py-8 Rs.{isDarkMode ? 'dark' : ''}`}>
+      <div className={`md:w-1/3 w-full border space-y-5  card shrink-0 max-w-sm shadow-2xl bg-base-100 px-4 py-8`}>
         <h4 className="text-lg font-semibold">Process your Payment!</h4>
         <h5 className="font-medium">Credit/Debit Card</h5>
         <form onSubmit={handleSubmit}>

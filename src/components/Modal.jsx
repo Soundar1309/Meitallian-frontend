@@ -79,7 +79,7 @@ const Modal = () => {
   };
 
   return (
-    <dialog id="my_modal_5" className={`modal Rs.{isModalOpen ? 'modal-middle sm:modal-middle' : 'hidden'}`}>
+    <dialog id="my_modal_5" className={`modal ${isModalOpen ? 'modal-middle sm:modal-middle' : 'hidden'}`}>
       <div className="modal-box">
         <div className="modal-action flex-col justify-center mt-0">
           <form
