@@ -20,6 +20,8 @@ import {
   Line,
   AreaChart,
 } from "recharts";
+import useAdmin from "../../../hooks/useAdmin";
+import useStoreManager from "../../../hooks/useStoreManager";
 
 const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red", "pink"];
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
@@ -27,6 +29,8 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 const Dashboard = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const [isAdmin, isAdminLoading] = useAdmin();
+  const [isStoreManager, isStoreManagerLoading] = useStoreManager();
 
   const { data: stats = {} } = useQuery({
     queryKey: ["admin-stats"],
@@ -96,28 +100,32 @@ const Dashboard = () => {
 
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
-      <h2 className="text-2xl font-semibold my-4">
-        Hi, {user.displayName}
-      </h2>
+      <h2 className="text-2xl font-semibold my-4">Hi, {user.displayName}</h2>
       {/* stats */}
       <div className="stats shadow flex flex-col md:flex-row">
-        <div className="stat bg-emerald-200">
-          <div className="stat-figure text-secondary">
-            <FaDollarSign className="text-3xl"></FaDollarSign>
-          </div>
-          <div className="stat-title">Revenue</div>
-          <div className="stat-value">Rs.{stats.revenue}</div>
-          <div className="stat-desc">Jan 1st - Feb 1st</div>
-        </div>
+        {isAdmin ? (
+          <>
+            <div className="stat bg-emerald-200">
+              <div className="stat-figure text-secondary">
+                <FaDollarSign className="text-3xl"></FaDollarSign>
+              </div>
+              <div className="stat-title">Revenue</div>
+              <div className="stat-value">Rs.{stats.revenue}</div>
+              <div className="stat-desc">Jan 1st - Feb 1st</div>
+            </div>
 
-        <div className="stat bg-orange-200">
-          <div className="stat-figure text-secondary">
-            <FaUsers className="text-3xl"></FaUsers>
-          </div>
-          <div className="stat-title">Users</div>
-          <div className="stat-value">{stats.users}</div>
-          <div className="stat-desc">↗︎ 400 (22%)</div>
-        </div>
+            <div className="stat bg-orange-200">
+              <div className="stat-figure text-secondary">
+                <FaUsers className="text-3xl"></FaUsers>
+              </div>
+              <div className="stat-title">Users</div>
+              <div className="stat-value">{stats.users}</div>
+              <div className="stat-desc">↗︎ 400 (22%)</div>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
 
         <div className="stat bg-indigo-400">
           <div className="stat-figure text-secondary">
@@ -182,27 +190,30 @@ const Dashboard = () => {
 
         {/* pie chart */}
         <div className="sm:w-1/2 w-full">
-        <div style={{ width: '100%', height: 300 }}>
-        <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={400}>
-          <Pie
-            data={pieChartData}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={renderCustomizedLabel}
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {pieChartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Legend/>
-        </PieChart>
-      </ResponsiveContainer>
-      </div>
+          <div style={{ width: "100%", height: 300 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart width={400} height={400}>
+                <Pie
+                  data={pieChartData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieChartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>
