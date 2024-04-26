@@ -171,7 +171,10 @@ const CartPage = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="font-medium">{item.name}</td>
+                      <td className="font-medium">
+                        <p className="capitalize mb-2">{item.name}</p>
+                        <p className="capitalize">{item.size}</p>
+                      </td>
                       <td className="flex">
                         <button
                           className="btn btn-xs"

@@ -75,7 +75,7 @@ const Cards = ({ item }) => {
           <img
             src={item.image}
             alt="popular dish"
-            className="hover:scale-105 transition-all duration-300 md:h-72 w-full object-cover"
+            className="hover:scale-105 transition-all duration-300 md:h-72 w-full"
           />
         </figure>
       </Link>
