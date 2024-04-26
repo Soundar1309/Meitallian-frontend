@@ -19,90 +19,104 @@ import ManageBookings from "../pages/dashboard/admin/ManageBookings";
 import Contact from "../pages/contact/Contact";
 import About from "../pages/about/About";
 import Error from "../pages/404";
-
+import MenuDetail from "../pages/menuPage/MenuDetail";
 
 const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Main/>,
-      children: [
-        {
-            path: "/",
-            element: <Home/>
-        },
-        {
-          path: "/menu",
-          element: <Menu/>
-        },
-        {
-          path: "/order",
-          element:<PrivateRoute><Order/></PrivateRoute>
-        },
-        {
-          path: "/update-profile",
-          element: <UserProfile/>
-        },
-        {
-          path: "/cartpage",
-          element: <CartPage/>
-        },
-        {
-          path: "/process-checkout",
-          element: <Payment/>
-        },
-        {
-          path:"/about",
-          element:<About/>
-        },
-        {
-          path:"/contact",
-          element:<Contact/>
-        },
-        {
-          path:"/404",
-          element:<Error/>
-        }
-      ]
-    },
-    {
-      path: "/signup",
-      element: <Signup/>
-    },
-    {
-      path: "/login",
-      element: <Login/>
-    },
-    {
-      path: 'dashboard',
-      element: <PrivateRoute><DashboardLayout/></PrivateRoute>,
-      children: [
-        {
-          path: '',
-          element: <Dashboard/>
-        },
-        {
-          path: 'users',
-          element: <Users/>
-        },
-        {
-          path: 'add-menu',
-          element: <AddMenu/>
-        },
-        {
-          path: 'manage-items',
-          element: <ManageItems/>
-        },
-        {
-          path: 'update-menu/:id',
-          element: <UpdateMenu/>,
-          loader: ({ params }) => fetch(`http://localhost:5000/menu/${params.id}`)
-        },
-        {
-          path: 'bookings',
-          element: <ManageBookings/>
-        }
-      ]
-    }
-  ]);
+  {
+    path: "/",
+    element: <Main />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/menu",
+        element: <Menu />,
+      },
+      {
+        path: "/menu/:id",
+        element: <MenuDetail />,
+      },
+      {
+        path: "/order",
+        element: (
+          <PrivateRoute>
+            <Order />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/update-profile",
+        element: <UserProfile />,
+      },
+      {
+        path: "/cartpage",
+        element: <CartPage />,
+      },
+      {
+        path: "/process-checkout",
+        element: <Payment />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/404",
+        element: <Error />,
+      },
+    ],
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "",
+        element: <Dashboard />,
+      },
+      {
+        path: "users",
+        element: <Users />,
+      },
+      {
+        path: "add-menu",
+        element: <AddMenu />,
+      },
 
-  export default router;
+      {
+        path: "manage-items",
+        element: <ManageItems />,
+      },
+      {
+        path: "update-menu/:id",
+        element: <UpdateMenu />,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/menu/${params.id}`),
+      },
+      {
+        path: "bookings",
+        element: <ManageBookings />,
+      },
+    ],
+  },
+]);
+
+export default router;

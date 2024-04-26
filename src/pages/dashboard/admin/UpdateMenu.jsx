@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { FaUtensils } from "react-icons/fa";
+import { Checkbox } from "antd";
+import Tags from "../../../components/Tags";
 
 const UpdateMenu = () => {
+  const [size, setSize] = useState([]);
+  const [toppings, setToppings] = useState([]);
   const item = useLoaderData();
   console.log(item);
 
@@ -19,6 +23,13 @@ const UpdateMenu = () => {
   const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
   const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
+  const SizeHandler = (e) => {
+    setSize(e);
+  };
+  useEffect(() => {
+    setSize(item.size);
+    setToppings(item.toppings);
+  }, [item]);
   // on submit form
   const onSubmit = async (data) => {
     // console.log(data);
@@ -40,8 +51,10 @@ const UpdateMenu = () => {
         price: parseFloat(data.price),
         recipe: data.recipe,
         image: hostingImg.data.data.display_url,
+        size: size,
+        toppings: toppings,
       };
-      //
+
       const menuRes = await axiosSecure.patch(`menu/${item._id}`, menuItem);
       console.log(menuRes);
       if (menuRes.status === 200) {
@@ -116,6 +129,19 @@ const UpdateMenu = () => {
               />
             </div>
           </div>
+          <div className="mb-4">
+            <p className="mb-2">Size</p>
+            <Checkbox.Group
+              options={sizeOptions}
+              value={size}
+              onChange={SizeHandler}
+            />
+          </div>
+          <div className="mb-4">
+            <p className="mb-2">Toppings</p>
+
+            <Tags setToppings={setToppings} toppings={toppings} />
+          </div>
           {/* recipe details */}
           <div className="form-control">
             <label className="label">
@@ -147,3 +173,18 @@ const UpdateMenu = () => {
 };
 
 export default UpdateMenu;
+const sizeOptions = [
+  {
+    label: "Regular",
+    value: "Regular",
+  },
+  {
+    label: "Medium",
+    value: "Medium",
+  },
+
+  {
+    label: "Large",
+    value: "Large",
+  },
+];

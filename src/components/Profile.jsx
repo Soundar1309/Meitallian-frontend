@@ -1,18 +1,21 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
-import avatarImg from "/images/avatar.jpg"
+import avatarImg from "/images/avatar.jpg";
 import { useNavigate } from "react-router-dom";
+import useAdmin from "../hooks/useAdmin";
+import useStoreManager from "../hooks/useStoreManager";
 
 const Profile = ({ user }) => {
   const { logOut } = useContext(AuthContext);
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
+  const [isAdmin, isAdminLoading] = useAdmin();
+  const [isStoreManager, isStoreManagerLoading] = useStoreManager();
   // logout
   const handleLogout = () => {
     logOut()
       .then(() => {
         // Sign-out successful.
-        navigate("/")
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
@@ -30,8 +33,11 @@ const Profile = ({ user }) => {
             className="drawer-button btn btn-ghost btn-circle avatar"
           >
             <div className="w-10 rounded-full">
-              {user.photoURL? <img alt="" src={user.photoURL} /> : <img alt="" src={avatarImg} />}
-              
+              {user.photoURL ? (
+                <img alt="" src={user.photoURL} />
+              ) : (
+                <img alt="" src={avatarImg} />
+              )}
             </div>
           </label>
         </div>
@@ -49,9 +55,14 @@ const Profile = ({ user }) => {
             <li>
               <a href="/order">Order</a>
             </li>
-            <li>
-              <a href="/dashboard">Dashboard</a>
-            </li>
+            {isAdmin || isStoreManager ? (
+              <li>
+                <a href="/dashboard">Dashboard</a>
+              </li>
+            ) : (
+              <></>
+            )}
+
             <li>
               <a onClick={handleLogout}>Logout</a>
             </li>

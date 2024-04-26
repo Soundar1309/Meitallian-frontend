@@ -7,54 +7,53 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const Users = () => {
   const axiosSecure = useAxiosSecure();
-    const { data: users = [], refetch } = useQuery({
-        queryKey: ['users'],
-        queryFn: async () => {
-            const res = await axiosSecure.get('/users');
-            return res.data;
-        }
-    })
+  const { data: users = [], refetch } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/users");
+      return res.data;
+    },
+  });
 
-    const handleMakeAdmin = user =>{
-      axiosSecure.patch(`/users/admin/${user._id}`)
-      .then(res =>{
-          console.log(res.data)
-          Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: `${user.name} is an Admin Now!`,
-              showConfirmButton: false,
-              timer: 1500
-            });
-            refetch();
-      })
+  const handleMakeAdmin = (user, e) => {
+    axiosSecure
+      .patch(`/users/admin/${user._id}`, { role: e.target.value })
+      .then((res) => {
+        console.log(res.data);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `${user.name} is an ${res.data.role.toUpperCase()} Now!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        refetch();
+      });
   };
 
-  const handleDeleteUser = user => {
+  const handleDeleteUser = (user) => {
     Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-        if (result.isConfirmed) {
-
-            axiosSecure.delete(`/users/${user._id}`)
-                .then(res => {
-                  console.log(res)
-                  Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success"
-                });
-                })
-                refetch();
-        }
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/users/${user._id}`).then((res) => {
+          console.log(res);
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success",
+          });
+        });
+        refetch();
+      }
     });
-}
+  };
 
   return (
     <div>
@@ -65,7 +64,7 @@ const Users = () => {
 
       {/* table */}
       <div>
-      <div className="overflow-x-auto">
+        <div className="overflow-x-auto">
           <table className="table table-zebra md:w-[870px]">
             {/* head */}
             <thead className="bg-green text-white">
@@ -84,16 +83,17 @@ const Users = () => {
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>
-                    {user.role === "admin" ? (
-                      "Admin"
-                    ) : (
-                      <button
-                        onClick={() => handleMakeAdmin(user)}
-                        className="btn btn-xs btn-circle bg-indigo-500"
-                      >
-                        <FaUsers className="text-white"></FaUsers>
-                      </button>
-                    )}
+                    <select
+                      className="p-2"
+                      value={user.role}
+                      onChange={(e) => {
+                        handleMakeAdmin(user, e);
+                      }}
+                    >
+                      <option value="admin">Admin</option>
+                      <option value="user">User</option>
+                      <option value="store manager">Store Manager</option>
+                    </select>
                   </td>
                   <td>
                     <button
