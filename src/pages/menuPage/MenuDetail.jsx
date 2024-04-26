@@ -1,14 +1,19 @@
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Input, Modal, Radio } from "antd";
+import { Alert, Input, Modal, Radio, message } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import CheckableTag from "../../components/CheckableTag";
 
 const MenuDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [menuDetail, setMenuDetail] = useState([]);
+  const [size, setSize] = useState([]);
+  const [toppings, setToppings] = useState([]);
+
   const [mobileNumber, setMobileNumber] = useState("");
   const [count, setCount] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,8 +21,41 @@ const MenuDetail = () => {
   const { user } = useAuth();
 
   const email = user.email;
-  const showModal = () => {
-    setIsModalOpen(true);
+  const addToCheckout = () => {
+    const cartItem = {
+      ...menuDetail,
+      size: size,
+      toppings: toppings,
+      email: email,
+      quantity: count,
+      menuItemId: menuDetail._id,
+    };
+
+    delete cartItem._id;
+    axios
+      .post("http://localhost:5000/carts", cartItem)
+      .then(() => {
+        navigate("/process-checkout");
+      })
+      .catch((error) =>
+        setError({ error: true, message: error.response.data.message })
+      );
+  };
+
+  const buyNowHandler = async () => {
+    if (size.length <= 0) {
+      setError({ error: true, message: "Select the size" });
+      return;
+    }
+    const user = await axios.get(`http://localhost:5000/users/${email}`);
+    if (!user.data.mobileNumber) {
+      setIsModalOpen(true);
+      const userDataUpdate = { mobileNumber, email };
+      axios.patch("http://localhost:5000/users/update", userDataUpdate);
+      addToCheckout();
+    } else {
+      addToCheckout();
+    }
   };
 
   const handleOk = () => {
@@ -25,16 +63,15 @@ const MenuDetail = () => {
       setError({ error: true, message: "Enter Valid Mobile Number" });
       setIsModalOpen(true);
     } else {
-      const userDataUpdate = { mobileNumber, email };
-      axios
-        .patch("http://localhost:5000/users/update", userDataUpdate)
-        .then((res) => console.log(res));
       setError({ error: false, message: "" });
       setIsModalOpen(false);
       setMobileNumber("");
     }
   };
-
+  const sizeHandler = (e) => {
+    setError({ error: null, message: "" });
+    setSize(e.target.value);
+  };
   const MobileNumberHandler = (e) => {
     setError({ error: false, message: "" });
     const EnteredMobileNumber = e.target.value;
@@ -57,7 +94,6 @@ const MenuDetail = () => {
 
   useEffect(() => {
     axios.get(`http://localhost:5000/menu/${id}`).then((res) => {
-      console.log(res.data.size);
       setMenuDetail(res.data);
     });
   }, [id]);
@@ -80,10 +116,16 @@ const MenuDetail = () => {
         </p>
         {menuDetail.size && menuDetail.size.length > 0 ? (
           <div>
-            <p className="pb-2">Size</p>
+            <p className="pb-2">
+              Size <span className="text-xl text-[#f06548]">*</span>
+            </p>
             <Radio.Group>
               {menuDetail.size.map((availableSize, index) => (
-                <Radio.Button key={index} value={availableSize}>
+                <Radio.Button
+                  key={index}
+                  value={availableSize}
+                  onChange={sizeHandler}
+                >
                   {availableSize}
                 </Radio.Button>
               ))}
@@ -94,37 +136,38 @@ const MenuDetail = () => {
         )}
         {menuDetail.toppings && menuDetail.toppings.length > 0 ? (
           <div>
-            <p className="pb-2">Toppings</p>
-            <Radio.Group>
-              {menuDetail.toppings.map((availableTopping, index) => (
-                <Radio.Button key={index} value={availableTopping}>
-                  {availableTopping}
-                </Radio.Button>
-              ))}
-            </Radio.Group>
+            <CheckableTag
+              label="Toppings"
+              tagData={menuDetail.toppings}
+              selectedTags={toppings}
+              setToppings={setToppings}
+            />
           </div>
         ) : (
           <></>
         )}
+
         <p className="my-2"> {menuDetail.recipe}</p>
+        {error.error ? <Alert message={error.message} type="error" /> : <></>}
         <div className="flex flex-row justify-between mb-4">
           <div className="flex gap-4 items-center">
-            <button
-              onClick={incrementHandler}
-              className="bg-green text-white font-xl rounded-full px-4 py-2"
-            >
-              +
-            </button>
-
-            <p>{count}</p>
             <button
               onClick={decrementHandler}
               className="bg-green text-white font-xl rounded-full px-4 py-2"
             >
               -
             </button>
+
+            <p>{count}</p>
+            <button
+              onClick={incrementHandler}
+              className="bg-green text-white font-xl rounded-full px-4 py-2"
+            >
+              +
+            </button>
           </div>
-          <button className="btn bg-green text-white" onClick={showModal}>
+
+          <button className="btn bg-green text-white" onClick={buyNowHandler}>
             Buy Now
           </button>
           <Modal
@@ -140,11 +183,6 @@ const MenuDetail = () => {
               value={mobileNumber}
               maxLength={10}
             />
-            {error.error ? (
-              <p className="mt-2 text-[#f06548]">{error.message}</p>
-            ) : (
-              <></>
-            )}
           </Modal>
         </div>
         <button className="flex gap-4 items-center">
