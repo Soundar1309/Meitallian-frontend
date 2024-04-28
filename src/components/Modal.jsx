@@ -1,33 +1,30 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaFacebookF, FaGithub, FaGoogle } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../contexts/AuthProvider";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Modal = () => {
-  const [errorMessage, seterrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const { signUpWithGmail, login } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
 
   // modal close button
-  const [isModalOpen, setIsModalOpen] = useState(true); 
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const closeModal = () => {
     setIsModalOpen(false);
     document.getElementById("my_modal_5").close()
   };
 
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const from = location.state?.from?.pathname || "/";
 
   //react hook form
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
@@ -36,29 +33,24 @@ const Modal = () => {
     login(email, password)
       .then((result) => {
         // Signed in
-        const user = result.user;
-
         const userInfo = {
           email: result.user?.email,
           name: result.user?.displayName
-      }
-      axiosPublic.post('/users', userInfo)
-      .then(res =>{
-          console.log(res.data);
-        
-      })
-        // console.log(user);
+        }
+        axiosPublic.post('/users', userInfo)
+          .then(res => {
+            console.log(res.data);
+          })
+
         alert("Login successful!");
         navigate("/");
         console.log("Modal Open:", isModalOpen);
-        closeModal(); 
-        // ...
+        closeModal();
       })
       .catch((error) => {
-        const errorMessage = error.message;
-        seterrorMessage("Please provide valid email & password!");
+        setErrorMessage("Please provide valid email & password!");
       });
-      reset()
+    reset()
 
   };
 
@@ -90,13 +82,13 @@ const Modal = () => {
             <h3 className="font-bold text-lg text-center">Welcome back</h3>
 
             <div className="text-center space-x-3 mt-5">
-            <button
-              onClick={handleRegister}
-              className="w-3/4 btn btn-circle bg-white text-dark hover:bg-green hover:text-white"
-            >
-              <FaGoogle /> Sign in with Google
-            </button>
-          </div>
+              <button
+                onClick={handleRegister}
+                className="w-3/4 btn btn-circle bg-white text-dark hover:bg-green hover:text-white"
+              >
+                <FaGoogle /> Sign in with Google
+              </button>
+            </div>
 
             {/* email */}
             <div className="form-control">
@@ -163,7 +155,7 @@ const Modal = () => {
               </Link>
             </p>
           </form>
-          
+
         </div>
       </div>
     </dialog>

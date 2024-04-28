@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { FaPaypal } from "react-icons/fa";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -7,8 +7,7 @@ import useAuth from "../../hooks/useAuth";
 import { useTheme } from "../../hooks/ThemeContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import axios from "axios";
-import sandwich from "../../assets/sandwich.jpg";
+import sandwich from "../../assets/sandwich.png";
 
 const CheckoutForm = ({ price, cart }) => {
   const { isDarkMode } = useTheme();
@@ -118,6 +117,8 @@ const CheckoutForm = ({ price, cart }) => {
   const editBasketHandler = () => {
     navigate("/cartpage");
   };
+
+  console.log(cart);
   return (
     <div className="flex justify-between max-w-6xl mx-auto mt-12">
       <div className="px-4 py-8 rounded-xl shadow-xl mt-10 border">
@@ -137,11 +138,13 @@ const CheckoutForm = ({ price, cart }) => {
                 >
                   <div className="flex flex-row gap-2 items-center">
                     <p className="mr-2">x{cartItem.quantity}</p>
-                    <img
-                      src={sandwich}
-                      alt="sandwich"
-                      className="w-[80px] mr-2"
-                    />
+                    <div className="w-[80px] h-[80px]">
+                      <img
+                        src={cartItem?.image || sandwich}
+                        alt={cartItem?.name}
+                        className="w-[80px] h-[80px] mr-2 object-cover"
+                      />
+                    </div>
                     <div className="felx flex-col gap-2">
                       <p className="font-bold capitalize mr-4">
                         {cartItem.name}

@@ -1,5 +1,5 @@
 import React from "react";
-import ceoImg from "../assets/Ceo.png";
+import ceoImg from "../assets/ceo.png";
 
 const Aboutceo = () => {
   return (
@@ -13,9 +13,9 @@ const Aboutceo = () => {
       </div>
       <div className=" md:col-span-3 flex flex-col items-center justify-center">
         <div>
-        <h4 className="text-stone-400 mb-3 font-KaushanScript">“Italian cuisine is more than just food; it’s a celebration of life.”</h4>
+          <h4 className="text-stone-400 mb-3 font-KaushanScript">“Italian cuisine is more than just food; it’s a celebration of life.”</h4>
           <p className="text-base text-justify text-stone-600">
-          ME ITALIAN is a tribute to my enduring passion for rich Italian culinary heritage and the art of pizza making, where every dish is a masterpiece crafted with passion, love, and tradition. Our commitment to the excellence of authentic Italian cuisine shines through from the very first bite to the very last. I welcome you to enjoy the authentic richness of Italian flavours.
+            ME ITALIAN is a tribute to my enduring passion for rich Italian culinary heritage and the art of pizza making, where every dish is a masterpiece crafted with passion, love, and tradition. Our commitment to the excellence of authentic Italian cuisine shines through from the very first bite to the very last. I welcome you to enjoy the authentic richness of Italian flavours.
           </p>
           <h1 className="text-xl mt-4 text-stone-800 font-bold text-right">
             PRINCE PANDIAN
