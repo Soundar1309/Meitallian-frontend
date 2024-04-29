@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Tag } from "antd";
 
-const CheckableTag = ({ label, tagData, setToppings }) => {
+const CheckableTag = ({ label, tagData, setToppings, setError }) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const handleChange = (tag, checked) => {
+    setError({ error: false, message: "" });
     const nextSelectedTags = checked
       ? [...selectedTags, tag]
       : selectedTags.filter((t) => t !== tag);
-    console.log("You are interested in: ", nextSelectedTags);
     setSelectedTags(nextSelectedTags);
   };
 
@@ -16,11 +16,11 @@ const CheckableTag = ({ label, tagData, setToppings }) => {
   }, [selectedTags]);
   return (
     <Flex gap={4} wrap="wrap" align="center">
-      <span>{label}: </span>
+      <span>{label} </span>
       {tagData.map((tag, index) => (
         <div key={index}>
           <Tag.CheckableTag
-            className="text-[16px] capitalize"
+            className="text-[17px] capitalize"
             key={tag}
             checked={selectedTags.includes(tag)}
             onChange={(checked) => handleChange(tag, checked)}

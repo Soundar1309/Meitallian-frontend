@@ -21,21 +21,21 @@ const MenuDetail = () => {
   const { user } = useAuth();
 
   const email = user.email;
-  const addToCheckout = () => {
-    const cartItem = {
-      ...menuDetail,
-      size: size,
-      toppings: toppings,
-      email: email,
-      quantity: count,
-      menuItemId: menuDetail._id,
-    };
+  const cartItem = {
+    ...menuDetail,
+    size: size,
+    toppings: toppings,
+    email: email,
+    quantity: count,
+    menuItemId: menuDetail._id,
+  };
+  delete cartItem._id;
 
-    delete cartItem._id;
+  const addToCheckout = (shouldNavigate) => {
     axios
       .post("http://localhost:5000/carts", cartItem)
       .then(() => {
-        navigate("/process-checkout");
+        if (shouldNavigate) navigate("/process-checkout");
       })
       .catch((error) =>
         setError({ error: true, message: error.response.data.message })
@@ -43,18 +43,14 @@ const MenuDetail = () => {
   };
 
   const buyNowHandler = async () => {
-    if (size.length <= 0) {
-      setError({ error: true, message: "Select the size" });
-      return;
-    }
     const user = await axios.get(`http://localhost:5000/users/${email}`);
     if (!user.data.mobileNumber) {
       setIsModalOpen(true);
       const userDataUpdate = { mobileNumber, email };
       axios.patch("http://localhost:5000/users/update", userDataUpdate);
-      addToCheckout();
+      addToCheckout(true);
     } else {
-      addToCheckout();
+      addToCheckout(true);
     }
   };
 
@@ -69,7 +65,6 @@ const MenuDetail = () => {
     }
   };
   const sizeHandler = (e) => {
-    setError({ error: null, message: "" });
     setSize(e.target.value);
   };
   const MobileNumberHandler = (e) => {
@@ -98,62 +93,66 @@ const MenuDetail = () => {
     });
   }, [id]);
   return (
-    <div className="mt-44 flex gap-2 max-w-4xl mx-auto shadow-xl rounded-lg ">
-      <img
-        src={menuDetail.image}
-        alt=""
-        className="w-2/4 rounded-lg object-cover"
-      />
-      <div className="flex flex-col gap-4 px-4 w-3/4 pb-4">
-        <p className="capitalize font-bold text-3xl"> {menuDetail.name}</p>
-
-        <p className="text-lg text-green font-bold"> Rs. {menuDetail.price}</p>
-        <p>
-          Category:
-          <span className="capitalize ml-2 text-green">
-            {menuDetail.category}
-          </span>{" "}
-        </p>
-        {menuDetail.size && menuDetail.size.length > 0 ? (
-          <div>
-            <p className="pb-2">
-              Size <span className="text-xl text-[#f06548]">*</span>
-            </p>
-            <Radio.Group>
-              {menuDetail.size.map((availableSize, index) => (
-                <Radio.Button
-                  key={index}
-                  value={availableSize}
-                  onChange={sizeHandler}
-                >
-                  {availableSize}
-                </Radio.Button>
-              ))}
-            </Radio.Group>
-          </div>
-        ) : (
-          <></>
-        )}
-        {menuDetail.toppings && menuDetail.toppings.length > 0 ? (
-          <div>
-            <CheckableTag
-              label="Toppings"
-              tagData={menuDetail.toppings}
-              selectedTags={toppings}
-              setToppings={setToppings}
-            />
-          </div>
-        ) : (
-          <></>
-        )}
-
-        <p className="my-2"> {menuDetail.recipe}</p>
-        {error.error ? <Alert message={error.message} type="error" /> : <></>}
-        <div className="flex flex-row justify-between mb-4">
-          <div className="flex gap-4 items-center">
+    <div className="my-44 max-w-7xl mx-auto px-16">
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="md:w-1/2 w-full">
+          <img
+            src={menuDetail.image}
+            alt=""
+            className="w-full h-[480px] rounded-xl object-cover"
+          />
+        </div>
+        <div className="md:w-1/2 w-full">
+          <p className="capitalize font-bold text-xl md:text-3xl mb-2">
+            {" "}
+            {menuDetail.name}
+          </p>
+          <p className="mb-4">
+            Category:
+            <span className="capitalize ml-2 text-green">
+              {menuDetail.category}
+            </span>{" "}
+          </p>
+          <p className="text-2xl text-green font-bold my-6">
+            {" "}
+            Rs. {menuDetail.price}
+          </p>
+          {menuDetail.size && menuDetail.size.length > 0 ? (
+            <div className="mb-4 flex flex-row gap-8 items-center">
+              <p className="mb-2">Size :</p>
+              <Radio.Group>
+                {menuDetail.size.map((availableSize, index) => (
+                  <Radio.Button
+                    key={index}
+                    value={availableSize}
+                    onChange={sizeHandler}
+                    className="h-[80px]"
+                  >
+                    {availableSize}
+                  </Radio.Button>
+                ))}
+              </Radio.Group>
+            </div>
+          ) : (
+            <></>
+          )}
+          {menuDetail.toppings && menuDetail.toppings.length > 0 ? (
+            <div className="mb-6">
+              <CheckableTag
+                label="Toppings :"
+                tagData={menuDetail.toppings}
+                selectedTags={toppings}
+                setToppings={setToppings}
+                setError={setError}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
+          <div className="flex gap-4 items-center mb-5">
             <button
               onClick={decrementHandler}
-              className="bg-green text-white font-xl rounded-full px-4 py-2"
+              className="bg-white border text-black font-xl rounded-full px-4 py-2"
             >
               -
             </button>
@@ -161,35 +160,47 @@ const MenuDetail = () => {
             <p>{count}</p>
             <button
               onClick={incrementHandler}
-              className="bg-green text-white font-xl rounded-full px-4 py-2"
+              className="bg-white border text-black font-xl rounded-full px-4 py-2"
             >
               +
             </button>
           </div>
-
-          <button className="btn bg-green text-white" onClick={buyNowHandler}>
-            Buy Now
-          </button>
-          <Modal
-            className="mt-48 w-1/4"
-            title="Mobile Number"
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-          >
-            <Input
-              placeholder="Enter Mobile Number"
-              onChange={MobileNumberHandler}
-              value={mobileNumber}
-              maxLength={10}
-            />
-          </Modal>
+          {error.error ? (
+            <Alert message={error.message} type="error" className="mb-4" />
+          ) : (
+            <></>
+          )}
+          <div className="flex flex-row md:gap-12 gap-4">
+            <button
+              onClick={() => addToCheckout(false)}
+              className="btn bg-green text-white w-[150px]"
+            >
+              Add to Cart{" "}
+            </button>
+            <button
+              className="btn bg-green text-white w-[150px]"
+              onClick={buyNowHandler}
+            >
+              Buy Now
+            </button>
+            <Modal
+              className="mt-48 w-1/4"
+              title="Mobile Number"
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+            >
+              <Input
+                placeholder="Enter Mobile Number"
+                onChange={MobileNumberHandler}
+                value={mobileNumber}
+                maxLength={10}
+              />
+            </Modal>
+          </div>
         </div>
-        <button className="flex gap-4 items-center">
-          <FontAwesomeIcon icon={faHeart} />
-          <p>Add to wishlist</p>
-        </button>
       </div>
+      <p className="my-8 w-full "> {menuDetail.recipe}</p>
     </div>
   );
 };

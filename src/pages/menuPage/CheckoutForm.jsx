@@ -120,8 +120,8 @@ const CheckoutForm = ({ price, cart }) => {
 
   console.log(cart);
   return (
-    <div className="flex justify-between max-w-6xl mx-auto mt-12">
-      <div className="px-4 py-8 rounded-xl shadow-xl mt-10 border">
+    <div className="flex justify-between max-w-6xl mx-auto mt-12 ">
+      <div className="px-4 py-8 rounded-xl shadow-xl mt-10 border px-10">
         <div className="flex flex-row justify-between gap-4">
           <p className="text-2xl font-bold">Basket</p>
           <button onClick={editBasketHandler}>
@@ -132,11 +132,8 @@ const CheckoutForm = ({ price, cart }) => {
           {cart && cart.length > 0 ? (
             cart.map((cartItem, index) => {
               return (
-                <div
-                  key={index}
-                  className="flex flex-row justify-between py-4 gap-6"
-                >
-                  <div className="flex flex-row gap-2 items-center">
+                <div key={index} className="flex flex-row py-4 ">
+                  <div className="flex flex-row gap-2 items-start">
                     <p className="mr-2">x{cartItem.quantity}</p>
                     <div className="w-[80px] h-[80px]">
                       <img
@@ -150,7 +147,11 @@ const CheckoutForm = ({ price, cart }) => {
                         {cartItem.name}
                       </p>
                       <div className="text-gray-400 text-sm">
-                        <p className="capitalize">size: {cartItem.size}</p>
+                        {cartItem.size && cartItem.size.length > 0 ? (
+                          <p className="capitalize">size: {cartItem.size}</p>
+                        ) : (
+                          <></>
+                        )}
                         {cartItem.toppings && cartItem.toppings.length > 0 ? (
                           <p className="capitalize">
                             Toppings: {cartItem.toppings?.join(", ")}
@@ -161,7 +162,7 @@ const CheckoutForm = ({ price, cart }) => {
                       </div>
                     </div>
                   </div>
-                  <div>
+                  <div className="mr-2 ml-auto">
                     <p className="font-bold">Rs. {cartItem.price}</p>
                   </div>
                   <hr />
