@@ -104,10 +104,14 @@ input[type="number"] {
   color: rgba(0, 0, 0, 0.88);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
 }
-:where(.css-dev-only-do-not-override-mzwlov).ant-btn-primary:not(:disabled):not(
-    .ant-btn-disabled
-  ):hover {
-  color: #4096ff;
-  border-color: #4096ff;
-  background: #ffffff;
+
+.ant-radio-button-wrapper {
+  line-height: 45px;
+  height: 50px;
+}
+.ant-tag {
+  line-height: 40px;
+}
+.ant-tag-checkable-checked {
+  background-color: #39db4a;
 }
