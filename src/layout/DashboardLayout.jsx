@@ -31,18 +31,6 @@ const sharedMenu = (
         Menu
       </Link>
     </li>
-    <li>
-      <Link to="/menu">
-        <FaLocationArrow />
-        Orders Tracking
-      </Link>
-    </li>
-    <li>
-      <Link to="/menu">
-        <FaQuestionCircle />
-        Customer Support
-      </Link>
-    </li>
   </>
 );
 
@@ -123,12 +111,14 @@ const DashboardLayout = () => {
               </li>
 
               {/* users */}
-              <li className="mb-3">
-                <Link to="/dashboard/users">
-                  <FaUsers />
-                  Users
-                </Link>
-              </li>
+              {isAdmin && (
+                <li className="mb-3">
+                  <Link to="/dashboard/users">
+                    <FaUsers />
+                    Users
+                  </Link>
+                </li>
+              )}
 
               {/* shared menu */}
               <hr />

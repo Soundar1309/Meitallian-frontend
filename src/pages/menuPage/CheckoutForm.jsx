@@ -21,8 +21,6 @@ const CheckoutForm = ({ price, cart }) => {
   const navigate = useNavigate();
   console.log(cart);
   const discount = 0;
-  const delivery = 0;
-  const tax = 0;
   // useEffect(() => {
   //   if (typeof price !== "number" || price < 1) {
   //     console.error(
@@ -112,8 +110,22 @@ const CheckoutForm = ({ price, cart }) => {
     }
   };
   const basketPrice = cart.reduce((total, cartItem) => {
-    return total + cartItem.price; // Accumulate the price of each cart item
+    return total + cartItem.price*cartItem.quantity; // Accumulate the price of each cart item
   }, 0);
+
+  const tax = cart.reduce((total, cartItem) => {
+    return total + cartItem.price*cartItem.quantity * 0.06;
+}, 0);
+
+const totalAmount = cart.reduce((total, cartItem) => {
+  return total+cartItem.price*cartItem.quantity;
+}, 0);
+
+let deliveryCharge = totalAmount <= 2000 ? 30 : 0;
+
+const totalAmountWithTaxAndDelivery = totalAmount+ deliveryCharge;
+
+
   const editBasketHandler = () => {
     navigate("/cartpage");
   };
@@ -121,11 +133,11 @@ const CheckoutForm = ({ price, cart }) => {
   console.log(cart);
   return (
     <div className="flex justify-between max-w-6xl mx-auto mt-12 ">
-      <div className="px-4 py-8 rounded-xl shadow-xl mt-10 border px-10">
+      <div className="px-4 py-8 rounded-xl shadow-xl mt-10 border">
         <div className="flex flex-row justify-between gap-4">
-          <p className="text-2xl font-bold">Basket</p>
+          <p className="text-2xl font-bold">Food Basket</p>
           <button onClick={editBasketHandler}>
-            Edit Basket <FontAwesomeIcon icon={faEdit} className="ml-2" />
+            Edit Cart <FontAwesomeIcon icon={faEdit} className="ml-2" />
           </button>
         </div>
         <div className="flex flex-col justify-between py-4 ">
@@ -163,7 +175,7 @@ const CheckoutForm = ({ price, cart }) => {
                     </div>
                   </div>
                   <div className="mr-2 ml-auto">
-                    <p className="font-bold">Rs. {cartItem.price}</p>
+                    <p className="font-bold">Rs. {cartItem.price*cartItem.quantity}</p>
                   </div>
                   <hr />
                 </div>
@@ -181,7 +193,7 @@ const CheckoutForm = ({ price, cart }) => {
           </div>
           <div className="flex justify-between pt-4">
             <p className="font-semibold">Delivery</p>
-            <p>Rs. {delivery}</p>
+            <p>Rs. {deliveryCharge}</p>
           </div>
           <div className="flex justify-between pt-4">
             <p className="font-semibold">Tax</p>
@@ -194,7 +206,7 @@ const CheckoutForm = ({ price, cart }) => {
           <hr />
           <div className="flex justify-between pt-4">
             <p className="font-semibold">Order Total</p>
-            <p>Rs. {discount + delivery + tax + basketPrice}</p>
+            <p>Rs. {discount + deliveryCharge + tax + basketPrice}</p>
           </div>
         </div>
         <button className="btn bg-green w-full mt-4">Confirm order</button>

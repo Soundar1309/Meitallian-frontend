@@ -58,7 +58,7 @@ const Cards = ({ item }) => {
         quantity: count,
       };
       axios
-        .post("http://localhost:5000/carts", cartItem)
+        .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
         .then((response) => {
           if (response) {
             setIsModalOpen(false);
@@ -99,7 +99,7 @@ const Cards = ({ item }) => {
     }
   };
   useEffect(() => {
-    axios.get(`http://localhost:5000/menu/${_id}`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/menu/${_id}`).then((res) => {
       setMenuDetail(res.data);
     });
   }, [_id]);

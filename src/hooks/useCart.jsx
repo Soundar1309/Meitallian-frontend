@@ -11,7 +11,7 @@ const useCart = () => {
     queryFn: async () => {
       if (user?.email && token) {
         const res = await fetch(
-          `http://localhost:5000/carts?email=${user?.email}`,
+          `${import.meta.env.VITE_API_URL}/carts?email=${user?.email}`,
           {
             headers: {
               authorization: `Bearer ${token}`,

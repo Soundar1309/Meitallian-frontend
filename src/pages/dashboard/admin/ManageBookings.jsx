@@ -16,7 +16,7 @@ const ManageBookings = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:5000/payments/all`,
+        `${import.meta.env.VITE_API_URL}/payments/all`,
         {
           headers: {
             authorization: `Bearer ${token}`,

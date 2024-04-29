@@ -33,7 +33,7 @@ const MenuDetail = () => {
 
   const addToCheckout = (shouldNavigate) => {
     axios
-      .post("http://localhost:5000/carts", cartItem)
+      .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
       .then(() => {
         if (shouldNavigate) navigate("/process-checkout");
       })
@@ -43,11 +43,11 @@ const MenuDetail = () => {
   };
 
   const buyNowHandler = async () => {
-    const user = await axios.get(`http://localhost:5000/users/${email}`);
+    const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
     if (!user.data.mobileNumber) {
       setIsModalOpen(true);
       const userDataUpdate = { mobileNumber, email };
-      axios.patch("http://localhost:5000/users/update", userDataUpdate);
+      axios.patch(`${import.meta.env.VITE_API_URL}/users/update`, userDataUpdate);
       addToCheckout(true);
     } else {
       addToCheckout(true);
@@ -88,7 +88,7 @@ const MenuDetail = () => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/menu/${id}`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/menu/${id}`).then((res) => {
       setMenuDetail(res.data);
     });
   }, [id]);

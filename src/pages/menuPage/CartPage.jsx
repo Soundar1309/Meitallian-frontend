@@ -20,7 +20,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`http://localhost:5000/carts/${item._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/carts/${item._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@ const CartPage = () => {
     if (item.quantity > 1) {
       try {
         const response = await fetch(
-          `http://localhost:5000/carts/${item._id}`,
+          `${import.meta.env.VITE_API_URL}/carts/${item._id}`,
           {
             method: "PUT",
             headers: {
@@ -109,7 +109,7 @@ const CartPage = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:5000/carts/${item._id}`)
+          .delete(`${import.meta.env.VITE_API_URL}/carts/${item._id}`)
           .then((response) => {
             if (response) {
               refetch();
@@ -195,7 +195,7 @@ const CartPage = () => {
                           +
                         </button>
                       </td>
-                      <td>${calculateTotalPrice(item).toFixed(2)}</td>
+                      <td>Rs.{calculateTotalPrice(item).toFixed(2)}</td>
                       <td>
                         <button
                           className="btn btn-sm border-none text-red bg-transparent"
@@ -217,16 +217,13 @@ const CartPage = () => {
               <h3 className="text-lg font-semibold">Customer Details</h3>
               <p>Name: {user?.displayName || "None"}</p>
               <p>Email: {user?.email}</p>
-              <p>
-                User_id: <span className="text-sm">{user?.uid}</span>
-              </p>
             </div>
             <div className="md:w-1/2 space-y-3">
               <h3 className="text-lg font-semibold">Shopping Details</h3>
               <p>Total Items: {cart.length}</p>
               <p>
                 Total Price:{" "}
-                <span id="total-price">${orderTotal.toFixed(2)}</span>
+                <span id="total-price">Rs. {orderTotal.toFixed(2)}</span>
               </p>
               <Link
                 to="/process-checkout"

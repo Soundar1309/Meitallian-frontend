@@ -71,6 +71,7 @@ const Users = () => {
               <tr>
                 <th>#</th>
                 <th>Name</th>
+                <th>Mobile Number</th>
                 <th>Email</th>
                 <th>Role</th>
                 <th>Action</th>
@@ -81,6 +82,7 @@ const Users = () => {
                 <tr key={user._id}>
                   <th>{index + 1}</th>
                   <td>{user.name}</td>
+                  <td>{user.mobileNumber}</td>
                   <td>{user.email}</td>
                   <td>
                     <select

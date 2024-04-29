@@ -15,7 +15,7 @@ const Menu = () => {
     // Fetch data from the backend
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/menu");
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/menu`);
         const data = await response.json();
         setMenu(data);
         setFilteredItems(data); // Initially, display all items
@@ -150,7 +150,7 @@ const Menu = () => {
           </div>
 
             {/* filter options */}
-          <div className="flex justify-end mb-4 rounded-sm">
+          {/* <div className="flex justify-end mb-4 rounded-sm">
             <div className="bg-black p-2 ">
               <FaFilter className="text-white h-4 w-4" />
             </div>
@@ -166,7 +166,7 @@ const Menu = () => {
               <option value="low-to-high">Low to High</option>
               <option value="high-to-low">High to Low</option>
             </select>
-          </div>
+          </div> */}
         </div>
 
         {/* product card */}
