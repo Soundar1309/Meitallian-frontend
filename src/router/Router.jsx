@@ -20,6 +20,7 @@ import Contact from "../pages/contact/Contact";
 import About from "../pages/about/About";
 import Error from "../pages/404";
 import MenuDetail from "../pages/menuPage/MenuDetail";
+import PrivateRouteAdmin from "../PrivateRoute/PrivateRouteAdmin";
 
 const router = createBrowserRouter([
   {
@@ -94,7 +95,11 @@ const router = createBrowserRouter([
       },
       {
         path: "users",
-        element: <Users />,
+        element: (
+          <PrivateRouteAdmin>
+            <DashboardLayout />
+          </PrivateRouteAdmin>
+        ),
       },
       {
         path: "add-menu",

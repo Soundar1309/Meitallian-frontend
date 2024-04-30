@@ -80,7 +80,7 @@ const UpdateMenu = () => {
       <div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control w-full my-6">
-            <label className="label">
+            <label htmlFor="name" className="label">
               <span className="label-text">Recipe Name*</span>
             </label>
             <input
@@ -89,17 +89,19 @@ const UpdateMenu = () => {
               defaultValue={item.name}
               {...register("name", { required: true })}
               required
+              id="name"
               className="input input-bordered w-full"
             />
           </div>
           <div className="flex gap-6">
             {/* category */}
             <div className="form-control w-full my-6">
-              <label className="label">
+              <label htmlFor="category" className="label">
                 <span className="label-text">Category*</span>
               </label>
               <select
                 defaultValue={item.category}
+                id="category"
                 {...register("category", { required: true })}
                 className="select select-bordered w-full"
               >
@@ -117,12 +119,13 @@ const UpdateMenu = () => {
 
             {/* price */}
             <div className="form-control w-full my-6">
-              <label className="label">
+              <label htmlFor="price" className="label">
                 <span className="label-text">Price*</span>
               </label>
               <input
                 type="number"
                 placeholder="Price"
+                id="price"
                 defaultValue={item.price}
                 {...register("price", { required: true })}
                 className="input input-bordered w-full"
@@ -144,11 +147,12 @@ const UpdateMenu = () => {
           </div>
           {/* recipe details */}
           <div className="form-control">
-            <label className="label">
+            <label htmlFor="recipe" className="label">
               <span className="label-text">Recipe Details</span>
             </label>
             <textarea
               {...register("recipe")}
+              id="recipe"
               className="textarea textarea-bordered h-24"
               placeholder="recipe details"
               defaultValue={item.recipe}

@@ -4,8 +4,9 @@ import { AuthContext } from "../contexts/AuthProvider";
 import Swal from "sweetalert2";
 import useCart from "../hooks/useCart";
 import axios from "axios";
-import { Alert, Modal, Radio } from "antd";
+import { Alert, Modal, Popover, Radio } from "antd";
 import CheckableTag from "./CheckableTag";
+import DisabledPopover from "./DisablePopover";
 
 const Cards = ({ item }) => {
   const { name, image, price, recipe, _id } = item;
@@ -41,7 +42,7 @@ const Cards = ({ item }) => {
   };
 
   const handleOk = () => {
-    if (user && user.email) {
+    if (user?.email) {
       if (size.length === 0 || toppings.length === 0) {
         setError({ error: true, message: "Please customize your order" });
         setIsModalOpen(true);
@@ -110,7 +111,7 @@ const Cards = ({ item }) => {
           <img
             src={item.image}
             alt="popular dish"
-            className="hover:scale-105 transition-all duration-300 md:h-72 w-full object-cover"
+            className="hover:scale-105 transition-all duration-300 md:h-72 w-full object-cover card-image"
           />
         </figure>
       </Link>
@@ -126,12 +127,21 @@ const Cards = ({ item }) => {
           <h5 className="font-semibold">
             <span className="text-sm text-red">Rs.</span> {item.price}
           </h5>
-          <button
-            onClick={() => handleAddToCart(item)}
-            className="btn bg-green text-white"
-          >
-            Add to Cart{" "}
-          </button>
+          {user ?
+            <button
+              onClick={() => handleAddToCart(item)}
+              className="btn bg-green text-white"
+            >
+              Add to Cart
+            </button> :
+            <DisabledPopover>
+              <button
+                className="btn opacity-50"
+              >
+                Add to Cart
+              </button>
+            </DisabledPopover>
+          }
           <Modal
             className="mt-48 w-1/4"
             title="Customize Your Order"
