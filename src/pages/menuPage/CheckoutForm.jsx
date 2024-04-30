@@ -110,20 +110,20 @@ const CheckoutForm = ({ price, cart }) => {
     }
   };
   const basketPrice = cart.reduce((total, cartItem) => {
-    return total + cartItem.price*cartItem.quantity; // Accumulate the price of each cart item
+    return total + cartItem.price * cartItem.quantity; // Accumulate the price of each cart item
   }, 0);
 
   const tax = cart.reduce((total, cartItem) => {
-    return total + cartItem.price*cartItem.quantity * 0.06;
-}, 0);
+    return total + cartItem.price * cartItem.quantity * 0.06;
+  }, 0);
 
-const totalAmount = cart.reduce((total, cartItem) => {
-  return total+cartItem.price*cartItem.quantity;
-}, 0);
+  const totalAmount = cart.reduce((total, cartItem) => {
+    return total + cartItem.price * cartItem.quantity;
+  }, 0);
 
-let deliveryCharge = totalAmount <= 2000 ? 30 : 0;
+  let deliveryCharge = totalAmount <= 2000 ? 30 : 0;
 
-const totalAmountWithTaxAndDelivery = totalAmount+ deliveryCharge;
+  const totalAmountWithTaxAndDelivery = totalAmount + deliveryCharge;
 
 
   const editBasketHandler = () => {
@@ -132,9 +132,9 @@ const totalAmountWithTaxAndDelivery = totalAmount+ deliveryCharge;
 
   console.log(cart);
   return (
-    <div className="flex justify-between max-w-6xl mx-auto mt-12 ">
-      <div className="px-4 py-8 rounded-xl shadow-xl mt-10 border">
-        <div className="flex flex-row justify-between gap-4">
+    <div className="flex flex-col md:flex-row justify-between max-w-6xl mx-auto md:mt-12 ">
+      <div className="md:w-2/4 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
+        <div className="flex flex-col-reverse md:flex-row text-center md:justify-between ">
           <p className="text-2xl font-bold">Food Basket</p>
           <button onClick={editBasketHandler}>
             Edit Cart <FontAwesomeIcon icon={faEdit} className="ml-2" />
@@ -144,7 +144,7 @@ const totalAmountWithTaxAndDelivery = totalAmount+ deliveryCharge;
           {cart && cart.length > 0 ? (
             cart.map((cartItem, index) => {
               return (
-                <div key={index} className="flex flex-row py-4 ">
+                <div key={index} className="flex flex-col md:flex-row py-4 ">
                   <div className="flex flex-row gap-2 items-start">
                     <p className="mr-2">x{cartItem.quantity}</p>
                     <div className="w-[80px] h-[80px]">
@@ -175,7 +175,7 @@ const totalAmountWithTaxAndDelivery = totalAmount+ deliveryCharge;
                     </div>
                   </div>
                   <div className="mr-2 ml-auto">
-                    <p className="font-bold">Rs. {cartItem.price*cartItem.quantity}</p>
+                    <p className="font-bold">Rs. {cartItem.price * cartItem.quantity}</p>
                   </div>
                   <hr />
                 </div>
@@ -196,7 +196,7 @@ const totalAmountWithTaxAndDelivery = totalAmount+ deliveryCharge;
             <p>Rs. {deliveryCharge}</p>
           </div>
           <div className="flex justify-between pt-4">
-            <p className="font-semibold">Tax</p>
+            <p className="font-semibold">Tax (12%)</p>
             <p>Rs. {tax}</p>
           </div>
           <div className="flex justify-between py-4">
@@ -211,13 +211,8 @@ const totalAmountWithTaxAndDelivery = totalAmount+ deliveryCharge;
         </div>
         <button className="btn bg-green w-full mt-4">Confirm order</button>
       </div>
-      {/* <div className="md:w-1/2 space-y-3">
-        <h4 className="text-lg font-semibold">Order Summary</h4>
-        <p>Total Price: Rs.{price}</p>
-        <p>Number of Items: {cart.length}</p>
-      </div> */}
       <div
-        className={`md:w-1/3 w-full border space-y-5  card shrink-0 max-w-sm shadow-2xl bg-base-100 px-4 py-8`}
+        className={`md:w-1/3 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2`}
       >
         <h4 className="text-lg font-semibold">Process your Payment!</h4>
         <h5 className="font-medium">Credit/Debit Card</h5>
