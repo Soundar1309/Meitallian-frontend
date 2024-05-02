@@ -4,25 +4,34 @@ import { AuthContext } from "../contexts/AuthProvider";
 import Swal from "sweetalert2";
 import useCart from "../hooks/useCart";
 import axios from "axios";
-import { Alert, Modal, Popover, Radio } from "antd";
+import { Alert, Input, Modal, Popover, Radio } from "antd";
 import CheckableTag from "./CheckableTag";
 import DisabledPopover from "./DisablePopover";
+import useAuth from "../hooks/useAuth";
 
 const Cards = ({ item }) => {
   const { name, image, price, recipe, _id } = item;
 
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [cart, refetch] = useCart();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [menuDetail, setMenuDetail] = useState([]);
+  const [mobileNumber, setMobileNumber] = useState("");
   const [size, setSize] = useState([]);
   const [toppings, setToppings] = useState([]);
   const [count, setCount] = useState(1);
-  const [error, setError] = useState({ error: false, message: "", name: "" });
+  const [isMobileNoModalOpen, setIsMobileNoModalOpen] = useState(false);
+  const [isOrderModelOpen, setIsOrderModelOpen] = useState(false);
+  const [error, setError] = useState({ error: false, message: "" });
   const navigate = useNavigate();
   const location = useLocation();
-  const handleCancel = () => {
-    setIsModalOpen(false);
+
+  const MobileNoCancelHandler = () => {
+    setIsMobileNoModalOpen(false);
+  };
+
+  const OrderCancelHandler = () => {
+    setIsOrderModelOpen(false);
   };
   const sizeHandler = (e) => {
     setSize(e.target.value);
@@ -36,16 +45,49 @@ const Cards = ({ item }) => {
     if (count === 1) return;
     setCount(count - 1);
   };
-  const handleAddToCart = (item) => {
+  const MobileNumberHandler = (e) => {
     setError({ error: false, message: "" });
-    setIsModalOpen(true);
+    const EnteredMobileNumber = e.target.value;
+    const isValid = EnteredMobileNumber.replace(/\D/g, "");
+    if (!isValid) return;
+    setMobileNumber(EnteredMobileNumber);
   };
-
-  const handleOk = () => {
+  const handleAddToCart = async () => {
+    setError({ error: false, message: "" });
+    setMobileNumber("");
+    setSize([]);
+    setToppings([]);
+    setCount(1);
+    const email = user.email;
+    const Loggeduser = await axios.get(`http://localhost:5000/users/${email}`);
+    if (!Loggeduser.data.mobileNumber) {
+      setIsMobileNoModalOpen(true);
+    } else {
+      setIsOrderModelOpen(true);
+    }
+  };
+  const mobileNumberOkHandler = () => {
+    const email = user.email;
+    if (mobileNumber.length < 10) {
+      setError({ error: true, message: "Enter Valid Mobile Number" });
+      setIsMobileNoModalOpen(true);
+      setIsOrderModelOpen(false);
+    } else {
+      setError({ error: false, message: "" });
+      const userDataUpdate = { mobileNumber, email };
+      axios.patch(
+        `${import.meta.env.VITE_API_URL}/users/update`,
+        userDataUpdate
+      );
+      setIsMobileNoModalOpen(false);
+      setIsOrderModelOpen(true);
+    }
+  };
+  const orderOkHandler = () => {
     if (user?.email) {
-      if (size.length === 0 || toppings.length === 0) {
+      if (size.length === 0) {
         setError({ error: true, message: "Please customize your order" });
-        setIsModalOpen(true);
+        setIsOrderModelOpen(true);
         return;
       }
       const cartItem = {
@@ -62,7 +104,7 @@ const Cards = ({ item }) => {
         .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
         .then((response) => {
           if (response) {
-            setIsModalOpen(false);
+            setIsOrderModelOpen(false);
             refetch(); // refetch cart
             Swal.fire({
               position: "center",
@@ -82,7 +124,7 @@ const Cards = ({ item }) => {
             showConfirmButton: false,
             timer: 1500,
           });
-          setIsModalOpen(false);
+          setIsOrderModelOpen(false);
         });
     } else {
       Swal.fire({
@@ -127,27 +169,44 @@ const Cards = ({ item }) => {
           <h5 className="font-semibold">
             <span className="text-sm text-red">Rs.</span> {item.price}
           </h5>
-          {user ?
+          {user ? (
             <button
               onClick={() => handleAddToCart(item)}
               className="btn bg-green text-white"
             >
               Add to Cart
-            </button> :
+            </button>
+          ) : (
             <DisabledPopover>
-              <button
-                className="btn opacity-50"
-              >
-                Add to Cart
-              </button>
+              <button className="btn opacity-50">Add to Cart</button>
             </DisabledPopover>
-          }
+          )}
           <Modal
             className="mt-48 w-1/4"
-            title="Customize Your Order"
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
+            title="Mobile Number"
+            open={isMobileNoModalOpen}
+            onOk={mobileNumberOkHandler}
+            onCancel={MobileNoCancelHandler}
+          >
+            <Input
+              placeholder="Enter Mobile Number"
+              onChange={MobileNumberHandler}
+              value={mobileNumber}
+              maxLength={10}
+              className="py-2"
+            />
+            {error.error ? (
+              <Alert message={error.message} type="error" className="mt-4" />
+            ) : (
+              <></>
+            )}
+          </Modal>
+          <Modal
+            className="mt-48 w-1/4"
+            title="Choose, Order & TakeOut"
+            open={isOrderModelOpen}
+            onOk={orderOkHandler}
+            onCancel={OrderCancelHandler}
           >
             {menuDetail.size && menuDetail.size.length > 0 ? (
               <div className="my-6 flex flex-row gap-8 items-center ">

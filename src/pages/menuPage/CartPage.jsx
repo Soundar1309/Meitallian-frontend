@@ -6,6 +6,7 @@ import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useTheme } from "../../hooks/ThemeContext";
+import useAuth from "../../hooks/useAuth";
 
 const CartPage = () => {
   const { user } = useContext(AuthContext);
@@ -20,13 +21,16 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/carts/${item._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ quantity: item.quantity + 1 }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/carts/${item._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ quantity: item.quantity + 1 }),
+        }
+      );
 
       if (response.ok) {
         const updatedCart = cartItems.map((cartItem) => {
@@ -83,7 +87,6 @@ const CartPage = () => {
     }
   };
 
-  console.log(cart);
   // Calculate the cart subtotal
   const cartSubtotal = cart
     ? cart.reduce((total, item) => {
@@ -96,7 +99,6 @@ const CartPage = () => {
   // console.log(orderTotal)
 
   // delete an item
-
   const handleDelete = (item) => {
     Swal.fire({
       title: "Are you sure?",

@@ -18,7 +18,7 @@ const MenuDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState({ error: null, message: "" });
   const { user } = useAuth();
-
+  const email = user.email;
 
   const addToCheckout = (shouldNavigate) => {
     const email = user.email;
@@ -42,12 +42,14 @@ const MenuDetail = () => {
   };
 
   const buyNowHandler = async () => {
-    const email = user.email;
     const user = await axios.get(`http://localhost:5000/users/${email}`);
     if (!user.data.mobileNumber) {
       setIsModalOpen(true);
       const userDataUpdate = { mobileNumber, email };
-      axios.patch(`${import.meta.env.VITE_API_URL}/users/update`, userDataUpdate);
+      axios.patch(
+        `${import.meta.env.VITE_API_URL}/users/update`,
+        userDataUpdate
+      );
       addToCheckout(true);
     } else {
       addToCheckout(true);
@@ -108,7 +110,11 @@ const MenuDetail = () => {
             {menuDetail.name}
           </p>
           <p className="mb-4">
-            Category: <span className="capitalize ml-2 text-green"> {menuDetail.category} </span>
+            Category:{" "}
+            <span className="capitalize ml-2 text-green">
+              {" "}
+              {menuDetail.category}{" "}
+            </span>
           </p>
           <p className="text-2xl text-green font-bold my-6">
             {" "}
@@ -168,38 +174,30 @@ const MenuDetail = () => {
             <></>
           )}
           <div className="flex flex-row md:gap-12 gap-4">
-            {user ?
+            {user ? (
               <button
                 onClick={() => addToCheckout(false)}
                 className="btn bg-green text-white w-[150px]"
               >
                 Add to Cart
               </button>
-              :
+            ) : (
               <DisabledPopover>
-                <button
-                  className="btn opacity-50"
-                >
-                  Add to Cart
-                </button>
+                <button className="btn opacity-50">Add to Cart</button>
               </DisabledPopover>
-            }
-            {user ?
+            )}
+            {user ? (
               <button
                 className="btn bg-green text-white w-[150px]"
                 onClick={buyNowHandler}
               >
                 Buy Now
               </button>
-              :
+            ) : (
               <DisabledPopover>
-                <button
-                  className="btn opacity-50"
-                >
-                  Buy Now
-                </button>
+                <button className="btn opacity-50">Buy Now</button>
               </DisabledPopover>
-            }
+            )}
             <Modal
               className="mt-48 w-1/4"
               title="Mobile Number"

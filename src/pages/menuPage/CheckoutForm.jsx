@@ -8,6 +8,9 @@ import { useTheme } from "../../hooks/ThemeContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import sandwich from "../../assets/sandwich.png";
+import { Input, Modal } from "antd";
+import axios from "axios";
+import AddressModal from "../../components/AddressModal";
 
 const CheckoutForm = ({ price, cart }) => {
   const { isDarkMode } = useTheme();
@@ -15,11 +18,24 @@ const CheckoutForm = ({ price, cart }) => {
   const elements = useElements();
   const [cardError, setcardError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
+  const [address, setAddress] = useState([]);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isNewAdderssModalOpen, setIsNewAdderssModalOpen] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState([]);
 
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const navigate = useNavigate();
-  console.log(cart);
+
+  const anotherAddressHandler = () => {
+    setIsAddressModalOpen(true);
+  };
+  const addressModalCancel = () => {
+    setIsAddressModalOpen(false);
+  };
+  const handleOk = () => {
+    setIsAddressModalOpen(false);
+  };
   const discount = 0;
   // useEffect(() => {
   //   if (typeof price !== "number" || price < 1) {
@@ -101,7 +117,6 @@ const CheckoutForm = ({ price, cart }) => {
 
       // send payment info
       axiosSecure.post("/payments", paymentInfo).then((res) => {
-        console.log(res.data);
         if (res.data) {
           alert("Payment info sent successfully!");
           navigate("/order");
@@ -125,139 +140,176 @@ const CheckoutForm = ({ price, cart }) => {
 
   const totalAmountWithTaxAndDelivery = totalAmount + deliveryCharge;
 
-
   const editBasketHandler = () => {
     navigate("/cartpage");
   };
 
-  console.log(cart);
   return (
-    <div className="flex flex-col md:flex-row justify-between max-w-6xl mx-auto md:mt-12 ">
-      <div className="md:w-2/4 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
-        <div className="flex flex-col-reverse md:flex-row text-center md:justify-between ">
-          <p className="text-2xl font-bold">Food Basket</p>
-          <button onClick={editBasketHandler}>
-            Edit Cart <FontAwesomeIcon icon={faEdit} className="ml-2" />
-          </button>
-        </div>
-        <div className="flex flex-col justify-between py-4 ">
-          {cart && cart.length > 0 ? (
-            cart.map((cartItem, index) => {
-              return (
-                <div key={index} className="flex flex-col md:flex-row py-4 ">
-                  <div className="flex flex-row gap-2 items-start">
-                    <p className="mr-2">x{cartItem.quantity}</p>
-                    <div className="w-[80px] h-[80px]">
-                      <img
-                        src={cartItem?.image || sandwich}
-                        alt={cartItem?.name}
-                        className="w-[80px] h-[80px] mr-2 object-cover"
-                      />
-                    </div>
-                    <div className="felx flex-col gap-2">
-                      <p className="font-bold capitalize mr-4">
-                        {cartItem.name}
-                      </p>
-                      <div className="text-gray-400 text-sm">
-                        {cartItem.size && cartItem.size.length > 0 ? (
-                          <p className="capitalize">size: {cartItem.size}</p>
-                        ) : (
-                          <></>
-                        )}
-                        {cartItem.toppings && cartItem.toppings.length > 0 ? (
-                          <p className="capitalize">
-                            Toppings: {cartItem.toppings?.join(", ")}
+    <>
+      <div className="flex flex-col md:flex-row justify-between max-w-6xl mx-auto md:mt-12 ">
+        <div className="flex flex-col gap-10 max-w-4xl mx-auto w-full">
+          <div className="md:w-3/4 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
+            <div className="flex flex-col md:flex-row justify-between mb-4">
+              <p className="font-bold">Address</p>
+              <button
+                className="text-green font-semibold"
+                onClick={anotherAddressHandler}
+              >
+                Manage address
+              </button>
+              <AddressModal
+                modalOpen={isAddressModalOpen}
+                addressModalCancel={addressModalCancel}
+                setSelectedAddress={setSelectedAddress}
+                handleOk={handleOk}
+              />
+            </div>
+            {/* <p className="mb-4">
+              12, XYZ street, ABC Nagar, TamilNadu, India-612112
+            </p> */}
+            <p>{selectedAddress.name}</p>
+            <p>{selectedAddress.Locality}</p>
+            <p>{selectedAddress.address}</p>
+            <p>{selectedAddress.city}</p>
+            <p>{selectedAddress.pincode}</p>
+            <p className="py-2">{selectedAddress.landmark}</p>
+            {/* <button className="ml-0 mr-auto">
+              Edit Address <FontAwesomeIcon icon={faEdit} className="ml-2" />
+            </button> */}
+          </div>
+          <div className="md:w-3/4 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
+            <div className="flex flex-col-reverse md:flex-row text-center md:justify-between ">
+              <p className="text-2xl font-bold">Food Basket</p>
+              <button onClick={editBasketHandler}>
+                Edit Cart <FontAwesomeIcon icon={faEdit} className="ml-2" />
+              </button>
+            </div>
+            <div className="flex flex-col justify-between py-4 ">
+              {cart && cart.length > 0 ? (
+                cart.map((cartItem, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-col md:flex-row py-4 "
+                    >
+                      <div className="flex flex-row gap-2 items-start">
+                        <p className="mr-2">x{cartItem.quantity}</p>
+                        <div className="w-[80px] h-[80px]">
+                          <img
+                            src={cartItem?.image || sandwich}
+                            alt={cartItem?.name}
+                            className="w-[80px] h-[80px] mr-2 object-cover"
+                          />
+                        </div>
+                        <div className="felx flex-col gap-2">
+                          <p className="font-bold capitalize mr-4">
+                            {cartItem.name}
                           </p>
-                        ) : (
-                          <></>
-                        )}
+                          <div className="text-gray-400 text-sm">
+                            {cartItem.size && cartItem.size.length > 0 ? (
+                              <p className="capitalize">
+                                size: {cartItem.size}
+                              </p>
+                            ) : (
+                              <></>
+                            )}
+                            {cartItem.toppings &&
+                            cartItem.toppings.length > 0 ? (
+                              <p className="capitalize">
+                                Toppings: {cartItem.toppings?.join(", ")}
+                              </p>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mr-2 ml-auto">
+                        <p className="font-bold">
+                          Rs. {cartItem.price * cartItem.quantity}
+                        </p>
                       </div>
                     </div>
-                  </div>
-                  <div className="mr-2 ml-auto">
-                    <p className="font-bold">Rs. {cartItem.price * cartItem.quantity}</p>
-                  </div>
-                  <hr />
-                </div>
-              );
-            })
-          ) : (
-            <></>
-          )}
+                  );
+                })
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
         </div>
-        <hr />
-        <div>
-          <div className="flex justify-between pt-4">
-            <p className="font-semibold">Basket Price</p>
-            <p>Rs. {basketPrice}</p>
-          </div>
-          <div className="flex justify-between pt-4">
-            <p className="font-semibold">Delivery</p>
-            <p>Rs. {deliveryCharge}</p>
-          </div>
-          <div className="flex justify-between pt-4">
-            <p className="font-semibold">Tax (12%)</p>
-            <p>Rs. {tax}</p>
-          </div>
-          <div className="flex justify-between py-4">
-            <p className="font-semibold">Discount</p>
-            <p>Rs. {discount}</p>
+        <div className="md:w-1/3 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
+          <div>
+            <p className="font-bold">Order Summary</p>
+            <div className="flex justify-between pt-6">
+              <p className="font-semibold">Basket Price</p>
+              <p>Rs. {basketPrice}</p>
+            </div>
+            <div className="flex justify-between pt-4">
+              <p className="font-semibold">Delivery</p>
+              <p>Rs. {deliveryCharge}</p>
+            </div>
+            <div className="flex justify-between pt-4">
+              <p className="font-semibold">Tax (12%)</p>
+              <p>Rs. {tax}</p>
+            </div>
+            <div className="flex justify-between py-4">
+              <p className="font-semibold">Discount</p>
+              <p>Rs. {discount}</p>
+            </div>
+            <hr />
+            <div className="flex justify-between pt-4">
+              <p className="font-semibold">Order Total</p>
+              <p>Rs. {discount + deliveryCharge + tax + basketPrice}</p>
+            </div>
           </div>
           <hr />
-          <div className="flex justify-between pt-4">
-            <p className="font-semibold">Order Total</p>
-            <p>Rs. {discount + deliveryCharge + tax + basketPrice}</p>
-          </div>
-        </div>
-        <button className="btn bg-green w-full mt-4">Confirm order</button>
-      </div>
-      <div
-        className={`md:w-1/3 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2`}
-      >
-        <h4 className="text-lg font-semibold">Process your Payment!</h4>
-        <h5 className="font-medium">Credit/Debit Card</h5>
-        <form onSubmit={handleSubmit}>
-          <CardElement
-            options={{
-              style: {
-                base: {
-                  fontSize: "16px",
-                  color: "#424770",
-                  "::placeholder": {
-                    color: "#aab7c4",
+          <h4 className="text-lg font-semibold mt-6">Process your Payment!</h4>
+          <h5 className="font-medium">Credit/Debit Card</h5>
+          <form onSubmit={handleSubmit}>
+            <CardElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: "16px",
+                    color: "#424770",
+                    "::placeholder": {
+                      color: "#aab7c4",
+                    },
+                  },
+                  invalid: {
+                    color: "#9e2146",
                   },
                 },
-                invalid: {
-                  color: "#9e2146",
-                },
-              },
-            }}
-          />
-          <button
-            type="submit"
-            disabled={!stripe || !clientSecret}
-            className="btn btn-primary btn-sm mt-5 w-full"
-          >
-            Pay
-          </button>
-        </form>
-        {cardError ? (
-          <p className="text-red text-xs italic">{cardError}</p>
-        ) : (
-          ""
-        )}
+              }}
+            />
+            <button
+              type="submit"
+              disabled={!stripe || !clientSecret}
+              className="btn btn-primary btn-sm mt-5 w-full"
+            >
+              Pay
+            </button>
+          </form>
+          {cardError ? (
+            <p className="text-red text-xs italic">{cardError}</p>
+          ) : (
+            ""
+          )}
 
-        <div className="mt-5 text-center">
-          <hr />
-          <button
-            type="submit"
-            className="btn  btn-sm mt-5 bg-orange-500 text-white"
-          >
-            <FaPaypal /> Pay with Paypal
-          </button>
+          <div className="mt-5 text-center">
+            <hr />
+            <button
+              type="submit"
+              className="btn  btn-sm mt-5 bg-orange-500 text-white"
+            >
+              <FaPaypal /> Pay with Paypal
+            </button>
+          </div>
+          <button className="btn bg-green w-full mt-4">Confirm order</button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
