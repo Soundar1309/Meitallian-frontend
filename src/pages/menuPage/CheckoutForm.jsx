@@ -164,18 +164,12 @@ const CheckoutForm = ({ price, cart }) => {
                 handleOk={handleOk}
               />
             </div>
-            {/* <p className="mb-4">
-              12, XYZ street, ABC Nagar, TamilNadu, India-612112
-            </p> */}
             <p>{selectedAddress.name}</p>
-            <p>{selectedAddress.Locality}</p>
+            <p>{selectedAddress.locality}</p>
             <p>{selectedAddress.address}</p>
             <p>{selectedAddress.city}</p>
             <p>{selectedAddress.pincode}</p>
             <p className="py-2">{selectedAddress.landmark}</p>
-            {/* <button className="ml-0 mr-auto">
-              Edit Address <FontAwesomeIcon icon={faEdit} className="ml-2" />
-            </button> */}
           </div>
           <div className="md:w-3/4 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
             <div className="flex flex-col-reverse md:flex-row text-center md:justify-between ">
@@ -238,7 +232,7 @@ const CheckoutForm = ({ price, cart }) => {
             </div>
           </div>
         </div>
-        <div className="md:w-1/3 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
+        <div className="md:w-1/2 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
           <div>
             <p className="font-bold">Order Summary</p>
             <div className="flex justify-between pt-6">

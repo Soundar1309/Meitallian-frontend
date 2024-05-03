@@ -1,11 +1,25 @@
-import { Button, Dropdown, Input, Menu, Modal, Space } from "antd";
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Input,
+  Menu,
+  Modal,
+  Popconfirm,
+  Popover,
+  Space,
+} from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faEllipsisVertical,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 const AddressModal = ({
   modalOpen,
@@ -15,13 +29,12 @@ const AddressModal = ({
 }) => {
   const { user } = useAuth();
   const [isNewAdderssModalOpen, setIsNewAdderssModalOpen] = useState(false);
-  // const [isEditAdderssModalOpen, setIsEditAdderssModalOpen] = useState(false);
   const [existingAddress, setExistingAddress] = useState([]);
   const [addressId, setAddressId] = useState("");
   const [name, setName] = useState("");
   const [pincode, setPincode] = useState("");
   const [locality, setLocality] = useState("");
-  const [address, setAddress] = useState("");
+  const [area, setArea] = useState("");
   const [city, setCity] = useState("");
   const [landmark, setLandmark] = useState("");
 
@@ -37,8 +50,8 @@ const AddressModal = ({
     if (name === "locality") {
       setLocality(value);
     }
-    if (name === "address") {
-      setAddress(value);
+    if (name === "area") {
+      setArea(value);
     }
     if (name === "city") {
       setCity(value);
@@ -54,51 +67,24 @@ const AddressModal = ({
     setName("");
     setPincode("");
     setLocality("");
-    setAddress("");
+    setArea("");
     setCity("");
     setLandmark("");
   };
   const addNewAddress = async () => {
     const email = user.email;
-    const Loggedinuser = await axios.get(
-      `http://localhost:5000/users/${email}`
-    );
-    const id = Loggedinuser.data._id;
-    const newAddress = {
+
+    const payload = {
+      user_email: email,
       name,
       pincode,
       locality,
-      address,
+      area,
       city,
       landmark,
     };
     axios
-      .post(`${import.meta.env.VITE_API_URL}/address`, newAddress, id)
-      .then(() => {
-        setIsNewAdderssModalOpen(false);
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "New Address has been Added.",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      });
-  };
-  const updateAddress = () => {
-    const revisedAddress = {
-      name,
-      pincode,
-      locality,
-      address,
-      city,
-      landmark,
-    };
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/address/update/${addressId}`,
-        revisedAddress
-      )
+      .post(`${import.meta.env.VITE_API_URL}/address/`, payload)
       .then((res) => {
         setIsNewAdderssModalOpen(false);
         Swal.fire({
@@ -108,14 +94,41 @@ const AddressModal = ({
           showConfirmButton: false,
           timer: 1500,
         });
-      });
+      })
+      .catch((error) => console.error(error.message));
+  };
+  const updateAddress = () => {
+    const revisedAddress = {
+      name,
+      pincode,
+      locality,
+      area,
+      city,
+      landmark,
+    };
+    axios
+      .patch(
+        `${import.meta.env.VITE_API_URL}/address/${addressId}`,
+        revisedAddress
+      )
+      .then(() => {
+        setIsNewAdderssModalOpen(false);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Address has been updated.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => console.error(error.message));
   };
   const newAddressModalCancel = () => {
     setIsNewAdderssModalOpen(false);
   };
   const confirmAddressHandler = async (id) => {
     const selectedAddress = await axios.get(
-      `${import.meta.env.VITE_API_URL}/address/${id}`
+      `${import.meta.env.VITE_API_URL}/address/address/${id}`
     );
     setSelectedAddress(selectedAddress.data);
   };
@@ -123,34 +136,44 @@ const AddressModal = ({
     setIsNewAdderssModalOpen(true);
     setAddressId(id);
     const selectedAddress = await axios.get(
-      `${import.meta.env.VITE_API_URL}/address/${id}`
+      `${import.meta.env.VITE_API_URL}/address/address/${id}`
     );
-    setAddress(selectedAddress.data.address);
-    setCity(selectedAddress.data.city);
-    setLandmark(selectedAddress.data.landmark);
-    setLocality(selectedAddress.data.locality);
-    setName(selectedAddress.data.name);
-    setPincode(selectedAddress.data.pincode);
+    const receivedAddress = selectedAddress.data;
+    setArea(receivedAddress.area);
+    setCity(receivedAddress.city);
+    setLandmark(receivedAddress.landmark);
+    setLocality(receivedAddress.locality);
+    setName(receivedAddress.name);
+    setPincode(receivedAddress.pincode);
   };
+
   const deleteAddressHandler = async (id) => {
-    const response = await axios.delete(
-      `${import.meta.env.VITE_API_URL}/${id}`
+    await axios.delete(`${import.meta.env.VITE_API_URL}/address/${id}`);
+
+    const updatedAddresses = existingAddress.filter(
+      (address) => address._id !== id
     );
-    setExistingAddress(response.data);
+    setExistingAddress(updatedAddresses);
     Swal.fire({
       position: "center",
-      icon: "Delted",
-      title: "Address Deleted Successfully.",
+      icon: "success",
+      title: "Address Deleted Successfully",
       showConfirmButton: false,
       timer: 1500,
     });
   };
+  const defaultAddressHandler = (id) => {
+    console.log(id);
+  };
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL}/address`).then((res) => {
-      console.log(res.data);
-      setExistingAddress(res.data);
-    });
-  }, []);
+    const email = user.email;
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/address/${email}`)
+      .then((res) => {
+        setExistingAddress(res.data);
+      });
+  }, [existingAddress, user]);
+
   return (
     <Modal
       className="mt-48"
@@ -160,7 +183,7 @@ const AddressModal = ({
       onCancel={addressModalCancel}
     >
       <button
-        className="btn my-4 bg-green font-semibold mr-0 ml-auto"
+        className="btn my-4 bg-green font-semibold"
         onClick={addNewAddressHandler}
       >
         Add New Address
@@ -199,8 +222,8 @@ const AddressModal = ({
           placeholder="Address (Area )"
           className="py-2 my-2"
           onChange={onChangeHandler}
-          name="address"
-          value={address}
+          name="area"
+          value={area}
         />
         <div className="flex gap-4">
           <Input
@@ -224,76 +247,84 @@ const AddressModal = ({
           existingAddress.map((address, index) => {
             return (
               <div key={index}>
-                <p className="text-green font-bold text-md pb-2">
-                  {address.name}
-                </p>
+                <div className="flex justify-between">
+                  <p className="font-bold text-md">{address.name}</p>
+                  <div className="flex gap-4">
+                    <Popover title="Confirm this address">
+                      <button
+                        onClick={() => confirmAddressHandler(address._id)}
+                      >
+                        <FontAwesomeIcon
+                          icon={faCheck}
+                          className="text-green text-2xl"
+                        />
+                      </button>
+                    </Popover>
+                    <Popover title="Edit this address">
+                      <button onClick={() => editAddressHandler(address._id)}>
+                        <FontAwesomeIcon icon={faEdit} className="ml-2" />
+                      </button>
+                    </Popover>
+                    <Popconfirm
+                      title="Delete this Address"
+                      description="Are you sure to delete this address?"
+                      onConfirm={() => {
+                        deleteAddressHandler(address._id);
+                      }}
+                      onCancel={() => {}}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <button>
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          className="ml-2 text-red"
+                        />
+                      </button>
+                    </Popconfirm>
+                  </div>
+                  {/* <div className="flex gap-4">
+                    <button
+                      className=""
+                      onClick={() => confirmAddressHandler(address._id)}
+                    >
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="text-green text-2xl"
+                      />
+                    </button>
+                    <button
+                      className=""
+                      onClick={() => editAddressHandler(address._id)}
+                    >
+                      <FontAwesomeIcon icon={faEdit} className="ml-2" />
+                    </button>
+                    <button
+                      className=""
+                      onClick={() => deleteAddressHandler(address._id)}
+                    >
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        className="ml-2 text-red"
+                      />
+                    </button>
+                  </div> */}
+                </div>
                 <p>{address.Locality}</p>
-                <p>{address.address}</p>
+                <p>{address.area}</p>
                 <p>{address.city}</p>
                 <p>{address.pincode}</p>
-                <p className="py-2">LandMark: {address.landmark}</p>
-                <div className="flex justify-between">
-                  <button
-                    className=""
-                    onClick={() => editAddressHandler(address._id)}
-                  >
-                    Edit Address{" "}
-                    <FontAwesomeIcon icon={faEdit} className="ml-2" />
-                  </button>
-                  <button
-                    className=""
-                    onClick={() => confirmAddressHandler(address._id)}
-                  >
-                    Confirm Address{" "}
-                  </button>
-                  <button
-                    className=""
-                    onClick={() => deleteAddressHandler(address._id)}
-                  >
-                    Delete Address{" "}
-                  </button>
-                </div>
-                {/* <Dropdown
-                  menu={[
-                    {
-                      key: "1",
-                      label: (
-                        <button
-                          className=""
-                          onClick={() => editAddressHandler(address._id)}
-                        >
-                          Edit Address
-                        </button>
-                      ),
-                    },
-                    {
-                      key: "2",
-                      label: (
-                        <button
-                          className=""
-                          onClick={() => confirmAddressHandler(address._id)}
-                        >
-                          Confirm Address{" "}
-                        </button>
-                      ),
-                    },
-                    {
-                      key: "3",
-                      label: (
-                        <button
-                          className=""
-                          onClick={() => deleteAddressHandler(address._id)}
-                        >
-                          Delete Address{" "}
-                        </button>
-                      ),
-                    },
-                  ]}
+                <p className="">LandMark: {address.landmark}</p>
+                <Checkbox
+                  className="my-4"
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      defaultAddressHandler(address._id);
+                    }
+                  }}
                 >
-                  <a onClick={(e) => e.preventDefault()}>
-                    <FontAwesomeIcon icon={faEllipsisVertical} />
-                  </a>
-                </Dropdown> */}
+                  Set as default address
+                </Checkbox>
                 <hr className="py-2" />
               </div>
             );

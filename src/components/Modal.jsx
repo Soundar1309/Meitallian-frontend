@@ -14,18 +14,13 @@ const Modal = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const closeModal = () => {
     setIsModalOpen(false);
-    document.getElementById("my_modal_5").close()
+    document.getElementById("my_modal_5").close();
   };
 
   const navigate = useNavigate();
 
-
   //react hook form
-  const {
-    register,
-    handleSubmit,
-    reset,
-  } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = (data) => {
     const email = data.email;
@@ -35,12 +30,11 @@ const Modal = () => {
         // Signed in
         const userInfo = {
           email: result.user?.email,
-          name: result.user?.displayName
-        }
-        axiosPublic.post('/users', userInfo)
-          .then(res => {
-            console.log(res.data);
-          })
+          name: result.user?.displayName,
+        };
+        axiosPublic.post("/users", userInfo).then((res) => {
+          console.log(res.data);
+        });
 
         alert("Login successful!");
         navigate("/");
@@ -50,20 +44,17 @@ const Modal = () => {
       .catch((error) => {
         setErrorMessage("Please provide valid email & password!");
       });
-    reset()
-
+    reset();
   };
 
   // login with google
   const handleRegister = () => {
     signUpWithGmail().then((result) => {
-      console.log(result.user);
       const userInfo = {
         email: result.user?.email,
         name: result.user?.displayName,
       };
       axiosPublic.post("/users", userInfo).then((res) => {
-        console.log(res.data);
         navigate("/");
         closeModal();
       });
@@ -71,7 +62,12 @@ const Modal = () => {
   };
 
   return (
-    <dialog id="my_modal_5" className={`modal ${isModalOpen ? 'modal-middle sm:modal-middle' : 'hidden'}`}>
+    <dialog
+      id="my_modal_5"
+      className={`modal ${
+        isModalOpen ? "modal-middle sm:modal-middle" : "hidden"
+      }`}
+    >
       <div className="modal-box">
         <div className="modal-action flex-col justify-center mt-0">
           <form
@@ -115,7 +111,10 @@ const Modal = () => {
                 {...register("password", { required: true })}
               />
               <label className="label">
-                <a href="/404" className="text-md label-text-alt link link-hover mt-2">
+                <a
+                  href="/404"
+                  className="text-md label-text-alt link link-hover mt-2"
+                >
                   Forgot password?
                 </a>
               </label>
@@ -155,7 +154,6 @@ const Modal = () => {
               </Link>
             </p>
           </form>
-
         </div>
       </div>
     </dialog>
