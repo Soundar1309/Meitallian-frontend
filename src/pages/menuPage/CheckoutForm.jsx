@@ -1,30 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { FaPaypal } from "react-icons/fa";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
-import { useTheme } from "../../hooks/ThemeContext";
+
+import { FaPaypal } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
+
 import sandwich from "../../assets/sandwich.png";
-import { Input, Modal } from "antd";
-import axios from "axios";
 import AddressModal from "../../components/AddressModal";
+import useUser from "../../hooks/useUser";
+import axios from "axios";
 
 const CheckoutForm = ({ price, cart }) => {
-  const { isDarkMode } = useTheme();
   const stripe = useStripe();
   const elements = useElements();
   const [cardError, setcardError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
-  const [address, setAddress] = useState([]);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const [isNewAdderssModalOpen, setIsNewAdderssModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState([]);
 
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+  const [loggedinUser] = useUser();
   const navigate = useNavigate();
 
   const anotherAddressHandler = () => {
@@ -37,20 +36,6 @@ const CheckoutForm = ({ price, cart }) => {
     setIsAddressModalOpen(false);
   };
   const discount = 0;
-  // useEffect(() => {
-  //   if (typeof price !== "number" || price < 1) {
-  //     console.error(
-  //       "Invalid price value. Must be a number greater than or equal to 1."
-  //     );
-  //     return;
-  //   }
-
-  //   axiosSecure.post("/create-payment-intent", { price }).then((res) => {
-  //     console.log(res.data.clientSecret);
-  //     console.log(price);
-  //     setClientSecret(res.data.clientSecret);
-  //   });
-  // }, [price, axiosSecure]);
 
   // handleSubmit btn click
   const handleSubmit = async (event) => {
@@ -97,8 +82,6 @@ const CheckoutForm = ({ price, cart }) => {
       console.log(confirmError);
     }
 
-    console.log("paymentIntent", paymentIntent);
-
     if (paymentIntent.status === "succeeded") {
       const transitionId = paymentIntent.id;
       setcardError(`Your transitionId is: ${transitionId}`);
@@ -143,6 +126,16 @@ const CheckoutForm = ({ price, cart }) => {
   const editBasketHandler = () => {
     navigate("/cartpage");
   };
+
+  useEffect(() => {
+    if (loggedinUser?.address) {
+      const getAddressHandler = async () => {
+        const selectedAddress = await axios.get(`${import.meta.env.VITE_API_URL}/address/address/${loggedinUser?.address}`);
+        setSelectedAddress(selectedAddress.data);
+      }
+      getAddressHandler();
+    }
+  }, [loggedinUser])
 
   return (
     <>
@@ -208,7 +201,7 @@ const CheckoutForm = ({ price, cart }) => {
                               <></>
                             )}
                             {cartItem.toppings &&
-                            cartItem.toppings.length > 0 ? (
+                              cartItem.toppings.length > 0 ? (
                               <p className="capitalize">
                                 Toppings: {cartItem.toppings?.join(", ")}
                               </p>

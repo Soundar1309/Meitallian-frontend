@@ -33,6 +33,7 @@ const Cards = ({ item }) => {
   const OrderCancelHandler = () => {
     setIsOrderModelOpen(false);
   };
+
   const sizeHandler = (e) => {
     setSize(e.target.value);
     setError({ error: false, message: "" });
@@ -41,10 +42,12 @@ const Cards = ({ item }) => {
   const incrementHandler = () => {
     setCount(count + 1);
   };
+
   const decrementHandler = () => {
     if (count === 1) return;
     setCount(count - 1);
   };
+
   const MobileNumberHandler = (e) => {
     setError({ error: false, message: "" });
     const EnteredMobileNumber = e.target.value;
@@ -52,6 +55,7 @@ const Cards = ({ item }) => {
     if (!isValid) return;
     setMobileNumber(EnteredMobileNumber);
   };
+
   const handleAddToCart = async () => {
     setError({ error: false, message: "" });
     setMobileNumber("");
@@ -66,6 +70,7 @@ const Cards = ({ item }) => {
       setIsOrderModelOpen(true);
     }
   };
+
   const mobileNumberOkHandler = () => {
     const email = user.email;
     if (mobileNumber.length < 10) {
@@ -94,7 +99,7 @@ const Cards = ({ item }) => {
         menuItemId: _id,
         name,
         image,
-        price,
+        price: size ? item.size.find((item) => item.label === size)?.price : price,
         email: user.email,
         size: size,
         toppings: toppings,
@@ -146,6 +151,7 @@ const Cards = ({ item }) => {
       setMenuDetail(res.data);
     });
   }, [_id]);
+
   return (
     <div className="card shadow-xl relative mr-5 md:my-5 cursor-pointer h-[560px]">
       <Link to={`/menu/${item._id}`}>
@@ -166,9 +172,16 @@ const Cards = ({ item }) => {
         </Link>
 
         <div className="card-actions justify-between items-center mt-2">
-          <h5 className="font-semibold">
+          {item.price ? <h5 className="font-semibold">
             <span className="text-sm text-red">Rs.</span> {item.price}
           </h5>
+            :
+            item.size[0]?.price ?
+              <h5 className="font-semibold">
+                <span className="text-sm text-red">Starts at </span> {item.size[0]?.price}
+              </h5>
+              : <></>
+          }
           {user ? (
             <button
               onClick={() => handleAddToCart(item)}
@@ -215,11 +228,11 @@ const Cards = ({ item }) => {
                   {menuDetail.size.map((availableSize, index) => (
                     <Radio.Button
                       key={index}
-                      value={availableSize}
+                      value={availableSize.label}
                       onChange={sizeHandler}
                       className="h-[40px]"
                     >
-                      {availableSize}
+                      {availableSize.label}
                     </Radio.Button>
                   ))}
                 </Radio.Group>

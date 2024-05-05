@@ -21,7 +21,7 @@ const Users = () => {
       .then((res) => {
         console.log(res.data);
         Swal.fire({
-          position: "top-end",
+          position: "top-center",
           icon: "success",
           title: `${user.name} is an ${res.data.role.toUpperCase()} Now!`,
           showConfirmButton: false,

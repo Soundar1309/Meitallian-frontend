@@ -126,16 +126,7 @@ input[type="number"] {
   border-top-right-radius: var(--rounded-box, 1rem);
 }
 
-.ant-popover-content,
-.ant-popover-content .ant-popover-inner {
-  border-radius: 8px;
-  background-color: #ff6868 !important;
-}
-
-.ant-popover .ant-popover-arrow:before {
-  background-color: #ff6868 !important;
-}
-
-.ant-popover-content .ant-popover-inner-content {
-  color: #fff !important;
+.ant-popover-content .ant-popover-title {
+  min-width: auto;
+  margin: 0px;
 }

@@ -71,6 +71,7 @@ const AddressModal = ({
     setCity("");
     setLandmark("");
   };
+
   const addNewAddress = async () => {
     const email = user.email;
 
@@ -97,6 +98,7 @@ const AddressModal = ({
       })
       .catch((error) => console.error(error.message));
   };
+
   const updateAddress = () => {
     const revisedAddress = {
       name,
@@ -123,15 +125,29 @@ const AddressModal = ({
       })
       .catch((error) => console.error(error.message));
   };
+
   const newAddressModalCancel = () => {
     setIsNewAdderssModalOpen(false);
   };
+
   const confirmAddressHandler = async (id) => {
     const selectedAddress = await axios.get(
       `${import.meta.env.VITE_API_URL}/address/address/${id}`
     );
+    const email = user?.email;
+
+    if (email) {
+      let payload = {
+        email,
+        address: id
+      }
+      await axios.patch(`${import.meta.env.VITE_API_URL}/users/update-address`, payload);
+    }
+
     setSelectedAddress(selectedAddress.data);
+    handleOk();
   };
+
   const editAddressHandler = async (id) => {
     setIsNewAdderssModalOpen(true);
     setAddressId(id);
@@ -153,6 +169,7 @@ const AddressModal = ({
     const updatedAddresses = existingAddress.filter(
       (address) => address._id !== id
     );
+
     setExistingAddress(updatedAddresses);
     Swal.fire({
       position: "center",
@@ -162,17 +179,17 @@ const AddressModal = ({
       timer: 1500,
     });
   };
-  const defaultAddressHandler = (id) => {
-    console.log(id);
-  };
+
   useEffect(() => {
-    const email = user.email;
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/address/${email}`)
-      .then((res) => {
-        setExistingAddress(res.data);
-      });
-  }, [existingAddress, user]);
+    const email = user?.email;
+    if (email && modalOpen) {
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/address/${email}`)
+        .then((res) => {
+          setExistingAddress(res.data);
+        });
+    }
+  }, [modalOpen]);
 
   return (
     <Modal
@@ -246,11 +263,11 @@ const AddressModal = ({
         {existingAddress && existingAddress.length > 0 ? (
           existingAddress.map((address, index) => {
             return (
-              <div key={index}>
+              <div key={index} className="my-4 pb-2 border-b-2">
                 <div className="flex justify-between">
                   <p className="font-bold text-md">{address.name}</p>
                   <div className="flex gap-4">
-                    <Popover title="Confirm this address">
+                    <Popover title="Select this address">
                       <button
                         onClick={() => confirmAddressHandler(address._id)}
                       >
@@ -271,7 +288,7 @@ const AddressModal = ({
                       onConfirm={() => {
                         deleteAddressHandler(address._id);
                       }}
-                      onCancel={() => {}}
+                      onCancel={() => { }}
                       okText="Yes"
                       cancelText="No"
                     >
@@ -283,49 +300,12 @@ const AddressModal = ({
                       </button>
                     </Popconfirm>
                   </div>
-                  {/* <div className="flex gap-4">
-                    <button
-                      className=""
-                      onClick={() => confirmAddressHandler(address._id)}
-                    >
-                      <FontAwesomeIcon
-                        icon={faCheck}
-                        className="text-green text-2xl"
-                      />
-                    </button>
-                    <button
-                      className=""
-                      onClick={() => editAddressHandler(address._id)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} className="ml-2" />
-                    </button>
-                    <button
-                      className=""
-                      onClick={() => deleteAddressHandler(address._id)}
-                    >
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        className="ml-2 text-red"
-                      />
-                    </button>
-                  </div> */}
                 </div>
                 <p>{address.Locality}</p>
                 <p>{address.area}</p>
                 <p>{address.city}</p>
                 <p>{address.pincode}</p>
-                <p className="">LandMark: {address.landmark}</p>
-                <Checkbox
-                  className="my-4"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      defaultAddressHandler(address._id);
-                    }
-                  }}
-                >
-                  Set as default address
-                </Checkbox>
-                <hr className="py-2" />
+                <p className=""><strong>LandMark:</strong> {address.landmark}</p>
               </div>
             );
           })

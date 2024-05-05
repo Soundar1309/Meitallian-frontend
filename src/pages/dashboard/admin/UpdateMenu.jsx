@@ -5,14 +5,14 @@ import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { FaUtensils } from "react-icons/fa";
-import { Checkbox } from "antd";
+import { Checkbox, Col, Row } from "antd";
 import Tags from "../../../components/Tags";
 
 const UpdateMenu = () => {
   const [size, setSize] = useState([]);
+  const [sizeValue, setSizeValue] = useState([]);
   const [toppings, setToppings] = useState([]);
   const item = useLoaderData();
-  console.log(item);
 
   const { register, handleSubmit, reset } = useForm();
   const axiosPublic = useAxiosPublic();
@@ -25,43 +25,48 @@ const UpdateMenu = () => {
 
   const SizeHandler = (e) => {
     setSize(e);
+    setSizeValue([...sizeValue.filter((item) => e.includes(item.label))])
   };
+
   useEffect(() => {
-    setSize(item.size);
+    setSize(item.size.map((item) => item.label));
+    setSizeValue(item.size);
     setToppings(item.toppings);
   }, [item]);
+
   // on submit form
   const onSubmit = async (data) => {
     // console.log(data);
     // image upload to imgbb and then get an url
-    const imageFile = { image: data.image[0] };
-    const hostingImg = await axiosPublic.post(image_hosting_api, imageFile, {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    });
+    let hostingImg;
+    if (data.image[0]) {
+      const imageFile = { image: data.image[0] };
+      hostingImg = await axiosPublic.post(image_hosting_api, imageFile, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      });
+    }
 
-    // console.log(hostingImg.data);
-
-    if (hostingImg.data.success) {
+    if (item.image || hostingImg.data.success) {
       // now send the menu item data to the server with the image url
       const menuItem = {
         name: data?.name,
         category: data.category,
-        price: parseFloat(data.price),
+        price: sizeValue.length === 0 ? parseFloat(data.price) : 0,
         recipe: data.recipe,
-        image: hostingImg.data.data.display_url,
-        size: size,
+        image: hostingImg?.data.data.display_url || item.image,
+        size: sizeValue,
         toppings: toppings,
       };
 
       const menuRes = await axiosSecure.patch(`menu/${item._id}`, menuItem);
-      console.log(menuRes);
+
       if (menuRes.status === 200) {
         // show success popup
         reset();
         Swal.fire({
-          position: "top-end",
+          position: "top-center",
           icon: "success",
           title: `Item is updated successfully!`,
           showConfirmButton: false,
@@ -72,6 +77,12 @@ const UpdateMenu = () => {
     }
   };
 
+  const SizeValueChangeHandler = (label, value) => {
+    setSizeValue([...sizeValue.filter((item) => item.label !== label), { "label": label, "price": parseInt(value) }])
+  };
+
+  console.log(sizeValue);
+  console.log(size);
   return (
     <div className="w-full md:w-[870px] mx-auto px-4">
       <h2 className="text-2xl font-semibold my-4">
@@ -81,7 +92,9 @@ const UpdateMenu = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control w-full my-6">
             <label htmlFor="name" className="label">
-              <span className="label-text">Recipe Name*</span>
+              <span className="label-text">Recipe Name
+                <span className="ml-1 text-xl text-[#f06548]">*</span>
+              </span>
             </label>
             <input
               type="text"
@@ -97,7 +110,9 @@ const UpdateMenu = () => {
             {/* category */}
             <div className="form-control w-full my-6">
               <label htmlFor="category" className="label">
-                <span className="label-text">Category*</span>
+                <span className="label-text">Category
+                  <span className="ml-1 text-xl text-[#f06548]">*</span>
+                </span>
               </label>
               <select
                 defaultValue={item.category}
@@ -120,14 +135,16 @@ const UpdateMenu = () => {
             {/* price */}
             <div className="form-control w-full my-6">
               <label htmlFor="price" className="label">
-                <span className="label-text">Price*</span>
+                <span className="label-text">Price
+                  <span className="ml-1 text-xl text-[#f06548]">{size?.length === 0 ? <span>*</span> : <></>}</span>
+                </span>
               </label>
               <input
                 type="number"
                 placeholder="Price"
                 id="price"
                 defaultValue={item.price}
-                {...register("price", { required: true })}
+                {...register("price", { required: size?.length === 0 })}
                 className="input input-bordered w-full"
               />
             </div>
@@ -135,10 +152,33 @@ const UpdateMenu = () => {
           <div className="mb-4">
             <p className="mb-2">Size</p>
             <Checkbox.Group
-              options={sizeOptions}
-              value={size}
               onChange={SizeHandler}
-            />
+              value={size}
+            >
+              <Row>
+                {sizeOptions.map((item) => {
+                  return <Col span={24} key={item.value}>
+                    <div className="flex items-center my-2">
+                      <div className="w-1/5">
+                        <Checkbox value={item.value}>{item.label}</Checkbox>
+                      </div>
+                      {size.includes(item.value) ?
+                        <div className="w-3/4">
+                          <input
+                            type="number"
+                            placeholder="Price"
+                            {...register(`${item.value}-price`, { required: true })}
+                            className="input input-bordered"
+                            onChange={(e) => SizeValueChangeHandler(item.value, e.target.value)}
+                            value={sizeValue?.find((itm) => itm.label === item.value)?.price}
+                          />
+                        </div>
+                        : <></>}
+                    </div>
+                  </Col>
+                })}
+              </Row>
+            </Checkbox.Group>
           </div>
           <div className="mb-4">
             <p className="mb-2">Toppings</p>
@@ -161,7 +201,7 @@ const UpdateMenu = () => {
 
           <div className="form-control w-full my-6">
             <input
-              {...register("image", { required: true })}
+              {...register("image", { required: false })}
               type="file"
               className="file-input w-full max-w-xs"
             />

@@ -26,38 +26,38 @@ const ManageBookings = () => {
       return res.json();
     },
   });
-    //   console.log(menu)
-      const axiosSecure = useAxiosSecure();
-    
-    //   pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const items_Per_Page =  10;
-    const indexOfLastItem = currentPage * items_Per_Page;
-      const indexOfFirstItem = indexOfLastItem - items_Per_Page;
-      const currentItems = orders.slice(indexOfFirstItem, indexOfLastItem);
-    
-      // delete item
-      const handleDeleteItem = (item) => {
-        console.log(item._id)
-    }
+  //   console.log(menu)
+  const axiosSecure = useAxiosSecure();
 
-    // confirm order
-    const confiremedOrder = async(item) => {
-      console.log(item)
-    await  axiosSecure.patch(`/payments/${item._id}`)
-      .then(res =>{
-          console.log(res.data)
-          Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: `Order Confirmed Now!`,
-              showConfirmButton: false,
-              timer: 1500
-            });
-          refetch();
+  //   pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const items_Per_Page = 10;
+  const indexOfLastItem = currentPage * items_Per_Page;
+  const indexOfFirstItem = indexOfLastItem - items_Per_Page;
+  const currentItems = orders.slice(indexOfFirstItem, indexOfLastItem);
+
+  // delete item
+  const handleDeleteItem = (item) => {
+    console.log(item._id)
+  }
+
+  // confirm order
+  const confiremedOrder = async (item) => {
+    console.log(item)
+    await axiosSecure.patch(`/payments/${item._id}`)
+      .then(res => {
+        console.log(res.data)
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: `Order Confirmed Now!`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        refetch();
       })
 
-    }
+  }
 
   console.log(orders)
 
@@ -89,7 +89,7 @@ const ManageBookings = () => {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>
-                   {item.email}
+                    {item.email}
                   </td>
                   <td>{item.transitionId}</td>
                   <td>Rs.{item.price}</td>
@@ -97,13 +97,13 @@ const ManageBookings = () => {
                     {item.status}
                   </td>
                   <td className="text-center">
-                  {item.status === "confirmed" ? "done" :  <button
+                    {item.status === "confirmed" ? "done" : <button
                       className="btn bg-green text-white btn-xs text-center"
                       onClick={() => confiremedOrder(item)}
                     >
                       <GiConfirmed />
-                    </button> }
-                   
+                    </button>}
+
                   </td>
                   <td>
                     <button
@@ -122,21 +122,21 @@ const ManageBookings = () => {
 
       {/* Pagination */}
       <div className="flex justify-center my-4">
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="btn btn-sm mr-2 btn-warning"
-          >
-            <FaArrowLeft/> Previous 
-          </button>
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={indexOfLastItem >= orders.length}
-            className="btn btn-sm bg-green text-white"
-          >
-            Next  <FaArrowRight/>
-          </button>
-        </div>
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="btn btn-sm mr-2 btn-warning"
+        >
+          <FaArrowLeft /> Previous
+        </button>
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={indexOfLastItem >= orders.length}
+          className="btn btn-sm bg-green text-white"
+        >
+          Next  <FaArrowRight />
+        </button>
+      </div>
     </div>
   )
 }
