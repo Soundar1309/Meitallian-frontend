@@ -99,7 +99,9 @@ const Cards = ({ item }) => {
         menuItemId: _id,
         name,
         image,
-        price: size ? item.size.find((item) => item.label === size)?.price : price,
+        price: size
+          ? item.size.find((item) => item.label === size)?.price
+          : price,
         email: user.email,
         size: size,
         toppings: toppings,
@@ -172,16 +174,18 @@ const Cards = ({ item }) => {
         </Link>
 
         <div className="card-actions justify-between items-center mt-2">
-          {item.price ? <h5 className="font-semibold">
-            <span className="text-sm text-red">Rs.</span> {item.price}
-          </h5>
-            :
-            item.size[0]?.price ?
-              <h5 className="font-semibold">
-                <span className="text-sm text-red">Starts at </span> {item.size[0]?.price}
-              </h5>
-              : <></>
-          }
+          {item.price ? (
+            <h5 className="font-semibold">
+              <span className="text-sm text-red">Rs.</span> {item.price}
+            </h5>
+          ) : item.size[0]?.price ? (
+            <h5 className="font-semibold">
+              <span className="text-sm text-red">Starts at </span>{" "}
+              {item.size[0]?.price}
+            </h5>
+          ) : (
+            <></>
+          )}
           {user ? (
             <button
               onClick={() => handleAddToCart(item)}

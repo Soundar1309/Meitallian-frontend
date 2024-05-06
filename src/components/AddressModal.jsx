@@ -139,9 +139,12 @@ const AddressModal = ({
     if (email) {
       let payload = {
         email,
-        address: id
-      }
-      await axios.patch(`${import.meta.env.VITE_API_URL}/users/update-address`, payload);
+        address: id,
+      };
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/users/update-address`,
+        payload
+      );
     }
 
     setSelectedAddress(selectedAddress.data);
@@ -189,7 +192,7 @@ const AddressModal = ({
           setExistingAddress(res.data);
         });
     }
-  }, [modalOpen]);
+  }, [modalOpen, existingAddress, user]);
 
   return (
     <Modal
@@ -288,7 +291,7 @@ const AddressModal = ({
                       onConfirm={() => {
                         deleteAddressHandler(address._id);
                       }}
-                      onCancel={() => { }}
+                      onCancel={() => {}}
                       okText="Yes"
                       cancelText="No"
                     >
@@ -305,7 +308,9 @@ const AddressModal = ({
                 <p>{address.area}</p>
                 <p>{address.city}</p>
                 <p>{address.pincode}</p>
-                <p className=""><strong>LandMark:</strong> {address.landmark}</p>
+                <p className="">
+                  <strong>LandMark:</strong> {address.landmark}
+                </p>
               </div>
             );
           })
