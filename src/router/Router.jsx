@@ -10,7 +10,6 @@ import Order from "../pages/dashboard/user/Order";
 import UserProfile from "../pages/dashboard/user/UserProfile";
 import DashboardLayout from "../layout/DashboardLayout";
 import Dashboard from "../pages/dashboard/admin/Dashboard";
-import Users from "../pages/dashboard/admin/Users";
 import AddMenu from "../pages/dashboard/admin/AddMenu";
 import ManageItems from "../pages/dashboard/admin/ManageItems";
 import UpdateMenu from "../pages/dashboard/admin/UpdateMenu";
@@ -20,6 +19,7 @@ import Contact from "../pages/contact/Contact";
 import About from "../pages/about/About";
 import Error from "../pages/404";
 import MenuDetail from "../pages/menuPage/MenuDetail";
+import PrivateRouteAdmin from "../PrivateRoute/PrivateRouteAdmin";
 
 const router = createBrowserRouter([
   {
@@ -94,7 +94,11 @@ const router = createBrowserRouter([
       },
       {
         path: "users",
-        element: <Users />,
+        element: (
+          <PrivateRouteAdmin>
+            <DashboardLayout />
+          </PrivateRouteAdmin>
+        ),
       },
       {
         path: "add-menu",

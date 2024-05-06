@@ -1,11 +1,10 @@
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Alert, Input, Modal, Radio, message } from "antd";
+import { Alert, Input, Modal, Radio } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import CheckableTag from "../../components/CheckableTag";
+import DisabledPopover from "../../components/DisablePopover";
 
 const MenuDetail = () => {
   const { id } = useParams();
@@ -19,19 +18,19 @@ const MenuDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState({ error: null, message: "" });
   const { user } = useAuth();
-
   const email = user.email;
-  const cartItem = {
-    ...menuDetail,
-    size: size,
-    toppings: toppings,
-    email: email,
-    quantity: count,
-    menuItemId: menuDetail._id,
-  };
-  delete cartItem._id;
 
   const addToCheckout = (shouldNavigate) => {
+    const email = user.email;
+    const cartItem = {
+      ...menuDetail,
+      size: size,
+      toppings: toppings,
+      email: email,
+      quantity: count,
+      menuItemId: menuDetail._id,
+    };
+    delete cartItem._id;
     axios
       .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
       .then(() => {
@@ -43,11 +42,14 @@ const MenuDetail = () => {
   };
 
   const buyNowHandler = async () => {
-    const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
+    const user = await axios.get(`http://localhost:5000/users/${email}`);
     if (!user.data.mobileNumber) {
       setIsModalOpen(true);
       const userDataUpdate = { mobileNumber, email };
-      axios.patch(`${import.meta.env.VITE_API_URL}/users/update`, userDataUpdate);
+      axios.patch(
+        `${import.meta.env.VITE_API_URL}/users/update`,
+        userDataUpdate
+      );
       addToCheckout(true);
     } else {
       addToCheckout(true);
@@ -108,10 +110,11 @@ const MenuDetail = () => {
             {menuDetail.name}
           </p>
           <p className="mb-4">
-            Category:
+            Category:{" "}
             <span className="capitalize ml-2 text-green">
-              {menuDetail.category}
-            </span>{" "}
+              {" "}
+              {menuDetail.category}{" "}
+            </span>
           </p>
           <p className="text-2xl text-green font-bold my-6">
             {" "}
@@ -123,7 +126,7 @@ const MenuDetail = () => {
               <Radio.Group>
                 {menuDetail.size.map((availableSize, index) => (
                   <Radio.Button
-                    key={index}
+                    key={availableSize}
                     value={availableSize}
                     onChange={sizeHandler}
                     className="h-[80px]"
@@ -171,18 +174,30 @@ const MenuDetail = () => {
             <></>
           )}
           <div className="flex flex-row md:gap-12 gap-4">
-            <button
-              onClick={() => addToCheckout(false)}
-              className="btn bg-green text-white w-[150px]"
-            >
-              Add to Cart{" "}
-            </button>
-            <button
-              className="btn bg-green text-white w-[150px]"
-              onClick={buyNowHandler}
-            >
-              Buy Now
-            </button>
+            {user ? (
+              <button
+                onClick={() => addToCheckout(false)}
+                className="btn bg-green text-white w-[150px]"
+              >
+                Add to Cart
+              </button>
+            ) : (
+              <DisabledPopover>
+                <button className="btn opacity-50">Add to Cart</button>
+              </DisabledPopover>
+            )}
+            {user ? (
+              <button
+                className="btn bg-green text-white w-[150px]"
+                onClick={buyNowHandler}
+              >
+                Buy Now
+              </button>
+            ) : (
+              <DisabledPopover>
+                <button className="btn opacity-50">Buy Now</button>
+              </DisabledPopover>
+            )}
             <Modal
               className="mt-48 w-1/4"
               title="Mobile Number"

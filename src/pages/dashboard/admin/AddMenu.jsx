@@ -3,7 +3,7 @@ import { FaUtensils } from "react-icons/fa";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
-import { Checkbox, Tag } from "antd";
+import { Checkbox, Col, Row, Tag } from "antd";
 import { useState } from "react";
 import Tags from "../../../components/Tags";
 const AddMenu = () => {
@@ -11,18 +11,20 @@ const AddMenu = () => {
   const axiosPublic = useAxiosPublic();
   const axiosSecure = useAxiosSecure();
   const [size, setSize] = useState([]);
+  const [sizeValue, setSizeValue] = useState([]);
   const [toppings, setToppings] = useState([]);
-  const [inputVisible, setInputVisible] = useState(false);
+
   // image hosting keys
   const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
   const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
   const SizeHandler = (e) => {
     setSize(e);
+    setSizeValue([...sizeValue.filter((item) => e.includes(item.label))])
   };
 
   // on submit form
   const onSubmit = async (data) => {
-    // console.log(data);
+
     // image upload to imgbb and then get an url
     const imageFile = { image: data.image[0] };
     const hostingImg = await axiosPublic.post(image_hosting_api, imageFile, {
@@ -31,19 +33,18 @@ const AddMenu = () => {
       },
     });
 
-    // console.log(hostingImg.data);
-
     if (hostingImg.data.success) {
       // now send the menu item data to the server with the image url
       const menuItem = {
         name: data.name,
         category: data.category,
-        price: parseFloat(data.price),
+        price: sizeValue.length === 0 ? parseFloat(data.price) : 0,
         recipe: data.recipe,
         image: hostingImg.data.data.display_url,
-        size: size,
+        size: sizeValue,
         toppings: toppings,
       };
+
       const menuRes = await axiosSecure.post("/menu", menuItem);
       if (menuRes.status === 200) {
         // show success popup
@@ -51,7 +52,7 @@ const AddMenu = () => {
         setSize("");
         setToppings([]);
         Swal.fire({
-          position: "top-end",
+          position: "top-center",
           icon: "success",
           title: `${data.name} is added to the menu.`,
           showConfirmButton: false,
@@ -59,6 +60,10 @@ const AddMenu = () => {
         });
       }
     }
+  };
+
+  const SizeValueChangeHandler = (label, value) => {
+    setSizeValue([...sizeValue.filter((item) => item.label !== label), { "label": label, "price": parseInt(value) }])
   };
 
   return (
@@ -114,13 +119,13 @@ const AddMenu = () => {
               <label className="label">
                 <span className="label-text">
                   Price
-                  <span className="ml-1 text-xl text-[#f06548]">*</span>
+                  <span className="ml-1 text-xl text-[#f06548]">{size?.length === 0 ? <span>*</span> : <></>}</span>
                 </span>
               </label>
               <input
                 type="number"
                 placeholder="Price"
-                {...register("price", { required: true })}
+                {...register("price", { required: size?.length === 0 })}
                 className="input input-bordered w-full"
               />
             </div>
@@ -128,13 +133,35 @@ const AddMenu = () => {
           <div className="mb-4">
             <p className="mb-2">
               Size
-              <span className="ml-1 text-xl text-[#f06548]">*</span>
             </p>
             <Checkbox.Group
-              options={sizeOptions}
               onChange={SizeHandler}
               value={size}
-            />
+            >
+              <Row>
+                {sizeOptions.map((item) => {
+                  return <Col span={24} key={item.value}>
+                    <div className="flex items-center my-2">
+                      <div className="w-1/5">
+                        <Checkbox value={item.value}>{item.label}</Checkbox>
+                      </div>
+                      {size.includes(item.value) ?
+                        <div className="w-3/4">
+                          <input
+                            type="number"
+                            placeholder="Price"
+                            {...register(`${item.value}-price`, { required: true })}
+                            className="input input-bordered"
+                            onChange={(e) => SizeValueChangeHandler(item.value, e.target.value)}
+                            value={sizeValue?.find((item) => item.label === item.value)?.price}
+                          />
+                        </div>
+                        : <></>}
+                    </div>
+                  </Col>
+                })}
+              </Row>
+            </Checkbox.Group>
           </div>
           <div className="mb-4">
             <p className="mb-2">Toppings</p>

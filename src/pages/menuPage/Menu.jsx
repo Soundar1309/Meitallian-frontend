@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Cards from "../../components/Cards";
-import { FaFilter } from "react-icons/fa";
-import { useTheme } from "../../hooks/ThemeContext";
 
 const Menu = () => {
   const [menu, setMenu] = useState([]);
@@ -27,8 +25,6 @@ const Menu = () => {
     fetchData();
   }, []);
 
-  // console.log(menu)
-
   const filterItems = (category) => {
     const filtered =
       category === "all"
@@ -43,7 +39,7 @@ const Menu = () => {
   const showAll = () => {
     setFilteredItems(menu);
     setSelectedCategory("all");
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleSortChange = (option) => {
@@ -74,7 +70,7 @@ const Menu = () => {
     setCurrentPage(1);
   };
 
-//   console.log(filteredItems);
+  //   console.log(filteredItems);
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -108,8 +104,8 @@ const Menu = () => {
       {/* menu shop  */}
       <div className="section-container">
         <div className="flex flex-col md:flex-row flex-wrap md:justify-between items-center space-y-3 mb-8">
-          
-           {/* all category buttons */}
+
+          {/* all category buttons */}
           <div className="flex flex-row justify-start md:items-center md:gap-8 gap-4  flex-wrap">
             <button
               onClick={showAll}
@@ -149,7 +145,7 @@ const Menu = () => {
             </button>
           </div>
 
-            {/* filter options */}
+          {/* filter options */}
           {/* <div className="flex justify-end mb-4 rounded-sm">
             <div className="bg-black p-2 ">
               <FaFilter className="text-white h-4 w-4" />
@@ -170,22 +166,21 @@ const Menu = () => {
         </div>
 
         {/* product card */}
-        <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 ">
+        <div className="grid  xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 ">
           {currentItems.map((item, index) => (
-            <Cards key={index} item={item} />
+            <Cards key={item.name} item={item} />
           ))}
         </div>
       </div>
 
-       {/* Pagination */}
-       <div className="flex justify-center my-8 flex-wrap gap-2">
+      {/* Pagination */}
+      <div className="flex justify-center my-8 flex-wrap gap-2">
         {Array.from({ length: Math.ceil(filteredItems.length / itemsPerPage) }).map((_, index) => (
           <button
             key={index + 1}
             onClick={() => paginate(index + 1)}
-            className={`mx-1 px-3 py-1 rounded-full ${
-              currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
-            } `}
+            className={`mx-1 px-3 py-1 rounded-full ${currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
+              } `}
           >
             {index + 1}
           </button>

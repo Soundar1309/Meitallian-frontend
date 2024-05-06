@@ -115,3 +115,18 @@ input[type="number"] {
 .ant-tag-checkable-checked {
   background-color: #39db4a;
 }
+
+.card-title {
+  height: 4rem;
+}
+
+.card-image,
+.card-image:hover {
+  border-top-left-radius: var(--rounded-box, 1rem);
+  border-top-right-radius: var(--rounded-box, 1rem);
+}
+
+.ant-popover-content .ant-popover-title {
+  min-width: auto;
+  margin: 0px;
+}

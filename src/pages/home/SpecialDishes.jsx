@@ -38,16 +38,6 @@ const SpecialDishes = () => {
   const [recipes, setRecipes] = useState([]);
   const slider = React.useRef(null);
 
-  // useEffect(() => {
-  //   fetch("/menu.json")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       const specials = data.filter((item) => item.category === "popular");
-  //       // console.log(specials)
-  //       setRecipes(specials);
-  //     });
-  // }, []);
-
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/menu`).then((res) => {
       const menuList = res.data;
