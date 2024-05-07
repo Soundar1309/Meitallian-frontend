@@ -105,12 +105,12 @@ const AddMenu = () => {
                 <option disabled value="default">
                   Select a category
                 </option>
-                <option value="salad">Salad</option>
-                <option value="pizza">Pizza</option>
-                <option value="soup">Soup</option>
-                <option value="dessert">Dessert</option>
-                <option value="drinks">Drinks</option>
-                <option value="popular">popular</option>
+                <option value="pizza">PIZZA</option>
+                <option value="pasta">PASTA</option>
+                <option value="burgers">BURGERS</option>
+                <option value="sandwich">SANDWICH</option>
+                <option value="dessert">DESSERTS</option>
+                <option value="popular">Popular</option>
               </select>
             </div>
 
