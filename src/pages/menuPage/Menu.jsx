@@ -78,11 +78,12 @@ const Menu = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-
   return (
     <div>
       {/* menu banner */}
-      <div className={`max-w-screen-2xl container mx-auto xl:px-24 px-4 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%`}>
+      <div
+        className={`max-w-screen-2xl container mx-auto xl:px-24 px-4 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%`}
+      >
         <div className="py-48 flex flex-col items-center justify-center">
           {/* content */}
           <div className=" text-center px-4 space-y-7">
@@ -104,7 +105,6 @@ const Menu = () => {
       {/* menu shop  */}
       <div className="section-container">
         <div className="flex flex-col md:flex-row flex-wrap md:justify-between items-center space-y-3 mb-8">
-
           {/* all category buttons */}
           <div className="flex flex-row justify-start md:items-center md:gap-8 gap-4  flex-wrap">
             <button
@@ -164,9 +164,8 @@ const Menu = () => {
             </select>
           </div> */}
         </div>
-
         {/* product card */}
-        <div className="grid  xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 ">
+        <div className="grid  xl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 ">
           {currentItems.map((item, index) => (
             <Cards key={item.name} item={item} />
           ))}
@@ -175,12 +174,15 @@ const Menu = () => {
 
       {/* Pagination */}
       <div className="flex justify-center my-8 flex-wrap gap-2">
-        {Array.from({ length: Math.ceil(filteredItems.length / itemsPerPage) }).map((_, index) => (
+        {Array.from({
+          length: Math.ceil(filteredItems.length / itemsPerPage),
+        }).map((_, index) => (
           <button
             key={index + 1}
             onClick={() => paginate(index + 1)}
-            className={`mx-1 px-3 py-1 rounded-full ${currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
-              } `}
+            className={`mx-1 px-3 py-1 rounded-full ${
+              currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
+            } `}
           >
             {index + 1}
           </button>
