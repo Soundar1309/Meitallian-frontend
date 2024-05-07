@@ -10,7 +10,7 @@ const MenuDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [menuDetail, setMenuDetail] = useState([]);
-  const [size, setSize] = useState([]);
+  const [size, setSize] = useState('');
   const [toppings, setToppings] = useState([]);
 
   const [mobileNumber, setMobileNumber] = useState("");
@@ -18,10 +18,9 @@ const MenuDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState({ error: null, message: "" });
   const { user } = useAuth();
-  const email = user.email;
 
   const addToCheckout = (shouldNavigate) => {
-    const email = user.email;
+    const email = user?.email;
     const cartItem = {
       ...menuDetail,
       size: size,
@@ -29,6 +28,9 @@ const MenuDetail = () => {
       email: email,
       quantity: count,
       menuItemId: menuDetail._id,
+      price: size
+        ? menuDetail.size.find((item) => item.label === size)?.price
+        : menuDetail.price,
     };
     delete cartItem._id;
     axios
@@ -42,17 +44,20 @@ const MenuDetail = () => {
   };
 
   const buyNowHandler = async () => {
-    const user = await axios.get(`http://localhost:5000/users/${email}`);
-    if (!user.data.mobileNumber) {
-      setIsModalOpen(true);
-      const userDataUpdate = { mobileNumber, email };
-      axios.patch(
-        `${import.meta.env.VITE_API_URL}/users/update`,
-        userDataUpdate
-      );
-      addToCheckout(true);
-    } else {
-      addToCheckout(true);
+    const email = user?.email || "";
+    if (email) {
+      const user = await axios.get(`http://localhost:5000/users/${email}`);
+      if (!user.data.mobileNumber) {
+        setIsModalOpen(true);
+        const userDataUpdate = { mobileNumber, email };
+        axios.patch(
+          `${import.meta.env.VITE_API_URL}/users/update`,
+          userDataUpdate
+        );
+        addToCheckout(true);
+      } else {
+        addToCheckout(true);
+      }
     }
   };
 
@@ -116,22 +121,27 @@ const MenuDetail = () => {
               {menuDetail.category}{" "}
             </span>
           </p>
-          <p className="text-2xl text-green font-bold my-6">
-            {" "}
-            Rs. {menuDetail.price}
-          </p>
+          {menuDetail.price ? (
+            <p className="text-2xl text-green font-bold my-6">
+              {" "}
+              Rs. {menuDetail.price}
+            </p>
+          ) : <></>}
+          {menuDetail.size && menuDetail.size.length > 0 ? (
+            <SizePrice size={size} menuDetail={menuDetail} />
+          ) : <></>}
           {menuDetail.size && menuDetail.size.length > 0 ? (
             <div className="mb-4 flex flex-row gap-8 items-center">
               <p className="mb-2">Size :</p>
               <Radio.Group>
                 {menuDetail.size.map((availableSize, index) => (
                   <Radio.Button
-                    key={availableSize}
-                    value={availableSize}
+                    key={availableSize.label}
+                    value={availableSize.label}
                     onChange={sizeHandler}
                     className="h-[80px]"
                   >
-                    {availableSize}
+                    {availableSize.label}
                   </Radio.Button>
                 ))}
               </Radio.Group>
@@ -220,3 +230,16 @@ const MenuDetail = () => {
   );
 };
 export default MenuDetail;
+
+
+
+const SizePrice = ({ size, menuDetail }) => {
+  if (size) {
+    return <p className="text-2xl text-green font-bold my-6">
+      Rs. {menuDetail.size.find((item) => item.label === size)?.price}
+    </p>
+  }
+  return <p className="text-2xl text-green font-bold my-6">
+    Starts at. {menuDetail.size[0]?.price}
+  </p>
+}

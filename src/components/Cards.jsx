@@ -10,14 +10,13 @@ import DisabledPopover from "./DisablePopover";
 import useAuth from "../hooks/useAuth";
 
 const Cards = ({ item }) => {
-  const { name, image, price, recipe, _id } = item;
+  const { name, image, price, _id } = item;
 
-  // const { user } = useContext(AuthContext);
   const { user } = useAuth();
   const [cart, refetch] = useCart();
   const [menuDetail, setMenuDetail] = useState([]);
   const [mobileNumber, setMobileNumber] = useState("");
-  const [size, setSize] = useState([]);
+  const [size, setSize] = useState("");
   const [toppings, setToppings] = useState([]);
   const [count, setCount] = useState(1);
   const [isMobileNoModalOpen, setIsMobileNoModalOpen] = useState(false);
