@@ -106,7 +106,7 @@ const MenuDetail = () => {
           <img
             src={menuDetail.image}
             alt=""
-            className="w-full h-[480px] rounded-xl object-cover"
+            className="w-full sm:h-[300px] md:w-full md:h-[480px] rounded-xl object-cover"
           />
         </div>
         <div className="md:w-1/2 w-full">
@@ -116,13 +116,13 @@ const MenuDetail = () => {
           </p>
           <p className="mb-4">
             Category:{" "}
-            <span className="capitalize ml-2 text-green">
+            <span className="capitalize ml-2 text-darkgreen">
               {" "}
               {menuDetail.category}{" "}
             </span>
           </p>
           {menuDetail.price ? (
-            <p className="text-2xl text-green font-bold my-6">
+            <p className="text-2xl text-darkgreen font-bold my-6">
               {" "}
               Rs. {menuDetail.price}
             </p>
@@ -187,7 +187,7 @@ const MenuDetail = () => {
             {user ? (
               <button
                 onClick={() => addToCheckout(false)}
-                className="btn bg-green text-white w-[150px]"
+                className="btn bg-white text-dark hover:bg-green hover:text-white w-[150px]"
               >
                 Add to Cart
               </button>
@@ -198,7 +198,7 @@ const MenuDetail = () => {
             )}
             {user ? (
               <button
-                className="btn bg-green text-white w-[150px]"
+                className="btn bg-darkgreen text-white w-[150px]"
                 onClick={buyNowHandler}
               >
                 Buy Now
@@ -225,7 +225,8 @@ const MenuDetail = () => {
           </div>
         </div>
       </div>
-      <p className="my-8 w-full "> {menuDetail.recipe}</p>
+      <h4 className="mt-7 font-bold text-lg">Description</h4>
+      <p className="my-6 w-full "> {menuDetail.recipe}</p>
     </div>
   );
 };

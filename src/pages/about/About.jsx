@@ -7,7 +7,6 @@ import Aboutceo from '../../components/Aboutceo'
 const About = () => {
   return (
     <div>
-        <Navbar/>
         <Aboutus/>
         <Aboutceo/>
         <Testimonials/>

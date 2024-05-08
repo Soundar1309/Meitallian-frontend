@@ -75,7 +75,7 @@ const Modal = () => {
             method="dialog"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h3 className="font-bold text-lg text-center">Welcome back</h3>
+            <h3 className="font-bold text-xl text-black text-center">Welcome back</h3>
 
             <div className="text-center space-x-3 mt-5">
               <button
@@ -110,14 +110,14 @@ const Modal = () => {
                 className="input input-bordered"
                 {...register("password", { required: true })}
               />
-              <label className="label">
+              {/* <label className="label">
                 <a
                   href="/404"
                   className="text-md label-text-alt link link-hover mt-2"
                 >
                   Forgot password?
                 </a>
-              </label>
+              </label> */}
             </div>
 
             {/* show errors */}
@@ -147,8 +147,8 @@ const Modal = () => {
               ✕
             </div>
 
-            <p className="text-center my-2">
-              Donot have an account?
+            <p className="text-center my-2 text-black">
+              Don't have an account?
               <Link to="/signup" className="underline text-red ml-1">
                 Signup Now
               </Link>
