@@ -17,7 +17,7 @@ const PrivateRouteAdmin = ({ children }) => {
     return <>{children}</>;
   }
 
-  return <Navigate to="/dashboard" state={{ from: location }} replace />;
+  return <Navigate to="/#/dashboard" state={{ from: location }} replace />;
 };
 
 export default PrivateRouteAdmin;

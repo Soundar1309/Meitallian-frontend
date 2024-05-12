@@ -17,7 +17,7 @@ const Banner = () => {
             <div className="bg-white px-2 py-2 rounded-2xl flex items-center gap-3 shadow-sm w-64">
               <img src="/images/home/b-food1.jpg" alt=""  className="rounded-2xl object-cover w-[6.5rem] h-[6.4rem]"/>
               <div className="space-y-1">
-                <a href="/menu"><h5>Pizza Rustica</h5></a>
+                <a href="/#/menu"><h5>Pizza Rustica</h5></a>
                 <div className="rating rating-sm">
               
                 <input
@@ -67,7 +67,7 @@ const Banner = () => {
             <div className="bg-white px-3 py-2 rounded-2xl md:flex items-center gap-3 shadow-sm w-64 hidden">
               <img src="/images/home/b-food2.jpg" alt=""  className="rounded-2xl object-cover w-[6.5rem] h-[6.4rem]"/>
               <div className="space-y-1">
-                <a href="/menu"><h5>Spicy Arrabiata  </h5></a>
+                <a href="/#/menu"><h5>Spicy Arrabiata  </h5></a>
                 <div className="rating rating-sm disabled">
                 <input
                     type="radio"
@@ -126,7 +126,7 @@ const Banner = () => {
           Indulge in the savory delights of Italian cuisine, where each dish is a celebration of tradition and taste. From handmade pasta to tantalizing sauces, experience the artistry of Italy's culinary heritage. Buon appetito!
           </p>
           <button className="bg-green font-semibold btn text-white px-8 py-3 rounded-full">
-            <a href="/menu">Order Now</a>
+            <a href="/#/menu">Order Now</a>
           </button>
         </div>
         

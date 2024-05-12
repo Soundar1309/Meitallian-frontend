@@ -7,7 +7,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOption, setSortOption] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8); // Number of items to display per page
+  const [itemsPerPage] = useState(9); // Number of items to display per page
 
   useEffect(() => {
     // Fetch data from the backend
@@ -106,7 +106,7 @@ const Menu = () => {
       <div className="section-container">
         <div className="flex flex-col md:flex-row flex-wrap md:justify-between items-center space-y-3 mb-8">
           {/* all category buttons */}
-          <div className="mt-9 flex flex-row justify-start md:items-center md:gap-8 gap-4  flex-wrap">
+          <div className="mt-9 flex flex-row justify-start md:items-center md:gap-6 gap-3 flex-wrap">
             <button
               onClick={showAll}
               className={selectedCategory === "all" ? "active" : ""}
