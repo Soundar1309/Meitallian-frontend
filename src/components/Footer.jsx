@@ -26,7 +26,7 @@ const Footer = () => {
         <div>
           <header className="footer-title">Contact Us</header>
           <a href="mailto:" className="link link-hover">meitalian@gmail.com</a>
-          <a href="tel:+" className="link link-hover">+91 9876543210</a>
+          <a href="tel:+">+91 8925351188</a>
         </div>
       </footer>
       <hr />

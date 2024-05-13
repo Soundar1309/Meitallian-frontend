@@ -6,20 +6,19 @@ const Contact = () => {
       <section className=" w-full mx-auto relative z-10 overflow-hidden bg-white py-20 dark:bg-dark lg:py-[120px]">
         <div className="container">
           <div className="flex flex-wrap lg:justify-between">
-            <div className="w-full ml-12 px-3 lg:w-1/2 xl:w-6/12">
-              <div className="mb-12 max-w-[570px] lg:mb-0">
-                <span className="mb-4 text-[32px] block  font-semibold text-black">
+            <div className="w-full px-3 lg:w-1/2 xl:w-6/12">
+              <div className="mb-12 md:ml-8 lg:ml-8 max-w-[570px] lg:mb-0 sm:w-full">
+                <span className="mb-4 text-[32px] block font-semibold sm:w-full sm:text-center text-black md:mx-0 lg:mx-0 md:text-justify lg:text-justify">
                   Contact Us
                 </span>
-                <h2 className="mb-6 text-[14px] font-bold text-dark sm:text-[25px] lg:text-[20px] xl:text-[20px]">
+                <h2 className="mb-4 text-[18px] font-bold text-dark sm:text-[30px] sm:text-center lg:text-[20px] xl:text-[20px] md:mx-0 lg:mx-0 md:text-justify lg:text-justify">
                   GET IN TOUCH
                 </h2>
-                <p className="mb-9 text-base leading-relaxed text-body-color dark:text-dark-6">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eius tempor incididunt ut labore e dolore magna aliqua. Ut
-                  enim adiqua minim veniam quis nostrud exercitation ullamco
+                <h4 className="mb-4 text-[20px] font-bold text-darkgreen sm:text-[30px] sm:text-center lg:text-[18px] xl:text-[18px] md:mx-0 lg:mx-0 md:text-justify lg:text-justify">Located in south Chennai </h4>
+                <p className="mb-9 text-base leading-relaxed text-body-color text-justify dark:text-dark-6 sm:w-full sm:mx-14 md:mx-0 lg:mx-0 md:text-justify lg:text-justify">
+                Our strategically chosen location in South Chennai reflects our commitment to becoming an integral part of the local community. South Chennai is known for its vibrant culture, diverse population, and thriving food scene. It is in this dynamic environment that <b>ME ITALIAN</b> finds its home, ready to serve the discerning palates of the region.
                 </p>
-                <div className="mb-8 flex w-full max-w-[370px]">
+                <div className="mb-8 flex w-full md:mx-0 lg:mx-0 sm:mx-28 max-w-[370px]">
                   <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-darkgreen/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                     <svg
                       width="32"
@@ -44,7 +43,7 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="mb-8 flex w-full max-w-[370px]">
+                <div className="mb-8 md:mx-0 lg:mx-0 sm:mx-28 flex w-full max-w-[370px]">
                   <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-darkgreen/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                     <svg
                       width="32"
@@ -79,12 +78,12 @@ const Contact = () => {
                       Phone Number
                     </h4>
                     <p className="text-base text-body-color dark:text-dark-6">
-                      (+62)81 414 257 9980
+                    <a href="tel:+">+91 8925351188</a>
                     </p>
                   </div>
                 </div>
 
-                <div className="mb-8 flex w-full max-w-[370px]">
+                <div className="mb-8 md:mx-0 lg:mx-0 sm:mx-28 sm:mt-4 flex w-full max-w-[370px]">
                   <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-darkgreen/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                     <svg
                       width="32"
@@ -110,8 +109,8 @@ const Contact = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full mr-14 px-3 lg:w-1/2 xl:w-5/12">
-              <div className="relative rounded-lg bg-white p-8 shadow-lg dark:bg-dark-2 sm:p-12">
+            <div className="w-full mx-2 px-3 lg:w-1/2 xl:w-5/12">
+              <div className=" relative rounded-lg bg-white p-6 shadow-lg dark:bg-dark-2">
                 <form>
                   <ContactInputBox
                     type="text"

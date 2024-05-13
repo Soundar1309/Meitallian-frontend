@@ -119,8 +119,8 @@ const Banner = () => {
 
         {/* texts */}
         <div className="md:w-1/2 px-4 space-y-7">
-        <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
-            Dive into Delights Of Delectable <span className="text-green">Food</span>
+        <h2 className="md:text-4xl sm:text-lg text-lg font-bold md:leading-snug leading-snug">
+        Dive into the delights of authentic <span className="text-green">Italian cuisine</span>
           </h2>
           <p className="text-[#4A4A4A] text-xl">
           Indulge in the savory delights of Italian cuisine, where each dish is a celebration of tradition and taste. From handmade pasta to tantalizing sauces, experience the artistry of Italy's culinary heritage. Buon appetito!
