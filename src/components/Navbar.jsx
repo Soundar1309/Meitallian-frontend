@@ -7,10 +7,15 @@ import Profile from "./Profile";
 import { Link } from "react-router-dom";
 import useCart from "../hooks/useCart";
 import { useTheme } from "../hooks/ThemeContext";
-
+import { Menu } from "antd";
+import {
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 const Navbar = () => {
   const [isSticky, setSticky] = useState(false);
-  const {user, loading} = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const [cart, refetch] = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -38,19 +43,13 @@ const Navbar = () => {
   const navItems = (
     <>
       <li>
-        <a href="/">
-          Home
-        </a>
+        <a href="/">Home</a>
       </li>
       <li>
-      <a href="/menu">
-          Menu
-        </a>
+        <a href="/menu">Menu</a>
       </li>
       <li>
-      <a href="/about">
-          About Us
-        </a>
+        <a href="/about">About Us</a>
       </li>
       <li>
         <a href="/contact">Contact us</a>
@@ -70,7 +69,11 @@ const Navbar = () => {
       >
         <div className="navbar-start ">
           <div className="dropdown justify-between">
-            <label onClick={toggleMenu} tabIndex={0} className="btn btn-ghost lg:hidden" >
+            <label
+              onClick={toggleMenu}
+              tabIndex={0}
+              className="btn btn-ghost lg:hidden"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -87,74 +90,92 @@ const Navbar = () => {
               </svg>
             </label>
             <ul
-              tabIndex={0}
-              className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-64 space-y-3`}
+              className={`hamburger-menu menu menu-sm dropdown-content  mt-3 z-[1] shadow bg-base-100 space-y-3 `}
               style={{ display: isMenuOpen ? "block" : "none" }}
             >
-              {navItems}
+              <div className="menu-container">
+                <Menu
+                  mode="vertical"
+                  items={items}
+                  className="responsive-menu"
+                />
+                <div className="w-full flex items-center justify-center">
+                  <Link
+                    to="/menu"
+                    type="button"
+                    className="bg-darkgreen font-semibold btn text-white my-6 order_now_btn text-md md:text-lg py-2"
+                  >
+                    Order Online
+                  </Link>
+                </div>
+              </div>
             </ul>
           </div>
-          <a href="/">
+          <a href="/" className="lg:block hidden">
             <img src={logo} className="w-44" />
           </a>
         </div>
+        <a href="/" className="lg:hidden block">
+          <img src={logo} className="w-44" />
+        </a>
         <div className="navbar-center hidden lg:flex">
-          <ul className="text-white hover:text-dark menu menu-horizontal px-1">{navItems}</ul>
+          <ul className="text-white hover:text-dark menu menu-horizontal px-1">
+            {navItems}
+          </ul>
         </div>
         <div className="navbar-end ">
-          {/* <button className="btn btn-ghost btn-circle hidden lg:flex">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <Link to="/cartpage">
+            <label
+              tabIndex={0}
+              className="btn btn-ghost btn-circle md:flex items-center justify-center mr-3 hidden"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button> */}
-         
-         {/* shopping cart */}
-         <Link to="/cartpage">
-         <label
-            tabIndex={0}
-            className="btn btn-ghost btn-circle lg:flex items-center justify-center mr-3"
-          >
-            <div className="indicator">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <span className="badge badge-sm indicator-item">{cart.length || 0}</span>
-            </div>
-          </label>
-         </Link>
+              <div className="indicator">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="white"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <span className="badge badge-sm indicator-item">
+                  {cart.length || 0}
+                </span>
+              </div>
+            </label>
+          </Link>
 
           {/* login button */}
 
-          { 
-            user ? <>
-           <Profile user={user}/>
-          </> : <button onClick={()=>document.getElementById('my_modal_5').showModal()} className="btn flex items-center gap-2 rounded-full px-6 bg-white text-dark">
-            <FaRegUser /> Login
-          </button>
-          }
-          <Modal/>
+          {user ? (
+            <>
+              <Profile user={user} />
+            </>
+          ) : (
+            <div>
+              <button
+                onClick={() =>
+                  document.getElementById("my_modal_5").showModal()
+                }
+                className="btn md:flex items-center gap-2 rounded-full px-6 bg-white text-dark hidden"
+              >
+                <FaRegUser /> Login
+              </button>
+              <FaRegUser
+                className="flex md:hidden text-[#fff] mr-4"
+                onClick={() =>
+                  document.getElementById("my_modal_5").showModal()
+                }
+              />
+            </div>
+          )}
+          <Modal />
         </div>
       </div>
     </header>
@@ -162,3 +183,59 @@ const Navbar = () => {
 };
 
 export default Navbar;
+// const navItems = (
+//   <>
+//     <li></li>
+//     <li>
+//       <a href="/menu">Menu</a>
+//     </li>
+//     <li>
+//       <a href="/about">About Us</a>
+//     </li>
+//     <li>
+//       <a href="/contact">Contact us</a>
+//     </li>
+//   </>
+// );
+const items = [
+  {
+    key: "sub1",
+    label: (
+      <a href="/" className="text-md md:text-lg">
+        Home
+      </a>
+    ),
+    children: [],
+    className: "border-b-2 border-dashed",
+  },
+  {
+    key: "sub2",
+    label: (
+      <a href="/menu" className="text-md md:text-lg">
+        Menu
+      </a>
+    ),
+    children: [],
+    className: "border-b-2 border-dashed",
+  },
+  {
+    key: "sub3",
+    label: (
+      <a href="/about" className="text-md md:text-lg">
+        About Us
+      </a>
+    ),
+    children: [],
+    className: "border-b-2 border-dashed",
+  },
+  {
+    key: "sub4",
+    label: (
+      <a href="/contact" className="text-md md:text-lg">
+        Contact us
+      </a>
+    ),
+    children: [],
+    className: "",
+  },
+];

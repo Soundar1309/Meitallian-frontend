@@ -9,7 +9,6 @@ import { useTheme } from "../hooks/ThemeContext";
 
 const Main = () => {
   const { loading } = useContext(AuthContext);
-
   return (
     <div className="bg-primaryBG">
       {loading ? (
@@ -17,8 +16,7 @@ const Main = () => {
       ) : (
         <div className="relative">
           <Navbar />
-          <div className="fixed top-14 lg:top-0  right-0 p-5 themediv">
-          </div>
+          <div className="fixed top-14 lg:top-0  right-0 p-5 themediv"></div>
           <div className="min-h-screen">
             <Outlet />
           </div>
