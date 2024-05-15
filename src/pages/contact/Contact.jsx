@@ -5,7 +5,6 @@ import Navbar from '../../components/Navbar'
 const contact = () => {
   return (
     <div>
-        <Navbar/>
         <Contact/>
     </div>
   )

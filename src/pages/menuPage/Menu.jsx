@@ -7,7 +7,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOption, setSortOption] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8); // Number of items to display per page
+  const [itemsPerPage] = useState(9); // Number of items to display per page
 
   useEffect(() => {
     // Fetch data from the backend
@@ -88,12 +88,10 @@ const Menu = () => {
           {/* content */}
           <div className=" text-center px-4 space-y-7">
             <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
-              For the Love of Delicious <span className="text-green">Food</span>
+            For the love of <span className="text-green">Italian cuisine</span>
             </h2>
             <p className="text-[#4A4A4A]  text-xl md:w-4/5 mx-auto">
-              Come with family & feel the joy of mouthwatering food such as
-              Greek Salad, Lasagne, Butternut Pumpkin, Tokusen Wagyu, Olivas
-              Rellenas and more for a moderate cost
+            Treat your loved one to a delicious Italian savor! Choose from our one-of-a-kind selection of thin-crust pizzas, mouthwatering pastas, delicious lasagnas, and other delightful creations.
             </p>
             <button className="bg-green font-semibold btn text-white px-8 py-3 rounded-full">
               Order Now
@@ -106,7 +104,7 @@ const Menu = () => {
       <div className="section-container">
         <div className="flex flex-col md:flex-row flex-wrap md:justify-between items-center space-y-3 mb-8">
           {/* all category buttons */}
-          <div className="flex flex-row justify-start md:items-center md:gap-8 gap-4  flex-wrap">
+          <div className="mt-9 flex flex-row justify-start md:items-center md:gap-6 gap-3 flex-wrap">
             <button
               onClick={showAll}
               className={selectedCategory === "all" ? "active" : ""}

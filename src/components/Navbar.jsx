@@ -50,9 +50,18 @@ const Navbar = () => {
       </li>
       <li>
         <a href="/about">About Us</a>
+   
+      <a href="/#/menu">
+          Menu
+        </a>
       </li>
       <li>
-        <a href="/contact">Contact us</a>
+      <a href="/#/about">
+          About Us
+        </a>
+      </li>
+      <li>
+        <a href="/#/contact">Contact us</a>
       </li>
     </>
   );

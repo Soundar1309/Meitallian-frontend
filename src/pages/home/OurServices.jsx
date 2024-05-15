@@ -1,10 +1,10 @@
 import React from "react";
 
 const serviceLists = [
-    {id:1, title: "Catering", des: "Delight your guests with our flavors and  presentation", img: "/images/home/services/icon1.png"},
-    {id:2, title: "Fast delivery", des: "We deliver your order promptly to your door", img: "/images/home/services/icon2.png"},
-    {id:3, title: "Online Ordering", des: "Explore menu & order with ease using our Online Ordering n", img: "/images/home/services/icon3.png"},
-    {id:4, title: "Gift Cards", des: "Give the gift of exceptional dining with Foodi Gift Cards", img: "/images/home/services/icon4.png"},
+    {id:1, title: "Dine-In Experience", des: "Experience authentic Italian cuisine and warm hospitality at our dine-in restaurant. Indulge in a delectable array of classic dishes straight from Italy.", img: "/images/home/services/dine-in.png"},
+    {id:2, title: "Takeaway & Delivery", des: "Can't make it to our restaurant? No problem! Enjoy the taste of Italy in the comfort of your own home with our convenient takeaway and delivery options.", img: "/images/home/services/take-away.png"},
+    {id:3, title: "Private Events", des: " Let us make your event unforgettable! From birthdays to corporate gatherings, we specialize in creating tailored menus and ambiance for any occasion.", img: "/images/home/services/party.png"},
+    {id:4, title: "Catering Services", des: "Hosting a big event? Leave the catering to us! From weddings to corporate luncheons, our skilled team crafts personalized menus to wow your guests and suit your budget.", img: "/images/home/services/catering.png"},
 ]
 
 const OurServices = () => {
@@ -16,13 +16,12 @@ const OurServices = () => {
             <p className="subtitle">Our Story & Services</p>
             <h2 className="title">Our Culinary Journey And Services</h2>
             <p className="my-5 text-secondary leading-[30px]">
-              Rooted in passion, we curate unforgettable dining experiences and
-              offer exceptional services, blending culinary artistry with warm
-              hospitality.
+                Me Italian is not just a restaurant; it's the culmination of an enduring passion for bringing authentic Italian flavors to every corner of Chennai.Born out of a love 
             </p>
+            <p className="-mt-4 mb-5 text-sm text-[#0000FF] cursor-pointer">Read more...</p>
 
             <button className="bg-green font-semibold btn text-white px-8 py-3 rounded-full">
-              Explore
+              <a href="/#/about">Explore</a>
             </button>
           </div>
         </div>
@@ -30,10 +29,10 @@ const OurServices = () => {
             <div className="grid sm:grid-cols-2 grid-cols-1 gap-8 items-center">
                 {
                     serviceLists.map((service) => (
-                        <div key={service.id} className="shadow-md rounded-sm py-5 px-4 text-center space-y-2 text-green cursor-pointer hover:border hover:border-indigo-600 transition-all duration-200">
-                            <img src={service.img} alt="" className=" mx-auto"/>
-                            <h5 className="pt-3 font-semibold"> {service.title}</h5>
-                            <p className="text-[#90BD95]">{service.des}</p>
+                        <div key={service.id} className="h-62 shadow-md rounded-sm py-5 px-4 text-center space-y-2 text-green cursor-pointer hover:border hover:border-indigo-600 transition-all duration-200">
+                            <img src={service.img} alt="" className="w-16 mx-auto"/>
+                            <h5 className="pt-3 font-bold text-lg text-darkgreen"> {service.title}</h5>
+                            <p className="text-black text-justify text-[14px]">{service.des}</p>
                         </div>
                     ))
                 }

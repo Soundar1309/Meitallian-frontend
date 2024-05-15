@@ -14,25 +14,25 @@ const Footer = () => {
         </aside>
         <div>
           <header className="footer-title text-black">Useful links</header>
-          <a href="/about" className="link link-hover">About</a>
+          <a href="/#/about" className="link link-hover">About</a>
           <a href="/" className="link link-hover">FAQ</a>
         </div>
         <div>
           <header className="footer-title">Main Menu</header>
           <a href="/" className="link link-hover">Home</a>
-          <a href="/menu" className="link link-hover">Menu</a>
-          <a href="/contact" className="link link-hover">Contact</a>
+          <a href="/#/menu" className="link link-hover">Menu</a>
+          <a href="/#/contact" className="link link-hover">Contact</a>
         </div>
         <div>
           <header className="footer-title">Contact Us</header>
           <a href="mailto:" className="link link-hover">meitalian@gmail.com</a>
-          <a href="tel:+" className="link link-hover">+91 9876543210</a>
+          <a href="tel:+">+91 8925351188</a>
         </div>
       </footer>
       <hr />
       <footer className={`footer items-center xl:px-24 px-4 py-4 mt-2`}>
         <aside className="items-center grid-flow-col">
-          <p>Copyright © 2024 - All right reserved | Developed By Codefi Corporation LLP</p>
+          <p>Copyright © 2024 - All right reserved | Developed By Codefi Corporation</p>
         </aside>
         <div className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
           <a href="/">
