@@ -5,20 +5,20 @@ import Modal from "./Modal";
 import { AuthContext } from "../contexts/AuthProvider";
 import Profile from "./Profile";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useCart from "../hooks/useCart";
-import { useTheme } from "../hooks/ThemeContext";
 import { Menu } from "antd";
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import MenuItem from "antd/es/menu/MenuItem";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+
 const Navbar = () => {
   const [isSticky, setSticky] = useState(false);
   const { user, loading } = useContext(AuthContext);
   const [cart, refetch] = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const navigate = useNavigate();
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
@@ -46,25 +46,17 @@ const Navbar = () => {
         <a href="/">Home</a>
       </li>
       <li>
-        <a href="/menu">Menu</a>
+        <a href="/#/menu">Menu</a>
       </li>
       <li>
-        <a href="/about">About Us</a>
-   
-      <a href="/#/menu">
-          Menu
-        </a>
-      </li>
-      <li>
-      <a href="/#/about">
-          About Us
-        </a>
+        <a href="/#/about">About Us</a>
       </li>
       <li>
         <a href="/#/contact">Contact us</a>
       </li>
     </>
   );
+
   return (
     <header
       className={`bg-darkgreen max-w-screen-2xl h-22 mb-6 container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out`}
@@ -103,11 +95,72 @@ const Navbar = () => {
               style={{ display: isMenuOpen ? "block" : "none" }}
             >
               <div className="menu-container">
-                <Menu
-                  mode="vertical"
-                  items={items}
-                  className="responsive-menu"
-                />
+                <Menu mode="vertical" className="responsive-menu">
+                  <MenuItem
+                    key="1"
+                    onClick={() => {
+                      navigate("/");
+                      setIsMenuOpen(false);
+                    }}
+                    className=" border-b-2 border-dashed"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <p className="text-md md:text-lg pt-2">Home</p>
+                      <FontAwesomeIcon
+                        icon={faChevronRight}
+                        className="w-3 h-3 text-md md:text-lg"
+                      />
+                    </div>
+                  </MenuItem>
+                  <MenuItem
+                    key="2"
+                    onClick={() => {
+                      navigate("menu");
+                      setIsMenuOpen(false);
+                    }}
+                    className=" border-b-2 border-dashed"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <p className="text-md md:text-lg">Menu</p>
+                      <FontAwesomeIcon
+                        icon={faChevronRight}
+                        className="w-3 h-3 text-md md:text-lg"
+                      />
+                    </div>
+                  </MenuItem>
+                  <MenuItem
+                    key="3"
+                    onClick={() => {
+                      navigate("about");
+                      setIsMenuOpen(false);
+                    }}
+                    className=" border-b-2 border-dashed"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <p className="text-md md:text-lg">About Us</p>
+                      <FontAwesomeIcon
+                        icon={faChevronRight}
+                        className="w-3 h-3 text-md md:text-lg"
+                      />
+                    </div>
+                  </MenuItem>
+                  <MenuItem
+                    key="4"
+                    onClick={() => {
+                      navigate("contact");
+                      setIsMenuOpen(false);
+                    }}
+                    className=""
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <p className="text-md md:text-lg">Contact Us</p>
+                      <FontAwesomeIcon
+                        icon={faChevronRight}
+                        className="w-3 h-3 text-md md:text-lg"
+                      />
+                    </div>
+                  </MenuItem>
+                </Menu>
                 <div className="w-full flex items-center justify-center">
                   <Link
                     to="/menu"
@@ -192,59 +245,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-// const navItems = (
-//   <>
-//     <li></li>
-//     <li>
-//       <a href="/menu">Menu</a>
-//     </li>
-//     <li>
-//       <a href="/about">About Us</a>
-//     </li>
-//     <li>
-//       <a href="/contact">Contact us</a>
-//     </li>
-//   </>
-// );
-const items = [
-  {
-    key: "sub1",
-    label: (
-      <a href="/" className="text-md md:text-lg">
-        Home
-      </a>
-    ),
-    children: [],
-    className: "border-b-2 border-dashed",
-  },
-  {
-    key: "sub2",
-    label: (
-      <a href="/menu" className="text-md md:text-lg">
-        Menu
-      </a>
-    ),
-    children: [],
-    className: "border-b-2 border-dashed",
-  },
-  {
-    key: "sub3",
-    label: (
-      <a href="/about" className="text-md md:text-lg">
-        About Us
-      </a>
-    ),
-    children: [],
-    className: "border-b-2 border-dashed",
-  },
-  {
-    key: "sub4",
-    label: (
-      <a href="/contact" className="text-md md:text-lg">
-        Contact us
-      </a>
-    ),
-    children: [],
-    className: "",
-  },
-];
