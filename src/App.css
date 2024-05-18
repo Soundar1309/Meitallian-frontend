@@ -208,23 +208,3 @@ input[type="number"] {
   background: #fff;
   width: 100%;
 }
-.menu-container {
-  .ant-menu-title-content {
-    display: flex;
-    align-content: space-between;
-  }
-  :where(.css-dev-only-do-not-override-mzwlov).ant-menu-light
-    .ant-menu-item-selected,
-  :where(.css-dev-only-do-not-override-mzwlov).ant-menu-light
-    > .ant-menu
-    .ant-menu-item-selected {
-    background-color: #fff;
-  }
-  :where(.css-dev-only-do-not-override-mzwlov).ant-menu-light
-    .ant-menu-item-selected,
-  :where(.css-dev-only-do-not-override-mzwlov).ant-menu-light
-    > .ant-menu
-    .ant-menu-item-selected {
-    color: #000;
-  }
-}
