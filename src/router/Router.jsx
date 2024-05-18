@@ -21,6 +21,8 @@ import About from "../pages/about/About";
 import Error from "../pages/404";
 import MenuDetail from "../pages/menuPage/MenuDetail";
 import PrivateRouteAdmin from "../PrivateRoute/PrivateRouteAdmin";
+import Termscondition from "../pages/terms-condition"
+import Privacypolicy from "../pages/privacy-policy"
 
 const router = createHashRouter([
   {
@@ -66,6 +68,14 @@ const router = createHashRouter([
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/terms-condition",
+        element: <Termscondition/>,
+      },
+      {
+        path: "/privacy-policy",
+        element: <Privacypolicy />,
       },
       {
         path: "/404",
