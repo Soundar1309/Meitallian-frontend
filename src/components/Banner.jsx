@@ -119,7 +119,7 @@ const Banner = () => {
 
         {/* texts */}
         <div className="md:w-1/2 px-4 space-y-7">
-        <h2 className="md:text-4xl sm:text-lg text-lg font-bold md:leading-snug leading-snug">
+        <h2 className="md:text-4xl sm:text-lg text-xl font-bold md:leading-snug leading-snug">
         Dive into the delights of authentic <span className="text-green">Italian cuisine</span>
           </h2>
           <p className="text-[#4A4A4A] text-xl">

@@ -46,7 +46,9 @@ const Navbar = () => {
         <a href="/">Home</a>
       </li>
       <li>
-        <a href="/#/menu">Menu</a>
+      <a href="/#/menu">
+          Menu
+        </a>
       </li>
       <li>
         <a href="/#/about">About Us</a>
@@ -165,7 +167,7 @@ const Navbar = () => {
                   <Link
                     to="/menu"
                     type="button"
-                    className="bg-darkgreen font-semibold btn text-white my-6 order_now_btn text-md md:text-lg py-2"
+                    className="bg-none w-[380px] font-semibold btn rounded-none text-darkgreen border-black my-6 order_now_btn text-md md:text-lg py-2"
                   >
                     Order Online
                   </Link>
@@ -244,4 +246,59 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+// const navItems = (
+//   <>
+//     <li></li>
+//     <li>
+//       <a href="/menu">Menu</a>
+//     </li>
+//     <li>
+//       <a href="/about">About Us</a>
+//     </li>
+//     <li>
+//       <a href="/contact">Contact us</a>
+//     </li>
+//   </>
+// );
+const items = [
+  {
+    key: "sub1",
+    label: (
+      <a href="/" className="text-md md:text-lg">
+        Home
+      </a>
+    ),
+    children: [],
+    className: "border-b-1 border",
+  },
+  {
+    key: "sub2",
+    label: (
+      <a href="/#/menu" className="text-md md:text-lg">
+        Menu
+      </a>
+    ),
+    children: [],
+    className: "border-b-1 border",
+  },
+  {
+    key: "sub3",
+    label: (
+      <a href="/#/about" className="text-md md:text-lg">
+        About Us
+      </a>
+    ),
+    children: [],
+    className: "border-b-1 border",
+  },
+  {
+    key: "sub4",
+    label: (
+      <a href="/#/contact" className="text-md md:text-lg">
+        Contact us
+      </a>
+    ),
+    children: [],
+    className: "",
+  },
+];
