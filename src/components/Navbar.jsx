@@ -1,21 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
-import logo from "/logo-white.png";
-import { FaRegUser } from "react-icons/fa";
-import Modal from "./Modal";
-import { AuthContext } from "../contexts/AuthProvider";
-import Profile from "./Profile";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import useCart from "../hooks/useCart";
-import { Menu } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import MenuItem from "antd/es/menu/MenuItem";
+import Modal from "./Modal";
+import Profile from "./Profile";
+
+import { FaRegUser } from "react-icons/fa";
+import useCart from "../hooks/useCart";
+
+import { Menu } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { AuthContext } from "../contexts/AuthProvider";
 
 const Navbar = () => {
-  const [isSticky, setSticky] = useState(false);
-  const { user, loading } = useContext(AuthContext);
-  const [cart, refetch] = useCart();
+  const [isSticky, setIsSticky] = useState(false);
+  const { user } = useContext(AuthContext);
+  const [cart] = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -27,9 +27,9 @@ const Navbar = () => {
     const handleScroll = () => {
       const offset = window.scrollY;
       if (offset > 0) {
-        setSticky(true);
+        setIsSticky(true);
       } else {
-        setSticky(false);
+        setIsSticky(false);
       }
     };
 
@@ -62,17 +62,15 @@ const Navbar = () => {
       className={`bg-darkgreen max-w-screen-2xl h-22 mb-6 container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out`}
     >
       <div
-        className={`navbar xl:px-24 ${
-          isSticky
-            ? "shadow-md bg-darkgreen transition-all duration-300 ease-in-out text-white"
-            : ""
-        }`}
+        className={`navbar xl:px-24 ${isSticky
+          ? "shadow-md bg-darkgreen transition-all duration-300 ease-in-out text-white"
+          : ""
+          }`}
       >
         <div className="navbar-start ">
           <div className="dropdown justify-between">
-            <label
+            <button
               onClick={toggleMenu}
-              tabIndex={0}
               className="btn btn-ghost lg:hidden"
             >
               <svg
@@ -89,7 +87,7 @@ const Navbar = () => {
                   d="M4 6h16M4 12h8m-8 6h16"
                 />
               </svg>
-            </label>
+            </button>
             <ul
               className={`hamburger-menu menu menu-sm dropdown-content  mt-3 z-[1] shadow bg-base-100 space-y-3 `}
               style={{ display: isMenuOpen ? "block" : "none" }}
@@ -174,11 +172,11 @@ const Navbar = () => {
             </ul>
           </div>
           <a href="/" className="lg:block hidden">
-            <img src={logo} className="w-44" />
+            <img src="logo-white.png" className="w-44" alt="logo" />
           </a>
         </div>
         <a href="/" className="lg:hidden block">
-          <img src={logo} className="w-44" />
+          <img src="logo-white.png" className="w-44" alt="logo" />
         </a>
         <div className="navbar-center hidden lg:flex">
           <ul className="text-white hover:text-dark menu menu-horizontal px-1">
@@ -187,8 +185,7 @@ const Navbar = () => {
         </div>
         <div className="navbar-end ">
           <Link to="/cartpage">
-            <label
-              tabIndex={0}
+            <div
               className="btn btn-ghost btn-circle md:flex items-center justify-center mr-3 hidden"
             >
               <div className="indicator">
@@ -210,15 +207,13 @@ const Navbar = () => {
                   {cart.length || 0}
                 </span>
               </div>
-            </label>
+            </div>
           </Link>
 
           {/* login button */}
 
           {user ? (
-            <>
-              <Profile user={user} />
-            </>
+            <Profile user={user} />
           ) : (
             <div>
               <button
@@ -244,20 +239,8 @@ const Navbar = () => {
   );
 };
 export default Navbar;
-// const navItems = (
-//   <>
-//     <li></li>
-//     <li>
-//       <a href="/menu">Menu</a>
-//     </li>
-//     <li>
-//       <a href="/about">About Us</a>
-//     </li>
-//     <li>
-//       <a href="/contact">Contact us</a>
-//     </li>
-//   </>
-// );
+
+
 const items = [
   {
     key: "sub1",

@@ -24,7 +24,7 @@ const MenuDetail = () => {
   const addToCheckout = async (shouldNavigate) => {
     const email = user?.email;
     if (email) {
-      const user = await axios.get(`http://localhost:5000/users/${email}`);
+      const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
       if (!user.data.mobileNumber) {
         setIsModalOpen(true);
         const userDataUpdate = { mobileNumber, email };
@@ -62,7 +62,7 @@ const MenuDetail = () => {
   const buyNowHandler = async () => {
     const email = user?.email || "";
     if (email) {
-      const user = await axios.get(`http://localhost:5000/users/${email}`);
+      const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
       if (!user.data.mobileNumber) {
         setIsModalOpen(true);
         const userDataUpdate = { mobileNumber, email };

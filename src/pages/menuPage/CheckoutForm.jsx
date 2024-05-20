@@ -4,7 +4,6 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 
-import { FaPaypal } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
 
@@ -12,11 +11,13 @@ import sandwich from "../../assets/sandwich.png";
 import AddressModal from "../../components/AddressModal";
 import useUser from "../../hooks/useUser";
 import axios from "axios";
-import Swal from "sweetalert2";
+
 import { Alert, Modal } from "antd";
+import useCart from "../../hooks/useCart";
 
 const CheckoutForm = ({ price, cart }) => {
   const stripe = useStripe();
+  const [cartData, refetch] = useCart();
   const elements = useElements();
   const [cardError, setcardError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
@@ -124,8 +125,6 @@ const CheckoutForm = ({ price, cart }) => {
 
   let deliveryCharge = totalAmount <= 2000 ? 30 : 0;
 
-  const totalAmountWithTaxAndDelivery = totalAmount + deliveryCharge;
-
   const editBasketHandler = () => {
     navigate("/cartpage");
   };
@@ -138,18 +137,10 @@ const CheckoutForm = ({ price, cart }) => {
           "Your cart is empty! Please add items to your cart before checkout.",
       });
     } else {
-      setIsModalOpen(true);
-      {
-        cart && cart.length > 0 ? (
-          cart.map((cartItem, index) => {
-            axios.delete(
-              `${import.meta.env.VITE_API_URL}/carts/${cartItem?._id}`
-            );
-          })
-        ) : (
-          <></>
-        );
-      }
+      axios.post(`${import.meta.env.VITE_API_URL}/carts/confirm?email=${user?.email}`).then((res) => {
+        refetch(); // refetch cart
+        setIsModalOpen(true);
+      });
     }
   };
   const handleConfirmOrderCancel = () => {
@@ -159,8 +150,7 @@ const CheckoutForm = ({ price, cart }) => {
     if (loggedinUser?.address) {
       const getAddressHandler = async () => {
         const selectedAddress = await axios.get(
-          `${import.meta.env.VITE_API_URL}/address/address/${
-            loggedinUser?.address
+          `${import.meta.env.VITE_API_URL}/address/address/${loggedinUser?.address
           }`
         );
         setSelectedAddress(selectedAddress.data);
