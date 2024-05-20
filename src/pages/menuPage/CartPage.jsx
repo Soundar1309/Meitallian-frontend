@@ -12,7 +12,6 @@ const CartPage = () => {
   const { user } = useContext(AuthContext);
   const [cart, refetch] = useCart();
   const [cartItems, setCartItems] = useState([]);
-  // console.log(cartItems)
 
   // Calculate the total price for each item in the cart
   const calculateTotalPrice = (item) => {

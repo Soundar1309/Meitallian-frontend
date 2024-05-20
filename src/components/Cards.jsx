@@ -62,7 +62,7 @@ const Cards = ({ item }) => {
     setToppings([]);
     setCount(1);
     const email = user.email;
-    const Loggeduser = await axios.get(`http://localhost:5000/users/${email}`);
+    const Loggeduser = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
     if (!Loggeduser.data.mobileNumber) {
       setIsMobileNoModalOpen(true);
     } else {
@@ -89,7 +89,7 @@ const Cards = ({ item }) => {
   };
   const orderOkHandler = () => {
     if (user?.email) {
-      if (size.length === 0) {
+      if (item.size.length > 0 && size.length === 0) {
         setError({ error: true, message: "Please customize your order" });
         setIsOrderModelOpen(true);
         return;
