@@ -46,9 +46,7 @@ const Navbar = () => {
         <a href="/">Home</a>
       </li>
       <li>
-      <a href="/#/menu">
-          Menu
-        </a>
+        <a href="/#/menu">Menu</a>
       </li>
       <li>
         <a href="/#/about">About Us</a>
@@ -245,7 +243,7 @@ const Navbar = () => {
     </header>
   );
 };
-
+export default Navbar;
 // const navItems = (
 //   <>
 //     <li></li>

@@ -89,11 +89,6 @@ const Cards = ({ item }) => {
   };
   const orderOkHandler = () => {
     if (user?.email) {
-      if (size.length === 0) {
-        setError({ error: true, message: "Please customize your order" });
-        setIsOrderModelOpen(true);
-        return;
-      }
       const cartItem = {
         menuItemId: _id,
         name,
@@ -154,13 +149,13 @@ const Cards = ({ item }) => {
   }, [_id]);
 
   return (
-    <div className="card shadow-xl relative mr-5 md:my-5 cursor-pointer h-[560px]">
+    <div className="card shadow-xl relative mr-5 md:my-5 cursor-pointer md:h-[580px] h-[490px]">
       <Link to={`/menu/${item._id}`}>
         <figure>
           <img
             src={item.image}
             alt="popular dish"
-            className="hover:scale-105 transition-all duration-300 md:h-72 w-full object-cover card-image"
+            className="hover:scale-105 transition-all duration-300 w-full md:h-72 h-44 object-cover card-image"
           />
         </figure>
       </Link>

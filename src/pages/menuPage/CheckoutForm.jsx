@@ -12,6 +12,8 @@ import sandwich from "../../assets/sandwich.png";
 import AddressModal from "../../components/AddressModal";
 import useUser from "../../hooks/useUser";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { Alert, Modal } from "antd";
 
 const CheckoutForm = ({ price, cart }) => {
   const stripe = useStripe();
@@ -20,7 +22,8 @@ const CheckoutForm = ({ price, cart }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState({});
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState({ error: null, message: "" });
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const [loggedinUser] = useUser();
@@ -127,22 +130,51 @@ const CheckoutForm = ({ price, cart }) => {
     navigate("/cartpage");
   };
 
+  const confirmOrderHandler = async () => {
+    if (cart.length <= 0) {
+      setError({
+        error: true,
+        message:
+          "Your cart is empty! Please add items to your cart before checkout.",
+      });
+    } else {
+      setIsModalOpen(true);
+      {
+        cart && cart.length > 0 ? (
+          cart.map((cartItem, index) => {
+            axios.delete(
+              `${import.meta.env.VITE_API_URL}/carts/${cartItem?._id}`
+            );
+          })
+        ) : (
+          <></>
+        );
+      }
+    }
+  };
+  const handleConfirmOrderCancel = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     if (loggedinUser?.address) {
       const getAddressHandler = async () => {
-        const selectedAddress = await axios.get(`${import.meta.env.VITE_API_URL}/address/address/${loggedinUser?.address}`);
+        const selectedAddress = await axios.get(
+          `${import.meta.env.VITE_API_URL}/address/address/${
+            loggedinUser?.address
+          }`
+        );
         setSelectedAddress(selectedAddress.data);
-      }
+      };
       getAddressHandler();
     }
-  }, [loggedinUser])
+  }, [loggedinUser]);
 
   return (
     <div className="flex flex-col md:flex-row justify-between max-w-6xl mx-auto md:mt-12 ">
       <div className="flex flex-col gap-10 max-w-4xl mx-auto w-full">
         <div className="md:w-3/4 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
           <div className="flex flex-col md:flex-row justify-between mb-4">
-            <p className="font-bold">Address</p>
+            <p className="font-bold text-lg">Address</p>
             <button
               className="text-green font-semibold"
               onClick={anotherAddressHandler}
@@ -156,20 +188,23 @@ const CheckoutForm = ({ price, cart }) => {
               handleOk={handleOk}
             />
           </div>
-          {selectedAddress ? <div>
-            <p>{selectedAddress.name}</p>
-            <p>{selectedAddress.locality}</p>
-            <p>{selectedAddress.address}</p>
-            <p>{selectedAddress.city}</p>
-            <p>{selectedAddress.pincode}</p>
-            <p className="py-2">{selectedAddress.landmark}</p>
-          </div>
-            : <></>
-          }
+          {selectedAddress ? (
+            <div>
+              <p>{selectedAddress.name}</p>
+              <p>{selectedAddress.locality}</p>
+              <p>{selectedAddress.address}</p>
+              <p>{selectedAddress.city}</p>
+              <p>{selectedAddress.pincode}</p>
+              <p className="py-2">{selectedAddress.landmark}</p>
+              <p>Contact Number: {loggedinUser?.mobileNumber}</p>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="md:w-3/4 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
           <div className="flex flex-col-reverse md:flex-row text-center md:justify-between ">
-            <p className="text-2xl font-bold">Food Basket</p>
+            <p className="text-lg font-bold">Food Basket</p>
             <button onClick={editBasketHandler}>
               Edit Cart <FontAwesomeIcon icon={faEdit} className="ml-2" />
             </button>
@@ -178,10 +213,7 @@ const CheckoutForm = ({ price, cart }) => {
             {cart && cart.length > 0 ? (
               cart.map((cartItem, index) => {
                 return (
-                  <div
-                    key={index}
-                    className="flex flex-col md:flex-row py-4 "
-                  >
+                  <div key={index} className="flex flex-col md:flex-row py-4 ">
                     <div className="flex flex-row gap-2 items-start">
                       <p className="mr-2">x{cartItem.quantity}</p>
                       <div className="w-[80px] h-[80px]">
@@ -197,14 +229,11 @@ const CheckoutForm = ({ price, cart }) => {
                         </p>
                         <div className="text-gray-400 text-sm">
                           {cartItem.size && cartItem.size.length > 0 ? (
-                            <p className="capitalize">
-                              size: {cartItem.size}
-                            </p>
+                            <p className="capitalize">size: {cartItem.size}</p>
                           ) : (
                             <></>
                           )}
-                          {cartItem.toppings &&
-                            cartItem.toppings.length > 0 ? (
+                          {cartItem.toppings && cartItem.toppings.length > 0 ? (
                             <p className="capitalize">
                               Toppings: {cartItem.toppings?.join(", ")}
                             </p>
@@ -228,9 +257,9 @@ const CheckoutForm = ({ price, cart }) => {
           </div>
         </div>
       </div>
-      <div className="md:w-1/2 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2">
+      <div className="md:w-1/2 w-full border card shadow-xl bg-base-100 px-4 py-8 my-2 h-[550px]">
         <div>
-          <p className="font-bold">Order Summary</p>
+          <p className="font-bold text-lg">Order Summary</p>
           <div className="flex justify-between pt-6">
             <p className="font-semibold">Basket Price</p>
             <p>Rs. {basketPrice}</p>
@@ -254,7 +283,12 @@ const CheckoutForm = ({ price, cart }) => {
           </div>
         </div>
         <hr />
-        <h4 className="text-lg font-semibold mt-6">Process your Payment!</h4>
+        <div className="flex justify-between items-center my-8">
+          <p className="text-medium font-semibold">Payment Method</p>
+          <p className="text-medium">Cash on Delivery</p>
+        </div>
+
+        {/* <h4 className="text-lg font-semibold mt-6">Process your Payment!</h4>
         <h5 className="font-medium">Credit/Debit Card</h5>
         <form onSubmit={handleSubmit}>
           <CardElement
@@ -295,8 +329,32 @@ const CheckoutForm = ({ price, cart }) => {
           >
             <FaPaypal /> Pay with Paypal
           </button>
-        </div>
-        <button className="btn bg-green w-full mt-4">Confirm order</button>
+        </div> */}
+        <button
+          className="btn bg-green w-full mt-4 text-white"
+          onClick={confirmOrderHandler}
+        >
+          Confirm order
+        </button>
+        {error.error ? (
+          <Alert message={error.message} type="error" className="my-2" />
+        ) : (
+          <></>
+        )}
+        <Modal
+          className="mt-48 w-1/4"
+          open={isModalOpen}
+          footer={null}
+          onCancel={handleConfirmOrderCancel}
+        >
+          <div className="text-center">
+            <h2 className="text-2xl font-bold  my-4">Thank You!</h2>
+            <p className="text-lg">
+              The delicious items you have been chosen will soon be at your
+              doorstep
+            </p>
+          </div>
+        </Modal>
       </div>
     </div>
   );

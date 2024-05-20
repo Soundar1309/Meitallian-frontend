@@ -5,12 +5,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import CheckableTag from "../../components/CheckableTag";
 import DisabledPopover from "../../components/DisablePopover";
+import useCart from "../../hooks/useCart";
 
 const MenuDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [menuDetail, setMenuDetail] = useState([]);
-  const [size, setSize] = useState('');
+  const [size, setSize] = useState("");
   const [toppings, setToppings] = useState([]);
 
   const [mobileNumber, setMobileNumber] = useState("");
@@ -18,9 +19,23 @@ const MenuDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState({ error: null, message: "" });
   const { user } = useAuth();
+  const [cart, refetch] = useCart();
 
-  const addToCheckout = (shouldNavigate) => {
+  const addToCheckout = async (shouldNavigate) => {
     const email = user?.email;
+    if (email) {
+      const user = await axios.get(`http://localhost:5000/users/${email}`);
+      if (!user.data.mobileNumber) {
+        setIsModalOpen(true);
+        const userDataUpdate = { mobileNumber, email };
+        await axios.patch(
+          `${import.meta.env.VITE_API_URL}/users/update`,
+          userDataUpdate
+        );
+      } else {
+        setIsModalOpen(false);
+      }
+    }
     const cartItem = {
       ...menuDetail,
       size: size,
@@ -36,6 +51,7 @@ const MenuDetail = () => {
     axios
       .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
       .then(() => {
+        refetch();
         if (shouldNavigate) navigate("/process-checkout");
       })
       .catch((error) =>
@@ -68,10 +84,11 @@ const MenuDetail = () => {
     } else {
       setError({ error: false, message: "" });
       setIsModalOpen(false);
-      setMobileNumber("");
+      // setMobileNumber("");
     }
   };
   const sizeHandler = (e) => {
+    setError({ error: false, message: "" });
     setSize(e.target.value);
   };
   const MobileNumberHandler = (e) => {
@@ -87,9 +104,11 @@ const MenuDetail = () => {
   };
 
   const incrementHandler = () => {
+    setError({ error: false, message: "" });
     setCount(count + 1);
   };
   const decrementHandler = () => {
+    setError({ error: false, message: "" });
     if (count === 1) return;
     setCount(count - 1);
   };
@@ -126,10 +145,14 @@ const MenuDetail = () => {
               {" "}
               Rs. {menuDetail.price}
             </p>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
           {menuDetail.size && menuDetail.size.length > 0 ? (
             <SizePrice size={size} menuDetail={menuDetail} />
-          ) : <></>}
+          ) : (
+            <></>
+          )}
           {menuDetail.size && menuDetail.size.length > 0 ? (
             <div className="mb-4 flex flex-row gap-8 items-center">
               <p className="mb-2">Size :</p>
@@ -232,15 +255,17 @@ const MenuDetail = () => {
 };
 export default MenuDetail;
 
-
-
 const SizePrice = ({ size, menuDetail }) => {
   if (size) {
-    return <p className="text-2xl text-green font-bold my-6">
-      Rs. {menuDetail.size.find((item) => item.label === size)?.price}
-    </p>
+    return (
+      <p className="text-2xl text-green font-bold my-6">
+        Rs. {menuDetail.size.find((item) => item.label === size)?.price}
+      </p>
+    );
   }
-  return <p className="text-2xl text-green font-bold my-6">
-    Starts at. {menuDetail.size[0]?.price}
-  </p>
-}
+  return (
+    <p className="text-2xl text-green font-bold my-6">
+      Starts at. {menuDetail.size[0]?.price}
+    </p>
+  );
+};
