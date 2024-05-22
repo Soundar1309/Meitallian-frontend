@@ -228,3 +228,44 @@ input[type="number"] {
     color: #000;
   }
 }
+/* .order_table{
+  :where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th,
+:where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td {
+  background: rgb(57, 219, 74);
+}
+:where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th,
+:where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td {
+  text-align: center;
+}
+
+} */
+.order_table
+  :where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th,
+.order_table
+  :where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td {
+  background: rgb(57, 219, 74);
+  text-align: center;
+}
+.order_table
+  :where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  table {
+  text-align: center;
+}

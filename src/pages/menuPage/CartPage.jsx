@@ -15,8 +15,20 @@ const CartPage = () => {
 
   // Calculate the total price for each item in the cart
   const calculateTotalPrice = (item) => {
+    console.log(item);
     return item.price * item.quantity;
   };
+  // const calculateTotalPrice = async (item) => {
+  //   console.log(item);
+  //   let price;
+  //   await axios
+  //     .get(`${import.meta.env.VITE_API_URL}/menu/${item.menuItemId}`)
+  //     .then((res) => {
+  //       price = res.data.price;
+  //     });
+  //   console.log(price * item.quantity);
+  //   return price * item.quantity;
+  // };
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {

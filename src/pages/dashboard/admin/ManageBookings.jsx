@@ -2,11 +2,19 @@ import React, { useState } from "react";
 import useMenu from "../../../hooks/useMenu";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
-import { FaArrowCircleRight, FaArrowLeft, FaArrowRight, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
+import {
+  FaArrowCircleRight,
+  FaArrowLeft,
+  FaArrowRight,
+  FaEdit,
+  FaTrashAlt,
+  FaUsers,
+} from "react-icons/fa";
 import { GiConfirmed } from "react-icons/gi";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
+import Order from "../user/Order";
 
 const ManageBookings = () => {
   const { user, loading } = useAuth();
@@ -15,14 +23,11 @@ const ManageBookings = () => {
     queryKey: ["orders", user?.email],
     enabled: !loading,
     queryFn: async () => {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/payments/all`,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/payments/all`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
       return res.json();
     },
   });
@@ -38,29 +43,26 @@ const ManageBookings = () => {
 
   // delete item
   const handleDeleteItem = (item) => {
-    console.log(item._id)
-  }
+    console.log(item._id);
+  };
 
   // confirm order
   const confiremedOrder = async (item) => {
-    console.log(item)
-    await axiosSecure.patch(`/payments/${item._id}`)
-      .then(res => {
-        console.log(res.data)
-        Swal.fire({
-          position: "top-center",
-          icon: "success",
-          title: `Order Confirmed Now!`,
-          showConfirmButton: false,
-          timer: 1500
-        });
-        refetch();
-      })
+    console.log(item);
+    await axiosSecure.patch(`/payments/${item._id}`).then((res) => {
+      console.log(res.data);
+      Swal.fire({
+        position: "top-center",
+        icon: "success",
+        title: `Order Confirmed Now!`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      refetch();
+    });
+  };
 
-  }
-
-  console.log(orders)
-
+  console.log(orders);
 
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
@@ -69,76 +71,9 @@ const ManageBookings = () => {
       </h2>
 
       {/* menu items table  */}
-      <div>
-        <div className="overflow-x-auto lg:overflow-x-visible">
-          <table className="table w-full">
-            {/* head */}
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>User</th>
-                <th>Transition Id</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Confirm Order</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((item, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>
-                    {item.email}
-                  </td>
-                  <td>{item.transitionId}</td>
-                  <td>Rs.{item.price}</td>
-                  <td>
-                    {item.status}
-                  </td>
-                  <td className="text-center">
-                    {item.status === "confirmed" ? "done" : <button
-                      className="btn bg-green text-white btn-xs text-center"
-                      onClick={() => confiremedOrder(item)}
-                    >
-                      <GiConfirmed />
-                    </button>}
-
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => handleDeleteItem(item)}
-                      className="btn btn-ghost btn-xs"
-                    >
-                      <FaTrashAlt className="text-red"></FaTrashAlt>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center my-4">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="btn btn-sm mr-2 btn-warning"
-        >
-          <FaArrowLeft /> Previous
-        </button>
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={indexOfLastItem >= orders.length}
-          className="btn btn-sm bg-green text-white"
-        >
-          Next  <FaArrowRight />
-        </button>
-      </div>
+      <Order isAdmin={true} />
     </div>
-  )
-}
+  );
+};
 
-export default ManageBookings
+export default ManageBookings;

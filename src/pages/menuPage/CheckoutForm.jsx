@@ -137,10 +137,14 @@ const CheckoutForm = ({ price, cart }) => {
           "Your cart is empty! Please add items to your cart before checkout.",
       });
     } else {
-      axios.post(`${import.meta.env.VITE_API_URL}/carts/confirm?email=${user?.email}`).then((res) => {
-        refetch(); // refetch cart
-        setIsModalOpen(true);
-      });
+      axiosSecure
+        .post(
+          `${import.meta.env.VITE_API_URL}/carts/confirm?email=${user?.email}`
+        )
+        .then((res) => {
+          refetch(); // refetch cart
+          setIsModalOpen(true);
+        });
     }
   };
   const handleConfirmOrderCancel = () => {
@@ -150,7 +154,8 @@ const CheckoutForm = ({ price, cart }) => {
     if (loggedinUser?.address) {
       const getAddressHandler = async () => {
         const selectedAddress = await axios.get(
-          `${import.meta.env.VITE_API_URL}/address/address/${loggedinUser?.address
+          `${import.meta.env.VITE_API_URL}/address/address/${
+            loggedinUser?.address
           }`
         );
         setSelectedAddress(selectedAddress.data);

@@ -10,8 +10,8 @@ import DisabledPopover from "./DisablePopover";
 import useAuth from "../hooks/useAuth";
 
 const Cards = ({ item }) => {
+  console.log(item);
   const { name, image, price, _id } = item;
-
   const { user } = useAuth();
   const [cart, refetch] = useCart();
   const [menuDetail, setMenuDetail] = useState([]);
@@ -62,7 +62,9 @@ const Cards = ({ item }) => {
     setToppings([]);
     setCount(1);
     const email = user.email;
-    const Loggeduser = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
+    const Loggeduser = await axios.get(
+      `${import.meta.env.VITE_API_URL}/users/${email}`
+    );
     if (!Loggeduser.data.mobileNumber) {
       setIsMobileNoModalOpen(true);
     } else {
@@ -98,14 +100,16 @@ const Cards = ({ item }) => {
         menuItemId: _id,
         name,
         image,
-        price: size
-          ? item.size.find((item) => item.label === size)?.price
-          : price,
+        price:
+          size.length !== 0
+            ? item.size.find((item) => item.label === size)?.price
+            : price,
         email: user.email,
         size: size,
         toppings: toppings,
         quantity: count,
       };
+      console.log(cartItem);
       axios
         .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
         .then((response) => {

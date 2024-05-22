@@ -30,7 +30,6 @@ const Menu = () => {
       category === "all"
         ? menu
         : menu.filter((item) => item.category === category);
-
     setFilteredItems(filtered);
     setSelectedCategory(category);
     setCurrentPage(1);
