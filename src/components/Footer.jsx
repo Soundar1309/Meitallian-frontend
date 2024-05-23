@@ -13,15 +13,17 @@ const Footer = () => {
           </p>
         </aside>
         <div>
-          <header className="footer-title text-black">Useful links</header>
-          <a href="/#/about" className="link link-hover">About</a>
-          <a href="/" className="link link-hover">FAQ</a>
-        </div>
-        <div>
           <header className="footer-title">Main Menu</header>
           <a href="/" className="link link-hover">Home</a>
+          <a href="/#/about" className="link link-hover">About</a>
           <a href="/#/menu" className="link link-hover">Menu</a>
           <a href="/#/contact" className="link link-hover">Contact</a>
+        </div>
+        <div>
+          <header className="footer-title text-black">Legals</header>
+          <a href="/" className="link link-hover">FAQ</a>
+          <a href="/#/terms-condition">Terms and Condition</a>
+          <a href="/#/privacy-policy">Privacy Policy</a>
         </div>
         <div>
           <header className="footer-title">Contact Us</header>
