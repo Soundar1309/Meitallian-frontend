@@ -1,87 +1,93 @@
-import { useQuery } from "@tanstack/react-query";
-
+import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { Table } from "antd";
+import useUser from "../../../hooks/useUser";
+import FoodBasket from "../../../components/FoodBasket";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
-const Order = () => {
-  const { user, loading } = useAuth();
-  const token = localStorage.getItem("access_token");
-  const { refetch, data: orders = [] } = useQuery({
-    queryKey: ["orders", user?.email],
-    enabled: !loading,
-    queryFn: async () => {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/payments?email=${user?.email}`,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return res.json();
-    },
-  });
+const Order = ({ isAdmin }) => {
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+  const [loggedinUser] = useUser();
+  const [order, setOrder] = useState([]);
 
-  // console.log(orders)
+  useEffect(() => {
+    let mailData =
+      !isAdmin && loggedinUser?.role === "user" ? `?email=${user?.email}` : "";
 
-  // date format
+    axiosSecure
+      .get(`${import.meta.env.VITE_API_URL}/order${mailData}`)
+      .then((res) => {
+        setOrder(res.data.orders);
+      });
+  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin]);
+
   const formatDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
-    return createdAtDate.toLocaleDateString(); // You can adjust options as needed
+    return createdAtDate.toLocaleDateString();
   };
+
+  const columns = [
+    { title: "S.No", dataIndex: "sno", key: "sno" },
+    { title: "Order Date", dataIndex: "orderDate", key: "orderDate" },
+    { title: "Price", dataIndex: "price", key: "price" },
+    { title: "Status", dataIndex: "status", key: "status" },
+  ];
+
+  let data = [];
+
+  if (order?.length > 0) {
+    data = order?.map((order, index) => ({
+      key: index + 1,
+      sno: index + 1,
+      orderDate: formatDate(order.createdAt),
+      price: `Rs. ${order.total}`,
+      status: order.status,
+      description: order?.orderItems?.map((cartItem, index) => (
+        <FoodBasket cartItem={cartItem} key={index} />
+      )),
+    }));
+  }
+
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
       {/* banner */}
-      <div className=" bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
-        <div className="py-28 flex flex-col items-center justify-center">
-          {/* content */}
-          <div className=" text-center px-4 space-y-7">
-            <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
-              Track Your All<span className="text-green"> Orders</span>
-            </h2>
+      {!isAdmin ? (
+        <div className=" bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
+          <div className="py-28 flex flex-col items-center justify-center">
+            {/* content */}
+            <div className=" text-center px-4 space-y-7">
+              <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
+                Track Your All<span className="text-green"> Orders</span>
+              </h2>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
 
       {/* table content */}
       <div>
         {
-          <div>
-            <div>
-              <div className="overflow-x-auto">
-                <table className="table text-center">
-                  {/* head */}
-                  <thead className="bg-green text-white rounded-sm">
-                    <tr>
-                      <th>#</th>
-                      <th>Order Date</th>
-                      <th>transitionId</th>
-                      <th>Price</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map((item, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{formatDate(item.createdAt)}</td>
-                        <td className="font-medium">{item.transitionId}</td>
-                        <td>Rs.{item.price}</td>
-                        <td>{item.status}</td>
-                        <td>
-                          <button className="btn btn-sm border-none text-orange-400 bg-transparent">
-                            Contact
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  {/* foot */}
-                </table>
-              </div>
-            </div>
-            <hr />
+          <div
+            className={`overflow-x-auto order_table ${
+              isAdmin ? "w-[1000px]" : ""
+            }`}
+          >
+            <Table
+              columns={columns}
+              expandable={{
+                expandedRowRender: (record) => (
+                  <p className="w-[500px]" style={{ margin: 0 }}>
+                    {record.description}
+                  </p>
+                ),
+                rowExpandable: (record) => record.name !== "Not Expandable",
+              }}
+              dataSource={data}
+            />
           </div>
         }
       </div>
