@@ -269,4 +269,17 @@ input[type="number"] {
   table {
   text-align: center;
 }
+.order_table {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+}
+
+.order_table table {
+  width: 100%;
+}
+.order_table {
+  .description {
+    width: 100%;
+  }
 }

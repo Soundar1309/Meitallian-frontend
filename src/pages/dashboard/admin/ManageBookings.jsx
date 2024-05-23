@@ -14,7 +14,7 @@ import { GiConfirmed } from "react-icons/gi";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
-import Order from "../user/Order";
+import AdminOrder from "./AdminOrder";
 
 const ManageBookings = () => {
   const { user, loading } = useAuth();
@@ -71,7 +71,7 @@ const ManageBookings = () => {
       </h2>
 
       {/* menu items table  */}
-      <Order isAdmin={true} />
+      <AdminOrder isAdmin={true} />
     </div>
   );
 };

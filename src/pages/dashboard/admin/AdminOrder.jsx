@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
-import { Table } from "antd";
+import { Select, Table } from "antd";
 import useUser from "../../../hooks/useUser";
 import FoodBasket from "../../../components/FoodBasket";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
-const Order = ({ isAdmin }) => {
+const AdminOrder = ({ isAdmin }) => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const [loggedinUser] = useUser();
   const [order, setOrder] = useState([]);
-
+  const { Option } = Select;
   useEffect(() => {
     let mailData =
       !isAdmin && loggedinUser?.role === "user" ? `?email=${user?.email}` : "";
@@ -27,7 +27,15 @@ const Order = ({ isAdmin }) => {
     const createdAtDate = new Date(createdAt);
     return createdAtDate.toLocaleDateString();
   };
-
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/order/${id}`, {
+        status: newStatus,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const columns = [
     { title: "S.No", dataIndex: "sno", key: "sno" },
     {
@@ -36,7 +44,28 @@ const Order = ({ isAdmin }) => {
       key: "orderDate",
     },
     { title: "Price", dataIndex: "price", key: "price" },
-    { title: "Status", dataIndex: "status", key: "status" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text, record) => (
+        <Select
+          defaultValue={text}
+          onChange={(value) => handleStatusChange(record._id, value)}
+        >
+          {statusOptions.map((status) => (
+            <Option key={status} value={status}>
+              {status}
+            </Option>
+          ))}
+        </Select>
+      ),
+    },
+    {
+      title: "Customer Details",
+      dataIndex: "customerDetails",
+      key: "customerDetails",
+    },
   ];
 
   let data = [];
@@ -45,9 +74,11 @@ const Order = ({ isAdmin }) => {
     data = order?.map((order, index) => ({
       key: index + 1,
       sno: index + 1,
+      _id: order._id,
       orderDate: formatDate(order.createdAt),
       price: `Rs. ${order.total}`,
       status: order.status,
+      customerDetails: `${order.userName} , Mobile Number: ${order.mobileNumber}`,
       description: order?.orderItems?.map((cartItem, index) => (
         <FoodBasket cartItem={cartItem} key={index} />
       )),
@@ -77,7 +108,7 @@ const Order = ({ isAdmin }) => {
         {
           <div
             className={`overflow-x-auto order_table ${
-              isAdmin ? "w-[1000px]" : ""
+              isAdmin ? "sm:w-[800px] md:w-[1000px]" : ""
             }`}
           >
             <Table
@@ -99,4 +130,13 @@ const Order = ({ isAdmin }) => {
   );
 };
 
-export default Order;
+export default AdminOrder;
+const statusOptions = [
+  "Order Received",
+  "Confirmed",
+  "Preparing",
+  "Ready",
+  "Pickup",
+  "Delivered",
+  "Cancelled",
+];
