@@ -264,8 +264,8 @@ const SizePrice = ({ size, menuDetail }) => {
     );
   }
   return (
-    <p className="text-2xl text-green font-bold my-6">
-      Starts at. {menuDetail.size[0]?.price}
+    <p className="text-2xl text-darkgreen font-bold my-6">
+      Starts at Rs. {menuDetail.size[0]?.price}
     </p>
   );
 };
