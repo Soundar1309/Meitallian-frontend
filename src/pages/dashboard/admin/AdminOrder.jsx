@@ -36,6 +36,21 @@ const AdminOrder = ({ isAdmin }) => {
       console.error(error);
     }
   };
+  const formatCustomerDetails = (order) => {
+    const { userName, mobileNumber, address } = order;
+    const locality = address?.locality || "";
+    const area = address?.area || "";
+    const city = address?.city || "";
+    const pincode = address?.pincode || "";
+    const landmark = address?.landmark || "";
+
+    return `${userName}\nMobile Number: ${mobileNumber}\n${
+      locality ? `${locality}, ` : ""
+    }${area ? `${area}, ` : ""}\n${city ? `${city}- ` : ""}${
+      pincode ? `Pincode: ${pincode}` : ""
+    }\n${landmark ? `Landmark: ${landmark}` : ""}`;
+  };
+
   const columns = [
     { title: "S.No", dataIndex: "sno", key: "sno" },
     {
@@ -65,6 +80,8 @@ const AdminOrder = ({ isAdmin }) => {
       title: "Customer Details",
       dataIndex: "customerDetails",
       key: "customerDetails",
+      width: "35%",
+      render: (text) => <div style={{ whiteSpace: "pre-wrap" }}>{text}</div>,
     },
   ];
 
@@ -78,7 +95,7 @@ const AdminOrder = ({ isAdmin }) => {
       orderDate: formatDate(order.createdAt),
       price: `Rs. ${order.total}`,
       status: order.status,
-      customerDetails: `${order.userName} , Mobile Number: ${order.mobileNumber}`,
+      customerDetails: formatCustomerDetails(order),
       description: order?.orderItems?.map((cartItem, index) => (
         <FoodBasket cartItem={cartItem} key={index} />
       )),
@@ -102,15 +119,13 @@ const AdminOrder = ({ isAdmin }) => {
       ) : (
         <></>
       )}
-
+      {/*  className={`overflow-x-auto order_table ${
+              isAdmin ? "sm:w-[800px] md:w-[1200px]" : ""
+            }`} */}
       {/* table content */}
       <div>
         {
-          <div
-            className={`overflow-x-auto order_table ${
-              isAdmin ? "sm:w-[800px] md:w-[1000px]" : ""
-            }`}
-          >
+          <div className="overflow-x-auto order_table w-[1200px]">
             <Table
               columns={columns}
               expandable={{
@@ -122,6 +137,7 @@ const AdminOrder = ({ isAdmin }) => {
                 rowExpandable: (record) => record.name !== "Not Expandable",
               }}
               dataSource={data}
+              pagination={{ pageSize: 5 }}
             />
           </div>
         }
