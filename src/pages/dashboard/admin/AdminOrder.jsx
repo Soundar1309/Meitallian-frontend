@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
-import { Table } from "antd";
+import { Select, Table } from "antd";
 import useUser from "../../../hooks/useUser";
 import FoodBasket from "../../../components/FoodBasket";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
-const Order = ({ isAdmin }) => {
+const AdminOrder = ({ isAdmin }) => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const [loggedinUser] = useUser();
   const [order, setOrder] = useState([]);
-
+  const { Option } = Select;
   useEffect(() => {
     let mailData =
       !isAdmin && loggedinUser?.role === "user" ? `?email=${user?.email}` : "";
@@ -27,6 +27,29 @@ const Order = ({ isAdmin }) => {
     const createdAtDate = new Date(createdAt);
     return createdAtDate.toLocaleDateString();
   };
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/order/${id}`, {
+        status: newStatus,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const formatCustomerDetails = (order) => {
+    const { userName, mobileNumber, address } = order;
+    const locality = address?.locality || "";
+    const area = address?.area || "";
+    const city = address?.city || "";
+    const pincode = address?.pincode || "";
+    const landmark = address?.landmark || "";
+
+    return `${userName}\nMobile Number: ${mobileNumber}\n${
+      locality ? `${locality}, ` : ""
+    }${area ? `${area}, ` : ""}\n${city ? `${city}- ` : ""}${
+      pincode ? `Pincode: ${pincode}` : ""
+    }\n${landmark ? `Landmark: ${landmark}` : ""}`;
+  };
 
   const columns = [
     { title: "S.No", dataIndex: "sno", key: "sno" },
@@ -36,7 +59,30 @@ const Order = ({ isAdmin }) => {
       key: "orderDate",
     },
     { title: "Price", dataIndex: "price", key: "price" },
-    { title: "Status", dataIndex: "status", key: "status" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text, record) => (
+        <Select
+          defaultValue={text}
+          onChange={(value) => handleStatusChange(record._id, value)}
+        >
+          {statusOptions.map((status) => (
+            <Option key={status} value={status}>
+              {status}
+            </Option>
+          ))}
+        </Select>
+      ),
+    },
+    {
+      title: "Customer Details",
+      dataIndex: "customerDetails",
+      key: "customerDetails",
+      width: "35%",
+      render: (text) => <div style={{ whiteSpace: "pre-wrap" }}>{text}</div>,
+    },
   ];
 
   let data = [];
@@ -45,9 +91,11 @@ const Order = ({ isAdmin }) => {
     data = order?.map((order, index) => ({
       key: index + 1,
       sno: index + 1,
+      _id: order._id,
       orderDate: formatDate(order.createdAt),
       price: `Rs. ${order.total}`,
       status: order.status,
+      customerDetails: formatCustomerDetails(order),
       description: order?.orderItems?.map((cartItem, index) => (
         <FoodBasket cartItem={cartItem} key={index} />
       )),
@@ -71,15 +119,13 @@ const Order = ({ isAdmin }) => {
       ) : (
         <></>
       )}
-
+      {/*  className={`overflow-x-auto order_table ${
+              isAdmin ? "sm:w-[800px] md:w-[1200px]" : ""
+            }`} */}
       {/* table content */}
       <div>
         {
-          <div
-            className={`overflow-x-auto order_table ${
-              isAdmin ? "w-[1000px]" : ""
-            }`}
-          >
+          <div className="overflow-x-auto order_table w-[1200px]">
             <Table
               columns={columns}
               expandable={{
@@ -91,6 +137,7 @@ const Order = ({ isAdmin }) => {
                 rowExpandable: (record) => record.name !== "Not Expandable",
               }}
               dataSource={data}
+              pagination={{ pageSize: 5 }}
             />
           </div>
         }
@@ -99,4 +146,13 @@ const Order = ({ isAdmin }) => {
   );
 };
 
-export default Order;
+export default AdminOrder;
+const statusOptions = [
+  "Order Received",
+  "Confirmed",
+  "Preparing",
+  "Ready",
+  "Pickup",
+  "Delivered",
+  "Cancelled",
+];

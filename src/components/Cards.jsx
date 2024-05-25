@@ -10,7 +10,6 @@ import DisabledPopover from "./DisablePopover";
 import useAuth from "../hooks/useAuth";
 
 const Cards = ({ item }) => {
-  console.log(item);
   const { name, image, price, _id } = item;
   const { user } = useAuth();
   const [cart, refetch] = useCart();
@@ -158,13 +157,14 @@ const Cards = ({ item }) => {
   }, [_id]);
 
   return (
+    <div className="card shadow-xl relative mr-5 md:my-5 cursor-pointer h-[590px]">
     <div className="card shadow-md relative mr-5 md:my-5 cursor-pointer h-[560px]">
       <Link to={`/menu/${item._id}`}>
         <figure>
           <img
             src={item.image}
             alt="popular dish"
-            className="hover:scale-105 transition-all duration-300 md:h-72 w-full object-cover card-image"
+            className="hover:scale-105 transition-all duration-300 h-72 w-full object-cover card-image"
           />
         </figure>
       </Link>

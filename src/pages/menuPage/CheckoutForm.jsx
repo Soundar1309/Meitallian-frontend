@@ -14,6 +14,7 @@ import axios from "axios";
 
 import { Alert, Modal } from "antd";
 import useCart from "../../hooks/useCart";
+import Swal from "sweetalert2";
 
 const CheckoutForm = ({ price, cart }) => {
   const stripe = useStripe();
@@ -137,14 +138,28 @@ const CheckoutForm = ({ price, cart }) => {
           "Your cart is empty! Please add items to your cart before checkout.",
       });
     } else {
-      axiosSecure
-        .post(
-          `${import.meta.env.VITE_API_URL}/carts/confirm?email=${user?.email}`
-        )
-        .then((res) => {
-          refetch(); // refetch cart
-          setIsModalOpen(true);
+      if (!selectedAddress) {
+        Swal.fire({
+          position: "center",
+          icon: "warning",
+          title: "Please choose address for delivery",
+          showConfirmButton: false,
+          timer: 1500,
         });
+      } else {
+        axiosSecure
+          .post(
+            `${import.meta.env.VITE_API_URL}/carts/confirm?email=${
+              user?.email
+            }`,
+            { address: selectedAddress }
+          )
+          .then((res) => {
+            console.log(res.data);
+            refetch(); // refetch cart
+            setIsModalOpen(true);
+          });
+      }
     }
   };
   const handleConfirmOrderCancel = () => {
