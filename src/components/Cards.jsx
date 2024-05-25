@@ -158,6 +158,7 @@ const Cards = ({ item }) => {
 
   return (
     <div className="card shadow-xl relative mr-5 md:my-5 cursor-pointer h-[590px]">
+    <div className="card shadow-md relative mr-5 md:my-5 cursor-pointer h-[560px]">
       <Link to={`/menu/${item._id}`}>
         <figure>
           <img
@@ -177,12 +178,12 @@ const Cards = ({ item }) => {
 
         <div className="card-actions justify-between items-center mt-2">
           {item.price ? (
-            <h5 className="font-semibold">
-              <span className="text-sm text-red">Rs.</span> {item.price}
+            <h5 className="font-bold">
+              <span className="text-sm text-darkgreen">Rs.</span> {item.price}
             </h5>
           ) : item.size[0]?.price ? (
             <h5 className="font-semibold">
-              <span className="text-sm text-red">Starts at </span>{" "}
+              <span className="text-md text-darkgreen">Starts at Rs. </span>{" "}
               {item.size[0]?.price}
             </h5>
           ) : (
@@ -197,7 +198,7 @@ const Cards = ({ item }) => {
             </button>
           ) : (
             <DisabledPopover>
-              <button className="btn opacity-50">Add to Cart</button>
+              <button className="btn opacity-60 bg-grey-80 text-black">Add to Cart</button>
             </DisabledPopover>
           )}
           <Modal
