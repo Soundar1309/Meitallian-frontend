@@ -1,9 +1,12 @@
+/* eslint-disable react/jsx-no-undef */
 import React from 'react'
 import Banner from '../../components/Banner'
 import Catagories from './Catagories'
 import SpecialDishes from './SpecialDishes'
 import Testimonials from './Testimonials'
 import OurServices from './OurServices'
+import Flbtn from "../../components/Flbtn"
+import Adplacement from '../../components/Adplacements'
 
 const Home = () => {
   return (
@@ -11,7 +14,9 @@ const Home = () => {
        <Banner/>
        <SpecialDishes/>
        <Testimonials/>
-       <OurServices/>
+       <Adplacement/>
+       <OurServices/>  
+      <Flbtn/>
     </div>
   )
 }

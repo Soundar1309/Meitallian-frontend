@@ -68,7 +68,7 @@ const Navbar = () => {
     >
       <div
         className={`navbar xl:px-24 ${isSticky
-          ? "shadow-md bg-darkgreen transition-all duration-300 ease-in-out text-white"
+          ? "shadow-md bg-darkgreen transition-all duration-300 ease-in-out text-white" 
           : ""
           }`}
       >

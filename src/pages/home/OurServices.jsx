@@ -18,10 +18,9 @@ const OurServices = () => {
             <p className="my-5 text-secondary leading-[30px]">
                 Me Italian is not just a restaurant; it is the culmination of an enduring passion for bringing authentic Italian flavors to every corner of Chennai.Born out of a love 
             </p>
-            <p className="-mt-4 mb-5 text-sm text-[#0000FF] cursor-pointer">Read more...</p>
-
+            <a href="/#/story"><p className="-mt-4 mb-5 text-sm text-[#0000FF] cursor-pointer">Read more...</p></a>
             <button className="bg-green font-semibold btn text-white px-8 py-3 rounded-full">
-              <a href="/#/about">Explore</a>
+              <a href="#/story">Explore</a>
             </button>
           </div>
         </div>

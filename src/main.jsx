@@ -11,6 +11,7 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import { ThemeProvider } from "./hooks/ThemeContext.jsx";
+import Popup from "../src/components/Popup.jsx"
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
       <RouterProvider router={router} />
+      <Popup/>
       </ThemeProvider>
     </QueryClientProvider>
   </AuthProvider>

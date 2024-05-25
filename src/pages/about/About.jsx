@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar'
 import Aboutus from '../../components/Aboutus'
 import Testimonials from '../home/Testimonials'
 import Aboutceo from '../../components/Aboutceo'
+import Flbtn from "../../components/Flbtn"
 
 const About = () => {
   return (
@@ -10,6 +11,7 @@ const About = () => {
         <Aboutus/>
         <Aboutceo/>
         <Testimonials/>
+        <Flbtn/>
     </div>
   )
 }
