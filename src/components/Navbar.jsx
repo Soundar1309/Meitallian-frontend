@@ -53,6 +53,11 @@ const Navbar = () => {
         </a>
       </li>
       <li>
+        <a href="/#/Story">
+          Our Story
+        </a>
+      </li>
+      <li>
         <a href="/#/contact">Contact us</a>
       </li>
     </>
@@ -213,6 +218,16 @@ const items = [
   },
   {
     key: "sub4",
+    label: (
+      <a href="/#/story" className="text-md md:text-lg">
+        Our Story
+      </a>
+    ),
+    children: [],
+    className: "border-b-1 border",
+  },
+  {
+    key: "sub5",
     label: (
       <a href="/#/contact" className="text-md md:text-lg">
         Contact us

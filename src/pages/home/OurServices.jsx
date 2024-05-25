@@ -16,7 +16,7 @@ const OurServices = () => {
             <p className="subtitle">Our Story & Services</p>
             <h2 className="title">Our Culinary Journey And Services</h2>
             <p className="my-5 text-secondary leading-[30px]">
-                Me Italian is not just a restaurant; it's the culmination of an enduring passion for bringing authentic Italian flavors to every corner of Chennai.Born out of a love 
+                Me Italian is not just a restaurant; it is the culmination of an enduring passion for bringing authentic Italian flavors to every corner of Chennai.Born out of a love 
             </p>
             <p className="-mt-4 mb-5 text-sm text-[#0000FF] cursor-pointer">Read more...</p>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ComponentName = () => {        
+const footer = () => {        
     return (
         <section className="py-10 sm:pt-16 lg:pt-24">
     <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
@@ -48,7 +48,7 @@ const ComponentName = () => {
 
                 <ul className="mt-6 space-y-4">
                     <li>
-                        <a href="#/about" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> About </a>
+                        <a href="#/about" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> About Us </a>
                     </li>
 
                     <li>
@@ -56,7 +56,7 @@ const ComponentName = () => {
                     </li>
 
                     <li>
-                        <a href="#/story" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Story </a>
+                        <a href="#/story" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Our Story </a>
                     </li>
                 </ul>
             </div>
@@ -74,7 +74,7 @@ const ComponentName = () => {
                     </li>
 
                     <li>
-                        <a href="#/contact" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Contact </a>
+                        <a href="#/contact" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Contact Us </a>
                     </li>
                 </ul>
             </div>
@@ -90,6 +90,10 @@ const ComponentName = () => {
 
                     <button type="submit" className=" inline-flex items-center justify-center px-6 py-4 mt-3 font-semibold text-white transition-all duration-200 bg-darkgreen rounded-md hover:bg-blue-700 focus:bg-blue-700">Subscribe</button>
                 </form>
+               <div className='flex items-center gap-2 mt-5'>
+               <img src="../images/fssai.png" className="w-16" alt="" />
+                <p className='font-semibold text-[12px] mt-1'>License No: 12424008001241</p>
+               </div>
             </div>
         </div>
 
@@ -101,4 +105,4 @@ const ComponentName = () => {
 
     )
 }
-export default ComponentName;
+export default footer;
