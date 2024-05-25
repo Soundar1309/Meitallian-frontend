@@ -63,7 +63,7 @@ const ManageBookings = () => {
   };
 
   return (
-    <div className="w-full md:w-[870px] mx-auto px-4 ">
+    <div className="w-[78vw] mx-auto px-4 ">
       <h2 className="text-2xl font-semibold my-4">
         Manage All <span className="text-green">Bookings!</span>
       </h2>

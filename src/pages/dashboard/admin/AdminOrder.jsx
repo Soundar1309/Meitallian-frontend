@@ -12,6 +12,7 @@ const AdminOrder = ({ isAdmin }) => {
   const [loggedinUser] = useUser();
   const [order, setOrder] = useState([]);
   const { Option } = Select;
+
   useEffect(() => {
     let mailData =
       !isAdmin && loggedinUser?.role === "user" ? `?email=${user?.email}` : "";
@@ -27,6 +28,7 @@ const AdminOrder = ({ isAdmin }) => {
     const createdAtDate = new Date(createdAt);
     return createdAtDate.toLocaleDateString();
   };
+
   const handleStatusChange = async (id, newStatus) => {
     try {
       await axios.patch(`${import.meta.env.VITE_API_URL}/order/${id}`, {
@@ -36,19 +38,21 @@ const AdminOrder = ({ isAdmin }) => {
       console.error(error);
     }
   };
+
   const formatCustomerDetails = (order) => {
     const { userName, mobileNumber, address } = order;
+
+    const user = userName || "";
+    const mobile = mobileNumber ? `Mobile Number: ${mobileNumber}` : "";
     const locality = address?.locality || "";
     const area = address?.area || "";
     const city = address?.city || "";
-    const pincode = address?.pincode || "";
-    const landmark = address?.landmark || "";
+    const pincode = address?.pincode ? `<br> Pincode : ${address?.pincode}` : "";
+    const landmark = address?.landmark ? `<br> Landmark : ${address?.landmark}` : "";
 
-    return `${userName}\nMobile Number: ${mobileNumber}\n${
-      locality ? `${locality}, ` : ""
-    }${area ? `${area}, ` : ""}\n${city ? `${city}- ` : ""}${
-      pincode ? `Pincode: ${pincode}` : ""
-    }\n${landmark ? `Landmark: ${landmark}` : ""}`;
+    [user, mobile, locality, area, city, pincode, landmark].filter(Boolean).join(', ')
+
+    return [user, mobile, locality, area, city, pincode, landmark].filter(Boolean).join(', ');
   };
 
   const columns = [
@@ -65,6 +69,7 @@ const AdminOrder = ({ isAdmin }) => {
       key: "status",
       render: (text, record) => (
         <Select
+          className="w-[60%]"
           defaultValue={text}
           onChange={(value) => handleStatusChange(record._id, value)}
         >
@@ -81,7 +86,7 @@ const AdminOrder = ({ isAdmin }) => {
       dataIndex: "customerDetails",
       key: "customerDetails",
       width: "35%",
-      render: (text) => <div style={{ whiteSpace: "pre-wrap" }}>{text}</div>,
+      render: (text) => <div dangerouslySetInnerHTML={{ __html: text }}></div>,
     },
   ];
 
@@ -103,7 +108,7 @@ const AdminOrder = ({ isAdmin }) => {
   }
 
   return (
-    <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
+    <div className="max-w-screen-2xl container mx-auto">
       {/* banner */}
       {!isAdmin ? (
         <div className=" bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
@@ -119,13 +124,9 @@ const AdminOrder = ({ isAdmin }) => {
       ) : (
         <></>
       )}
-      {/*  className={`overflow-x-auto order_table ${
-              isAdmin ? "sm:w-[800px] md:w-[1200px]" : ""
-            }`} */}
-      {/* table content */}
       <div>
         {
-          <div className="overflow-x-auto order_table w-[1200px]">
+          <div className="overflow-x-auto order_table w-full">
             <Table
               columns={columns}
               expandable={{

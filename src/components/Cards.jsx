@@ -157,7 +157,6 @@ const Cards = ({ item }) => {
   }, [_id]);
 
   return (
-    <div className="card shadow-xl relative mr-5 md:my-5 cursor-pointer h-[590px]">
     <div className="card shadow-md relative mr-5 md:my-5 cursor-pointer h-[560px]">
       <Link to={`/menu/${item._id}`}>
         <figure>

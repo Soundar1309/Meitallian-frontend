@@ -85,9 +85,10 @@ const Dashboard = () => {
     );
   };
 
-  const pieChartData = chartData.map((data) => {
-    return { name: data.category, value: data.revenue };
-  });
+  const pieChartData = [];
+  for (const [key, value] of Object.entries(chartData)) {
+    pieChartData.push({ name: key.charAt(0).toUpperCase() + key.slice(1), value: value })
+  }
 
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
@@ -101,8 +102,8 @@ const Dashboard = () => {
                 <FaDollarSign className="text-3xl"></FaDollarSign>
               </div>
               <div className="stat-title">Revenue</div>
-              <div className="stat-value">Rs.{stats.revenue}</div>
-              <div className="stat-desc">Jan 1st - Feb 1st</div>
+              <div className="stat-value">Rs.{stats?.revenue}</div>
+              <div className="stat-desc">This Month</div>
             </div>
 
             <div className="stat bg-orange-200">
@@ -111,7 +112,6 @@ const Dashboard = () => {
               </div>
               <div className="stat-title">Users</div>
               <div className="stat-value">{stats.users}</div>
-              <div className="stat-desc">↗︎ 400 (22%)</div>
             </div>
           </>
         ) : (
@@ -124,7 +124,6 @@ const Dashboard = () => {
           </div>
           <div className="stat-title">Menu Items</div>
           <div className="stat-value">{stats.menuItems}</div>
-          <div className="stat-desc">↗︎ 400 (22%)</div>
         </div>
 
         <div className="stat bg-purple-300">
@@ -151,33 +150,6 @@ const Dashboard = () => {
 
       {/* bar & pie chart */}
       <div className="mt-16 flex flex-col sm:flex-row">
-        {/* bar chart */}
-        <div className="sm:w-1/2 w-full">
-          <div style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer>
-              <AreaChart
-                data={chartData}
-                margin={{
-                  top: 10,
-                  right: 30,
-                  left: 0,
-                  bottom: 0,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="category" />
-                <YAxis />
-                <Tooltip />
-                <Area
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#8884d8"
-                  fill="#8884d8"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
 
         {/* pie chart */}
         <div className="sm:w-1/2 w-full">
