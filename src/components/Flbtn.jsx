@@ -6,7 +6,7 @@ const FloatingMenuButton = () => {
   return (
     <Link
       to="/menu"
-      className="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-md shadow-lg transition duration-300 md:bottom-4 md:right-4 lg:bottom-6 lg:right-6"
+      className="fixed bottom-6 right-6 z-50 bg-darkgreen hover:bg-red text-white py-3 px-6 rounded-md shadow-lg transition duration-300 md:bottom-4 md:right-4 lg:bottom-6 lg:right-6"
     >
       Menu <PlusCircleOutlined />
     </Link>

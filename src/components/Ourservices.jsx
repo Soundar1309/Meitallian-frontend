@@ -10,9 +10,9 @@ const serviceLists = [
 
 const Ourservices = () => {
     return (
-        <div className="p-3 pt-20 sm:px-10 md:px-4 lg:px-6 xl:px-20 flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x lg:space-x-6 2xl:space-x-24">
+        <div className="sm:mt-10 md:mt-10 mt-20 p-3 pt-20 sm:px-10 md:px-4 lg:px-6 xl:px-20 flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x lg:space-x-6 2xl:space-x-24">
         <div className="w-full">
-          <h2 className="font-bold text-center text-3xl mb-10 -mt-36">Our Services</h2>
+          <h2 className="font-bold text-center text-3xl mb-6 -mt-36">Our Services</h2>
           <div className="flex flex-wrap gap-8 justify-center items-center">
             {serviceLists.map((service) => (
               <div
