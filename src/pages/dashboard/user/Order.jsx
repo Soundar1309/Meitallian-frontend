@@ -49,7 +49,7 @@ const Order = ({ isAdmin }) => {
       price: `Rs. ${order.total}`,
       status: order.status,
       description: order?.orderItems?.map((cartItem, index) => (
-        <FoodBasket cartItem={cartItem} key={index} />
+        <div key={cartItem._id} className="w-1/2"><FoodBasket cartItem={cartItem} /></div>
       )),
     }));
   }
@@ -76,17 +76,16 @@ const Order = ({ isAdmin }) => {
       <div>
         {
           <div
-            className={`overflow-x-auto order_table ${
-              isAdmin ? "w-[1000px]" : ""
-            }`}
+            className={`overflow-x-auto order_table ${isAdmin ? "w-[1000px]" : ""
+              }`}
           >
             <Table
               columns={columns}
               expandable={{
                 expandedRowRender: (record) => (
-                  <p className="w-[500px]" style={{ margin: 0 }}>
+                  <div className="flex gap-4" style={{ margin: 0 }}>
                     {record.description}
-                  </p>
+                  </div>
                 ),
                 rowExpandable: (record) => record.name !== "Not Expandable",
               }}
