@@ -23,6 +23,7 @@ import MenuDetail from "../pages/menuPage/MenuDetail";
 import PrivateRouteAdmin from "../PrivateRoute/PrivateRouteAdmin";
 import Termscondition from "../pages/terms-condition"
 import Privacypolicy from "../pages/privacy-policy"
+import Story from "../pages/about/Ourstory"
 
 const router = createHashRouter([
   {
@@ -68,6 +69,10 @@ const router = createHashRouter([
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/story",
+        element: <Story />,
       },
       {
         path: "/terms-condition",
