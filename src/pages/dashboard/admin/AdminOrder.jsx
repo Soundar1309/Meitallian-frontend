@@ -42,17 +42,15 @@ const AdminOrder = ({ isAdmin }) => {
   const formatCustomerDetails = (order) => {
     const { userName, mobileNumber, address } = order;
 
-    const user = userName || "";
-    const mobile = mobileNumber ? `Mobile Number: ${mobileNumber}` : "";
+    const user = userName ? `<p class="capitalize m-0"> ${userName} </p>` : "";
     const locality = address?.locality || "";
     const area = address?.area || "";
     const city = address?.city || "";
-    const pincode = address?.pincode ? `<br> Pincode : ${address?.pincode}` : "";
-    const landmark = address?.landmark ? `<br> Landmark : ${address?.landmark}` : "";
+    const pincode = address?.pincode ? `<p> <span class="font-bold">Pincode</span> : ${address?.pincode}</p>` : "";
+    const landmark = address?.landmark ? `<p> <span class="font-bold">Landmark</span> : ${address?.landmark}</p>` : "";
+    const mobile = mobileNumber ? `<p> <span class="font-bold">Mobile No</span> : ${mobileNumber} </p>` : "";
 
-    [user, mobile, locality, area, city, pincode, landmark].filter(Boolean).join(', ')
-
-    return [user, mobile, locality, area, city, pincode, landmark].filter(Boolean).join(', ');
+    return `${user} ${[locality, area, city].filter(Boolean).join(', ')} ${pincode}${landmark}${mobile}`;
   };
 
   const columns = [
@@ -102,7 +100,7 @@ const AdminOrder = ({ isAdmin }) => {
       status: order.status,
       customerDetails: formatCustomerDetails(order),
       description: order?.orderItems?.map((cartItem, index) => (
-        <FoodBasket cartItem={cartItem} key={index} />
+        <div key={cartItem._id} className="w-1/2"><FoodBasket cartItem={cartItem} /></div>
       )),
     }));
   }
@@ -131,9 +129,9 @@ const AdminOrder = ({ isAdmin }) => {
               columns={columns}
               expandable={{
                 expandedRowRender: (record) => (
-                  <p className="w-[500px]" style={{ margin: 0 }}>
+                  <div className="flex gap-4" style={{ margin: 0 }}>
                     {record.description}
-                  </p>
+                  </div>
                 ),
                 rowExpandable: (record) => record.name !== "Not Expandable",
               }}
