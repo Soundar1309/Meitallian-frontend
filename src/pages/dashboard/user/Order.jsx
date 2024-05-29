@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
 import { Table } from "antd";
 import useUser from "../../../hooks/useUser";
 import FoodBasket from "../../../components/FoodBasket";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const Order = ({ isAdmin }) => {
   const axiosSecure = useAxiosSecure();
@@ -12,7 +13,8 @@ const Order = ({ isAdmin }) => {
   const [loggedinUser] = useUser();
   const [order, setOrder] = useState([]);
 
-  useEffect(() => {
+
+  const GetOrder = useCallback(() => {
     let mailData =
       !isAdmin && loggedinUser?.role === "user" ? `?email=${user?.email}` : "";
 
@@ -21,11 +23,42 @@ const Order = ({ isAdmin }) => {
       .then((res) => {
         setOrder(res.data.orders);
       });
-  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin]);
+  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin])
+
+  useEffect(() => {
+    GetOrder()
+  }, [GetOrder]);
+
 
   const formatDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
     return createdAtDate.toLocaleDateString();
+  };
+
+  const handleCancelOrder = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, cancel it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await axios.patch(`${import.meta.env.VITE_API_URL}/order/${id}`, {
+          status: "Cancelled",
+        });
+        GetOrder();
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: `Order Cancelled successfully`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    });
   };
 
   const columns = [
@@ -37,6 +70,20 @@ const Order = ({ isAdmin }) => {
     },
     { title: "Price", dataIndex: "price", key: "price" },
     { title: "Status", dataIndex: "status", key: "status" },
+    {
+      title: "",
+      dataIndex: "_id",
+      key: "_id",
+      width: "10%",
+      render: (id) => (
+        <button
+          onClick={() => handleCancelOrder(id)}
+          className="btn btn-danger btn-xs"
+        >
+          Cancel Order
+        </button>
+      ),
+    },
   ];
 
   let data = [];
@@ -45,6 +92,7 @@ const Order = ({ isAdmin }) => {
     data = order?.map((order, index) => ({
       key: index + 1,
       sno: index + 1,
+      _id: order._id,
       orderDate: formatDate(order.createdAt),
       price: `Rs. ${order.total}`,
       status: order.status,
