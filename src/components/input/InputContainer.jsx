@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { useEffect, useState, forwardRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -258,9 +259,8 @@ const InputContainer = forwardRef(
       const labelArray = label?.split(",");
       let optionLabel = "";
       labelArray?.map((labl, index) => {
-        optionLabel = `${optionLabel} ${
-          index === 0 ? `${option[labl]}` : ` - ${option[labl]}`
-        }`;
+        optionLabel = `${optionLabel} ${index === 0 ? `${option[labl]}` : ` - ${option[labl]}`
+          }`;
         return optionLabel;
       });
       return optionLabel;
@@ -276,15 +276,13 @@ const InputContainer = forwardRef(
 
     return (
       <div
-        className={`input-container mb-2 ${
-          labelAlign === "left" ? "d-flex flex-row m-5-0" : ""
-        } ${containerClassName || ""} ${type === "toggle" ? "w-150-px" : ""}`}
+        className={`input-container mb-2 ${labelAlign === "left" ? "d-flex flex-row m-5-0" : ""
+          } ${containerClassName || ""} ${type === "toggle" ? "w-150-px" : ""}`}
       >
         {label && (
           <div
-            className={`${!tableInline && "mt-1"} ${
-              labelAlign === "left" ? "col-4 col-sm-4 col-md-4" : "col-md-12"
-            }`}
+            className={`${!tableInline && "mt-1"} ${labelAlign === "left" ? "col-4 col-sm-4 col-md-4" : "col-md-12"
+              }`}
           >
             <label
               htmlFor={id}
@@ -296,23 +294,20 @@ const InputContainer = forwardRef(
           </div>
         )}
         <div
-          className={`mt-1 field-container ${
-            labelAlign === "left" ? "col-8 col-sm-8 col-md-8" : "col-md-12"
-          } ${type === "password" ? "position-relative" : ""} ${
-            inputClassName || null
-          }`}
+          className={`mt-1 field-container ${labelAlign === "left" ? "col-8 col-sm-8 col-md-8" : "col-md-12"
+            } ${type === "password" ? "position-relative" : ""} ${inputClassName || null
+            }`}
         >
           {(type === "text" || type === "number" || type === "email") && (
             <span className="d-flex align-items-center">
               <input
                 type={type}
-                className={`${className || ""} ${
-                  error && error.length > 0 ? "error-border" : ""
-                }  w-full form-control p-2 placeholder-[#b6b6b6]`}
+                className={`${className || ""} ${error && error.length > 0 ? "error-border" : ""
+                  }  w-full form-control p-2 placeholder-[#b6b6b6]`}
                 id={id}
                 name={name}
                 value={value || ""}
-                onChange={onChange ? onChangeInput : () => {}}
+                onChange={onChange ? onChangeInput : () => { }}
                 onBlur={onBlur}
                 ref={ref}
                 onKeyDown={handleEnter}
@@ -322,7 +317,6 @@ const InputContainer = forwardRef(
                 readOnly={readOnly}
                 min={min}
                 step={step}
-                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus={autoFocus}
                 style={style}
                 autoComplete="new-password"
@@ -333,13 +327,12 @@ const InputContainer = forwardRef(
             <span className="d-flex align-items-center">
               <input
                 type={passwordVisible ? "text" : "password"}
-                className={`form-control ${className || ""} ${
-                  error && error.length > 0 ? "error-border" : ""
-                } ${tableInline ? "no-border" : ""}`}
+                className={`form-control ${className || ""} ${error && error.length > 0 ? "error-border" : ""
+                  } ${tableInline ? "no-border" : ""}`}
                 id={id}
                 name={name}
                 value={value || ""}
-                onChange={onChange ? onChangeInput : () => {}}
+                onChange={onChange ? onChangeInput : () => { }}
                 onBlur={onBlur}
                 ref={ref}
                 onKeyDown={handleEnter}
@@ -349,7 +342,6 @@ const InputContainer = forwardRef(
                 readOnly={readOnly}
                 min={min}
                 step={step}
-                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus={autoFocus}
                 style={style}
                 autoComplete="new-password"
@@ -358,7 +350,6 @@ const InputContainer = forwardRef(
                 <FontAwesomeIcon
                   icon={faClipboard}
                   className="clipboard-view right-35-px"
-                  onClick={CopyToClipboardHandler}
                 />
               ) : (
                 <></>
@@ -373,9 +364,8 @@ const InputContainer = forwardRef(
           {type === "date" && (
             <DatePicker
               picker={picker || undefined}
-              className={`form-control ${
-                error && error.length > 0 ? "error-border" : ""
-              }  ${tableInline ? "no-border" : ""}`}
+              className={`form-control ${error && error.length > 0 ? "error-border" : ""
+                }  ${tableInline ? "no-border" : ""}`}
               id={id}
               name={name}
               onChange={onDateChange}
@@ -398,13 +388,13 @@ const InputContainer = forwardRef(
                 !value || moment(value, "DD/MM/YYYY") === "Invalid date"
                   ? undefined
                   : dayjs(
-                      moment(
-                        value.length > 10
-                          ? moment(value.remainderDate).format("DD/MM/YYYY")
-                          : value,
-                        "DD/MM/YYYY"
-                      )
+                    moment(
+                      value.length > 10
+                        ? moment(value.remainderDate).format("DD/MM/YYYY")
+                        : value,
+                      "DD/MM/YYYY"
                     )
+                  )
               }
               disabled={disabled}
               disabledDate={disabledDate}
@@ -415,9 +405,8 @@ const InputContainer = forwardRef(
           {type === "select" && (
             <Select
               isMulti={isMulti}
-              className={`select-input ${className} ${
-                error && error.length > 0 ? "error-border" : null
-              } ${tableInline ? "no-border" : ""}`}
+              className={`select-input ${className} ${error && error.length > 0 ? "error-border" : null
+                } ${tableInline ? "no-border" : ""}`}
               value={selectedValue}
               onChange={(e) => onChangeSelect(e)}
               placeholder={!disabled ? placeholder : ""}
@@ -445,11 +434,12 @@ const InputContainer = forwardRef(
           {type === "textarea" && (
             <textarea
               type={type}
-              className="w-full p-2 border border-stone-500 rounded-md"
+              className={`${className || ""} ${error && error.length > 0 ? "error-border" : ""
+                }  w-full form-control p-2 placeholder-[#b6b6b6]`}
               id={id}
               name={name}
               value={value || ""}
-              onChange={onChange ? onChangeInput : () => {}}
+              onChange={onChange ? onChangeInput : () => { }}
               onBlur={onBlur}
               ref={ref}
               onKeyDown={handleEnter}
@@ -459,7 +449,6 @@ const InputContainer = forwardRef(
               min={min}
               step={step}
               style={style}
-              // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus={autoFocus}
             />
           )}
@@ -469,9 +458,8 @@ const InputContainer = forwardRef(
               unCheckedChildren={unCheckedChildren}
               defaultChecked={defaultChecked}
               checked={Boolean(value)}
-              className={`toggle form-control ${className || ""} ${
-                error && error.length > 0 ? "error-border" : ""
-              } ${tableInline ? "no-border" : ""}`}
+              className={`toggle form-control ${className || ""} ${error && error.length > 0 ? "error-border" : ""
+                } ${tableInline ? "no-border" : ""}`}
               onChange={onChange}
               disabled={disabled}
             />
@@ -515,31 +503,31 @@ const InputContainer = forwardRef(
                 plugins: disabled
                   ? []
                   : [
-                      "advlist",
-                      "autolink",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "code",
-                      "fullscreen",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                      "code",
-                      "help",
-                      "wordcount",
-                    ],
+                    "advlist",
+                    "autolink",
+                    "lists",
+                    "link",
+                    "image",
+                    "charmap",
+                    "preview",
+                    "anchor",
+                    "searchreplace",
+                    "visualblocks",
+                    "code",
+                    "fullscreen",
+                    "insertdatetime",
+                    "media",
+                    "table",
+                    "code",
+                    "help",
+                    "wordcount",
+                  ],
                 toolbar: disabled
                   ? ""
                   : "undo redo | blocks | " +
-                    "bold italic forecolor | alignleft aligncenter " +
-                    "alignright alignjustify | bullist numlist outdent indent | " +
-                    "removeformat | help",
+                  "bold italic forecolor | alignleft aligncenter " +
+                  "alignright alignjustify | bullist numlist outdent indent | " +
+                  "removeformat | help",
               }}
             />
           )}
@@ -597,7 +585,7 @@ const customStyles = {
   menuPortal: (base) => ({ ...base, zIndex: 9999 }),
   control: (baseStyles, state) => ({
     ...baseStyles,
-    borderColor: "#d9d9d9",
+    borderColor: "#ccc",
     borderRadius: "5px",
   }),
   placeholder: (provided, state) => ({

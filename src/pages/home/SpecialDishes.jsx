@@ -42,11 +42,12 @@ const SpecialDishes = () => {
     axios.get(`${import.meta.env.VITE_API_URL}/menu`).then((res) => {
       const menuList = res.data;
       const filterpopular = menuList.filter((menu) => {
-        return menu.category === "popular";
+        return menu.category.includes("popular");
       });
       setRecipes(filterpopular);
     });
   }, []);
+
   const settings = {
     dots: true,
     infinite: false,
@@ -88,7 +89,7 @@ const SpecialDishes = () => {
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4 my-20 relative">
       <div className="text-left">
         <p className="subtitle">Customer Favorites</p>
-        <h2 className="title">Popular Catagories</h2>
+        <h2 className="title">Popular Categories</h2>
       </div>
       <div className="md:absolute right-3 top-8 mb-10 md:mr-24">
         <button

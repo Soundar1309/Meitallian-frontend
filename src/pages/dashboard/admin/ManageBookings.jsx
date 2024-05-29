@@ -1,16 +1,5 @@
 import React, { useState } from "react";
-import useMenu from "../../../hooks/useMenu";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { Link } from "react-router-dom";
-import {
-  FaArrowCircleRight,
-  FaArrowLeft,
-  FaArrowRight,
-  FaEdit,
-  FaTrashAlt,
-  FaUsers,
-} from "react-icons/fa";
-import { GiConfirmed } from "react-icons/gi";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";

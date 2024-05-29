@@ -1,59 +1,88 @@
+import { useEffect, useState } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FaUtensils } from "react-icons/fa";
-import useAxiosPublic from "../../../hooks/useAxiosPublic";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
-import { Checkbox, Col, Row, Tag } from "antd";
-import { useEffect, useState } from "react";
+import { Checkbox, Col, Row } from "antd";
+
 import Tags from "../../../components/Tags";
 import InputContainer from "../../../components/input/InputContainer";
-import { useLoaderData, useParams } from "react-router-dom";
-import axios from "axios";
+
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
+// image hosting keys
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
 const AddMenu = () => {
   const { register, handleSubmit, reset } = useForm();
+
   const axiosPublic = useAxiosPublic();
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
+
   const [size, setSize] = useState([]);
   const [sizeValue, setSizeValue] = useState([]);
   const [toppings, setToppings] = useState([]);
-  const [formData, setFormData] = useState([]);
-  const [formErrors, setFormErrors] = useState([]);
+  const [formData, setFormData] = useState({});
+  const [formErrors, setFormErrors] = useState({});
 
   const item = useLoaderData();
-  console.log(item);
-  const params = useParams();
-  const id = params.id;
-  // image hosting keys
-  const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
-  const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
+  useEffect(() => {
+    if (item) {
+      setSize(item.size?.map((item) => item.label));
+      setSizeValue(item.size);
+      setToppings(item.toppings);
+      setFormData(item)
+    }
+  }, [item]);
+
+
   const SizeHandler = (e) => {
     setSize(e);
-    setSizeValue([...sizeValue.filter((item) => e.includes(item.label))]);
+    if (sizeValue) {
+      setSizeValue([...sizeValue.filter((item) => e.includes(item.label))]);
+    }
   };
+
   const validate = (values, imageFile) => {
-    const errors = {};
+    const errors = {
+      size: []
+    };
 
     if (!values.name) {
       errors.name = "Please enter recipe name";
     }
-    if (!values.category || values.category.length === 0) {
+
+    if (!values.category || values.category?.length === 0) {
       errors.category = "Please select category";
     }
-    if (!values.price) {
+
+    if ((!size || size?.length === 0) && !values.price) {
       errors.price = "Please enter price";
     }
+
     if (!values.recipe) {
       errors.recipe = "Please enter recipe details";
     }
-    if (!imageFile || !imageFile.image) {
+
+    size.map((size, index) => {
+      let price = sizeValue.find((sizeItem) => sizeItem.label === size)?.price || null;
+      errors.size[index] = price ? "" : "Please enter price for this size";
+    })
+
+    if (!imageFile) {
       errors.image = "Please upload an image";
     }
+
     return errors;
   };
+
   // on submit form
   const onSubmit = async (data) => {
-    const imageFile =
-      data.image && data.image[0] ? { image: data.image[0] } : null;
+    const imageFile = data.image && data.image[0] ? data.image[0] : item?.image;
     const fieldErrors = validate(formData, imageFile);
 
     if (Object.keys(fieldErrors).length > 0) {
@@ -61,42 +90,62 @@ const AddMenu = () => {
       return;
     } else {
       // image upload to imgbb and then get an url
-      const imageFile = { image: data.image[0] };
-      const hostingImg = await axiosPublic.post(image_hosting_api, imageFile, {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      });
+      let hostingImg;
+      if (data.image[0]) {
+        const imageFile = { image: data.image[0] };
+        hostingImg = await axiosPublic.post(image_hosting_api, imageFile, {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        });
+      }
 
-      if (hostingImg.data.success) {
+      if (item.image || hostingImg.data.success) {
         // now send the menu item data to the server with the image url
         const menuItem = {
           name: formData.name,
           category: formData.category,
           price: sizeValue.length === 0 ? formData.price : 0,
           recipe: formData.recipe,
-          image: hostingImg.data.data.display_url,
+          image: hostingImg?.data.data.display_url || item.image,
           size: sizeValue,
           toppings: toppings,
         };
-        const menuRes = await axiosSecure.post("/menu", menuItem);
-        if (menuRes.status === 200) {
-          // show success popup
-          reset();
-          setFormData([]);
-          setSize("");
-          setToppings([]);
-          Swal.fire({
-            position: "top-center",
-            icon: "success",
-            title: `${formData.name} is added to the menu.`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
+
+        if (item._id) {
+          const menuRes = await axiosSecure.patch(`menu/${item._id}`, menuItem);
+          if (menuRes.status === 200) {
+            // show success popup
+            reset();
+            Swal.fire({
+              position: "top-center",
+              icon: "success",
+              title: `Item is updated successfully!`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            navigate("/dashboard/manage-items");
+          }
+        } else {
+          const menuRes = await axiosSecure.post("/menu", menuItem);
+          if (menuRes.status === 200) {
+            reset();
+            setFormData([]);
+            setSize("");
+            setToppings([]);
+            Swal.fire({
+              position: "top-center",
+              icon: "success",
+              title: `${formData.name} is added to the menu.`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
         }
       }
     }
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (value) {
@@ -111,6 +160,7 @@ const AddMenu = () => {
       { label: label, price: parseInt(value) },
     ]);
   };
+
   const multiSelectChangeHandler = (nameField, valueField, valueObject) => {
     if (valueObject) {
       setFormErrors({ ...formErrors, [nameField]: [] });
@@ -122,17 +172,16 @@ const AddMenu = () => {
         : [],
     });
   };
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setFormErrors({ ...formErrors, image: "" });
+      setFormData({ ...formData, image: "" });
     }
   };
-  useEffect(() => {
-    axios.get(`/menu/${id}`).then((res) => {
-      console.log(res);
-    });
-  }, []);
+
+  console.log(formErrors);
   return (
     <div className="w-full md:w-[870px] mx-auto px-4">
       <h2 className="text-2xl font-semibold my-4">
@@ -148,9 +197,8 @@ const AddMenu = () => {
           value={formData.name}
           error={formErrors.name}
           required
-          className="mb-4"
+          className=""
         />
-
         <div className="flex gap-6 mb-4">
           <div className="w-full">
             <InputContainer
@@ -178,6 +226,7 @@ const AddMenu = () => {
             type="number"
             placeholder="Price"
             name="price"
+            required={size?.length === 0}
             onChange={handleChange}
             value={formData.price}
             error={formErrors?.price}
@@ -187,19 +236,20 @@ const AddMenu = () => {
           <p className="mb-2 text-[14px] font-[600]">Size</p>
           <Checkbox.Group onChange={SizeHandler} value={size}>
             <Row>
-              {sizeOptions.map((item) => {
+              {sizeOptions.map((item, index) => {
                 return (
                   <Col span={24} key={item.value}>
                     <div className="flex items-center my-2">
-                      <div className="w-1/5">
-                        <Checkbox value={item.value}>{item.label}</Checkbox>
+                      <div className="w-[100px]">
+                        <Checkbox className="mt-[15px]" value={item.value}>{item.label}</Checkbox>
                       </div>
                       {size.includes(item.value) ? (
-                        <div className="w-1/4 ml-8">
+                        <div className="w-[200px] ml-8">
                           <InputContainer
                             label="Price"
                             type="number"
                             placeholder="Price"
+                            required
                             onChange={(e) =>
                               SizeValueChangeHandler(item.value, e.target.value)
                             }
@@ -209,6 +259,7 @@ const AddMenu = () => {
                                 (sizeItem) => sizeItem.label === item.value
                               )?.price || ""
                             }
+                            error={formErrors?.size ? formErrors?.size[index] : "" || ""}
                           />
                         </div>
                       ) : (
@@ -226,18 +277,34 @@ const AddMenu = () => {
           <p className="">Toppings</p>
           <Tags setToppings={setToppings} toppings={toppings} />
         </div>
-
-        <InputContainer
-          label=" Recipe Details"
-          type="textarea"
-          placeholder=" Recipe Details"
-          name="recipe"
-          onChange={handleChange}
-          value={formData.recipe}
-          error={formErrors?.recipe}
-          required
-        />
+        <div className="mb-6">
+          <InputContainer
+            label=" Recipe Details"
+            type="textarea"
+            placeholder=" Recipe Details"
+            name="recipe"
+            onChange={handleChange}
+            value={formData.recipe}
+            error={formErrors?.recipe}
+            required
+          />
+        </div>
         <div className="form-control w-full my-6">
+          <InputContainer
+            label="Image"
+            type=""
+            name="image"
+            required
+          />
+          {typeof formData?.image === "string" && formData?.image ? <InputContainer
+            label=""
+            type="image"
+            placeholder=""
+            name="image"
+            value={{ url: formData?.image }}
+            disabled={true}
+          />
+            : <></>}
           <input
             {...register("image")}
             type="file"
@@ -261,6 +328,7 @@ const AddMenu = () => {
 };
 
 export default AddMenu;
+
 const sizeOptions = [
   {
     label: "Regular",

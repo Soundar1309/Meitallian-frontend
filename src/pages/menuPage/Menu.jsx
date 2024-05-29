@@ -29,7 +29,7 @@ const Menu = () => {
     const filtered =
       category === "all"
         ? menu
-        : menu.filter((item) => item.category === category);
+        : menu.filter((item) => item.category.includes(category));
     setFilteredItems(filtered);
     setSelectedCategory(category);
     setCurrentPage(1);
@@ -180,9 +180,8 @@ const Menu = () => {
           <button
             key={index + 1}
             onClick={() => paginate(index + 1)}
-            className={`mx-1 px-3 py-1 rounded-full ${
-              currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
-            } `}
+            className={`mx-1 px-3 py-1 rounded-full ${currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
+              } `}
           >
             {index + 1}
           </button>
