@@ -4,20 +4,13 @@ import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { Checkbox, Col, Row, Tag } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Tags from "../../../components/Tags";
 import InputContainer from "../../../components/input/InputContainer";
-
+import { useLoaderData, useParams } from "react-router-dom";
+import axios from "axios";
 const AddMenu = () => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    // setValue,
-    // setError,
-    // clearErrors,
-    // formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const axiosPublic = useAxiosPublic();
   const axiosSecure = useAxiosSecure();
   const [size, setSize] = useState([]);
@@ -26,6 +19,10 @@ const AddMenu = () => {
   const [formData, setFormData] = useState([]);
   const [formErrors, setFormErrors] = useState([]);
 
+  const item = useLoaderData();
+  console.log(item);
+  const params = useParams();
+  const id = params.id;
   // image hosting keys
   const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
   const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
@@ -47,9 +44,6 @@ const AddMenu = () => {
     }
     if (!values.recipe) {
       errors.recipe = "Please enter recipe details";
-    }
-    if (!values.toppings) {
-      errors.toppings = "Please enter toppings";
     }
     if (!imageFile || !imageFile.image) {
       errors.image = "Please upload an image";
@@ -83,7 +77,7 @@ const AddMenu = () => {
           recipe: formData.recipe,
           image: hostingImg.data.data.display_url,
           size: sizeValue,
-          toppings: formData.toppings,
+          toppings: toppings,
         };
         const menuRes = await axiosSecure.post("/menu", menuItem);
         if (menuRes.status === 200) {
@@ -134,6 +128,11 @@ const AddMenu = () => {
       setFormErrors({ ...formErrors, image: "" });
     }
   };
+  useEffect(() => {
+    axios.get(`/menu/${id}`).then((res) => {
+      console.log(res);
+    });
+  }, []);
   return (
     <div className="w-full md:w-[870px] mx-auto px-4">
       <h2 className="text-2xl font-semibold my-4">
@@ -148,7 +147,6 @@ const AddMenu = () => {
           onChange={handleChange}
           value={formData.name}
           error={formErrors.name}
-          // disabled={disabled}
           required
           className="mb-4"
         />
@@ -163,7 +161,6 @@ const AddMenu = () => {
               name="category"
               value={formData.category}
               error={formErrors?.category}
-              // disabled={disabled}
               required
               menuPlacement="bottom"
               onChange={multiSelectChangeHandler.bind(
@@ -184,7 +181,6 @@ const AddMenu = () => {
             onChange={handleChange}
             value={formData.price}
             error={formErrors?.price}
-            // required
           />
         </div>
         <div className="mb-4">
@@ -226,17 +222,9 @@ const AddMenu = () => {
           </Checkbox.Group>
         </div>
 
-        <div className="mb-4">
-          <InputContainer
-            label="Toppings"
-            type="textarea"
-            placeholder="Toppings"
-            name="toppings"
-            onChange={handleChange}
-            value={formData.toppings}
-            error={formErrors?.toppings}
-            required
-          />
+        <div className="mb-4 text-[14px] font-[600]">
+          <p className="">Toppings</p>
+          <Tags setToppings={setToppings} toppings={toppings} />
         </div>
 
         <InputContainer

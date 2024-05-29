@@ -68,10 +68,6 @@ const Tags = ({ toppings, setToppings, defaultValue }) => {
         <Input
           ref={inputRef}
           type="text"
-          size="small"
-          style={{
-            width: 78,
-          }}
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleInputConfirm}

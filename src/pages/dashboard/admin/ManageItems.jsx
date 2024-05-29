@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import useMenu from "../../../hooks/useMenu";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
-import { FaArrowCircleRight, FaArrowLeft, FaArrowRight, FaEdit, FaTrashAlt } from "react-icons/fa";
+import {
+  FaArrowCircleRight,
+  FaArrowLeft,
+  FaArrowRight,
+  FaEdit,
+  FaTrashAlt,
+} from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const ManageItems = () => {
@@ -19,7 +25,7 @@ const ManageItems = () => {
 
   // delete item
   const handleDeleteItem = (item) => {
-    console.log(item._id)
+    console.log(item._id);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -27,7 +33,7 @@ const ManageItems = () => {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
+      confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await axiosSecure.delete(`/menu/${item._id}`);
@@ -38,12 +44,11 @@ const ManageItems = () => {
           icon: "success",
           title: `${item.name} has been deleted`,
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
-
       }
     });
-  }
+  };
 
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
@@ -85,7 +90,7 @@ const ManageItems = () => {
                   <td>{item.name}</td>
                   <td>{item.price ? `Rs.${item.price}` : ""}</td>
                   <td>
-                    <Link to={`/dashboard/update-menu/${item._id}`}>
+                    <Link to={`/dashboard/add-menu/${item._id}`}>
                       <button className="btn btn-ghost btn-xs bg-orange-500">
                         <FaEdit
                           className="text-white 
@@ -123,7 +128,7 @@ const ManageItems = () => {
           disabled={indexOfLastItem >= menu.length}
           className="btn btn-sm bg-green text-white"
         >
-          Next  <FaArrowRight />
+          Next <FaArrowRight />
         </button>
       </div>
     </div>
