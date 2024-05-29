@@ -58,6 +58,12 @@ const Dashboard = () => {
     return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
   };
 
+
+  const pieChartData = [];
+  for (const [key, value] of Object.entries(chartData)) {
+    pieChartData.push({ name: key.charAt(0).toUpperCase() + key.slice(1), value: value })
+  }
+
   // custom shape for the pie chart
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
@@ -67,28 +73,29 @@ const Dashboard = () => {
     innerRadius,
     outerRadius,
     percent,
+    index,
   }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
+    if (pieChartData[index]?.value) {
+      return (
+        <text
+          x={x}
+          y={y}
+          fill="white"
+          textAnchor={x > cx ? "start" : "end"}
+          fontSize={13}
+          dominantBaseline="central"
+        >
+          {`${pieChartData[index]?.value}`}
+        </text>
+      );
+    } else {
+      return;
+    }
   };
-
-  const pieChartData = [];
-  for (const [key, value] of Object.entries(chartData)) {
-    pieChartData.push({ name: key.charAt(0).toUpperCase() + key.slice(1), value: value })
-  }
 
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
