@@ -48,9 +48,7 @@ const AddMenu = () => {
   };
 
   const validate = (values, imageFile) => {
-    const errors = {
-      size: []
-    };
+    const errors = {};
 
     if (!values.name) {
       errors.name = "Please enter recipe name";
@@ -70,13 +68,25 @@ const AddMenu = () => {
 
     size.map((size, index) => {
       let price = sizeValue.find((sizeItem) => sizeItem.label === size)?.price || null;
-      errors.size[index] = price ? "" : "Please enter price for this size";
+      if (price) {
+        if (errors.size) {
+          delete errors.size ? errors.size[index] : "";
+        }
+      } else {
+        if (!errors.size) {
+          errors.size = []
+        }
+        errors.size[index] = price ? "" : "Please enter price for this size";
+      }
     })
 
     if (!imageFile) {
       errors.image = "Please upload an image";
     }
 
+    if (errors.size?.length === 0) {
+      delete errors.size
+    }
     return errors;
   };
 
@@ -181,7 +191,6 @@ const AddMenu = () => {
     }
   };
 
-  console.log(formErrors);
   return (
     <div className="w-full md:w-[870px] mx-auto px-4">
       <h2 className="text-2xl font-semibold my-4">
@@ -320,7 +329,7 @@ const AddMenu = () => {
           />
         </div>
         <button className="btn bg-green text-white px-6">
-          Add Item <FaUtensils></FaUtensils>
+          {item._id ? "Update Item" : "Add Item"} <FaUtensils></FaUtensils>
         </button>
       </form>
     </div>
