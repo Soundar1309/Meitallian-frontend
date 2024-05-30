@@ -42,7 +42,7 @@ const SpecialDishes = () => {
     axios.get(`${import.meta.env.VITE_API_URL}/menu`).then((res) => {
       const menuList = res.data;
       const filterpopular = menuList.filter((menu) => {
-        return menu.category.includes("popular");
+        return menu.category.includes("Popular");
       });
       setRecipes(filterpopular);
     });

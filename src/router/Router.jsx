@@ -1,4 +1,4 @@
-import { createBrowserRouter, createHashRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import Main from "../layout/Main";
 import Home from "../pages/home/Home";
 import Menu from "../pages/menuPage/Menu";
@@ -13,7 +13,6 @@ import Dashboard from "../pages/dashboard/admin/Dashboard";
 import Users from "../pages/dashboard/admin/Users";
 import AddMenu from "../pages/dashboard/admin/AddMenu";
 import ManageItems from "../pages/dashboard/admin/ManageItems";
-import UpdateMenu from "../pages/dashboard/admin/UpdateMenu";
 import Payment from "../pages/menuPage/Payment";
 import ManageBookings from "../pages/dashboard/admin/ManageBookings";
 import Contact from "../pages/contact/Contact";
@@ -129,12 +128,6 @@ const router = createHashRouter([
       {
         path: "manage-items",
         element: <ManageItems />,
-      },
-      {
-        path: "update-menu/:id",
-        element: <UpdateMenu />,
-        loader: ({ params }) =>
-          fetch(`${import.meta.env.VITE_API_URL}/menu/${params.id}`),
       },
       {
         path: "bookings",

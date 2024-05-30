@@ -122,8 +122,8 @@ const AddMenu = () => {
           toppings: toppings,
         };
 
-        if (item._id) {
-          const menuRes = await axiosSecure.patch(`menu/${item._id}`, menuItem);
+        if (item?._id) {
+          const menuRes = await axiosSecure.patch(`menu/${item?._id}`, menuItem);
           if (menuRes.status === 200) {
             // show success popup
             reset();
@@ -329,7 +329,7 @@ const AddMenu = () => {
           />
         </div>
         <button className="btn bg-green text-white px-6">
-          {item._id ? "Update Item" : "Add Item"} <FaUtensils></FaUtensils>
+          {item?._id ? "Update Item" : "Add Item"} <FaUtensils></FaUtensils>
         </button>
       </form>
     </div>
@@ -386,8 +386,8 @@ const categoryOptions = [
     value: "Pasta",
   },
   {
-    label: "Burgers",
-    value: "Burgers",
+    label: "Burger",
+    value: "Burger",
   },
   {
     label: "Sandwich",
