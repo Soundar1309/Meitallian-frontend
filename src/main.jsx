@@ -8,10 +8,9 @@ import AuthProvider from "./contexts/AuthProvider.jsx";
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
 } from "@tanstack/react-query";
 import { ThemeProvider } from "./hooks/ThemeContext.jsx";
-import Popup from "../src/components/Popup.jsx"
+import Popup from "./components/Popup.jsx";
 
 const queryClient = new QueryClient();
 

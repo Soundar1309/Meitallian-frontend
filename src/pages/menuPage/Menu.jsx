@@ -7,7 +7,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOption, setSortOption] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(9); // Number of items to display per page
+  const [itemsPerPage] = useState(9); 
 
   useEffect(() => {
     // Fetch data from the backend

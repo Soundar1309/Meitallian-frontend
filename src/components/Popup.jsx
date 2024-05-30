@@ -4,8 +4,18 @@ const PopupAd = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Show the popup ad when the component mounts
-    setIsVisible(true);
+    // Check if the popup has been shown less than 3 times
+    const popupCount = parseInt(localStorage.getItem('popupCount') || '0', 10);
+    if (popupCount < 3) {
+      // Show the popup ad after a 3-second delay
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+        localStorage.setItem('popupCount', (popupCount + 1).toString());
+      }, 5000);
+
+      // Cleanup the timer if the component unmounts before the delay
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const closePopup = () => {
@@ -14,22 +24,22 @@ const PopupAd = () => {
 
   return (
     isVisible && (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full mx-4">
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+        <div className="bg-white p-4 rounded-lg shadow-lg relative max-w-lg w-full h-[95%] mx-4">
           <button
-            className="absolute top-0 right-0 mt-2 mr-2 text-gray-500 hover:text-gray-800"
-            onClick={closePopup}
+            className="absolute top-0 right-3 text-[30px] mt-2 mr-2 text-white hover:text-gray-800"
+            onClick={closePopup} 
           >
             &times;
           </button>
           <img
-            src="../images/1.jpg" 
+            src="../images/1.jpg"
             alt="Ad Image"
-            className="w-full h-auto rounded-md mb-4"
+            className="w-full h-[85%] rounded-md mb-4"
           />
-          <h2 className="text-2xl font-semibold mb-4">Special Offer!</h2>
-          <p className="text-gray-700 mb-4">
-            Get 20% off on your first order! Use code: FIRST20
+          <h2 className="text-xl font-bold mb-2">Special Offer!</h2>
+          <p className="text-gray-700 mb-2">
+            Get <b>20%</b>off on your first order! Use code: <b>FIRST20</b>
           </p>
         </div>
       </div>

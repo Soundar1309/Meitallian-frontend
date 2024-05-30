@@ -8,12 +8,19 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { useTheme } from "../hooks/ThemeContext";
 
 const Main = () => {
-  const { loading } = useContext(AuthContext);
+  // const { loading } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000); 
+  }, []);
+
   return (
     <div className="bg-primaryBG">
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
+     {loading && <LoadingSpinner />}
+      {!loading && (
         <div className="relative">
           <Navbar />
           <div className="fixed top-14 lg:top-0  right-0 p-5 themediv"></div>

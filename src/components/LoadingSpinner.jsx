@@ -1,12 +1,15 @@
-import loadingSpinner from "../assets/spinner.png";
+import React from 'react';
+import loadingSpinner from '../assets/spinner.png';
 
 const LoadingSpinner = () => {
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-[51] bg-[#fff] bg-opacity-75">
-      <div className="relative">
-        <div className="animate-ping absolute inline-flex h-24 w-24">
-          <img src={loadingSpinner} alt="spinner" />
-        </div>
+    <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center z-50 bg-white bg-opacity-75">
+      <div className="relative flex justify-center items-center">
+        <img
+          src={loadingSpinner}
+          alt="Loading spinner"
+          className="h-24 w-24 animate-spin"
+        />
       </div>
     </div>
   );
