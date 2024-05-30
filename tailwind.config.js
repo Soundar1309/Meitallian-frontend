@@ -7,28 +7,28 @@ export default {
   ],
   theme: {
     extend: {
-      font:{
+      font: {
         KaushanScript: "Kaushan Script",
       },
       colors: {
         "green": "#39DB4A",
-        "darkgreen":"#2a634e",
+        "darkgreen": "#2a634e",
         "red": "#FF6868",
         "secondary": "#555",
-        "primaryBG": "#fffff"
+        "primaryBG": "#ffff"
       }
     },
   },
   plugins: [require("daisyui")],
 
   daisyui: {
-    themes: false, 
+    themes: false,
     darkTheme: "light",
     base: true,
     styled: true,
     utils: true,
-    prefix: "", 
-    logs: true, 
+    prefix: "",
+    logs: true,
     themeRoot: ":root",
   },
 }

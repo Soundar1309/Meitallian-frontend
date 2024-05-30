@@ -21,9 +21,9 @@ import About from "../pages/about/About";
 import Error from "../pages/404";
 import MenuDetail from "../pages/menuPage/MenuDetail";
 import PrivateRouteAdmin from "../PrivateRoute/PrivateRouteAdmin";
-import Termscondition from "../pages/terms-condition"
-import Privacypolicy from "../pages/privacy-policy"
-import Story from "../pages/about/Ourstory"
+import Termscondition from "../pages/terms-condition";
+import Privacypolicy from "../pages/privacy-policy";
+import Story from "../pages/about/Ourstory";
 
 const router = createHashRouter([
   {
@@ -76,7 +76,7 @@ const router = createHashRouter([
       },
       {
         path: "/terms-condition",
-        element: <Termscondition/>,
+        element: <Termscondition />,
       },
       {
         path: "/privacy-policy",
@@ -120,7 +120,12 @@ const router = createHashRouter([
         path: "add-menu",
         element: <AddMenu />,
       },
-
+      {
+        path: "add-menu/:id",
+        element: <AddMenu />,
+        loader: ({ params }) =>
+          fetch(`${import.meta.env.VITE_API_URL}/menu/${params.id}`),
+      },
       {
         path: "manage-items",
         element: <ManageItems />,

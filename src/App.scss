@@ -115,7 +115,13 @@ input[type="number"] {
   height: 50px;
 }
 .ant-tag {
-  line-height: 40px;
+  line-height: 20px;
+}
+
+.tag-content {
+  .ant-tag {
+    line-height: 30px;
+  }
 }
 .ant-tag-checkable-checked {
   background-color: #39db4a;
@@ -242,4 +248,8 @@ input[type="number"] {
   .description {
     width: 100%;
   }
+}
+
+.animate-ping {
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }

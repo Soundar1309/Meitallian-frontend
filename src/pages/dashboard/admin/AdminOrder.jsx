@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
 import { Select, Table } from "antd";
 import useUser from "../../../hooks/useUser";
 import FoodBasket from "../../../components/FoodBasket";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
+
+import {
+  FaTrashAlt,
+} from "react-icons/fa";
 
 const AdminOrder = ({ isAdmin }) => {
   const axiosSecure = useAxiosSecure();
@@ -13,7 +18,7 @@ const AdminOrder = ({ isAdmin }) => {
   const [order, setOrder] = useState([]);
   const { Option } = Select;
 
-  useEffect(() => {
+  const GetOrder = useCallback(() => {
     let mailData =
       !isAdmin && loggedinUser?.role === "user" ? `?email=${user?.email}` : "";
 
@@ -22,7 +27,11 @@ const AdminOrder = ({ isAdmin }) => {
       .then((res) => {
         setOrder(res.data.orders);
       });
-  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin]);
+  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin])
+
+  useEffect(() => {
+    GetOrder()
+  }, [GetOrder]);
 
   const formatDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
@@ -51,6 +60,30 @@ const AdminOrder = ({ isAdmin }) => {
     const mobile = mobileNumber ? `<p> <span class="font-bold">Mobile No</span> : ${mobileNumber} </p>` : "";
 
     return `${user} ${[locality, area, city].filter(Boolean).join(', ')} ${pincode}${landmark}${mobile}`;
+  };
+
+  const handleDeleteItem = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await axiosSecure.delete(`/order/${id}`);
+        GetOrder();
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: `Order deleted successfully`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    });
   };
 
   const columns = [
@@ -85,6 +118,20 @@ const AdminOrder = ({ isAdmin }) => {
       key: "customerDetails",
       width: "35%",
       render: (text) => <div dangerouslySetInnerHTML={{ __html: text }}></div>,
+    },
+    {
+      title: "Action",
+      dataIndex: "_id",
+      key: "_id",
+      width: "10%",
+      render: (id) => (
+        <button
+          onClick={() => handleDeleteItem(id)}
+          className="btn btn-ghost btn-xs"
+        >
+          <FaTrashAlt className="text-red"></FaTrashAlt>
+        </button>
+      ),
     },
   ];
 

@@ -25,7 +25,7 @@ const UpdateMenu = () => {
 
   const SizeHandler = (e) => {
     setSize(e);
-    setSizeValue([...sizeValue.filter((item) => e.includes(item.label))])
+    setSizeValue([...sizeValue.filter((item) => e.includes(item.label))]);
   };
 
   useEffect(() => {
@@ -36,7 +36,6 @@ const UpdateMenu = () => {
 
   // on submit form
   const onSubmit = async (data) => {
-    // console.log(data);
     // image upload to imgbb and then get an url
     let hostingImg;
     if (data.image[0]) {
@@ -78,11 +77,12 @@ const UpdateMenu = () => {
   };
 
   const SizeValueChangeHandler = (label, value) => {
-    setSizeValue([...sizeValue.filter((item) => item.label !== label), { "label": label, "price": parseInt(value) }])
+    setSizeValue([
+      ...sizeValue.filter((item) => item.label !== label),
+      { label: label, price: parseInt(value) },
+    ]);
   };
 
-  console.log(sizeValue);
-  console.log(size);
   return (
     <div className="w-full md:w-[870px] mx-auto px-4">
       <h2 className="text-2xl font-semibold my-4">
@@ -92,7 +92,8 @@ const UpdateMenu = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control w-full my-6">
             <label htmlFor="name" className="label">
-              <span className="label-text">Recipe Name
+              <span className="label-text">
+                Recipe Name
                 <span className="ml-1 text-xl text-[#f06548]">*</span>
               </span>
             </label>
@@ -110,7 +111,8 @@ const UpdateMenu = () => {
             {/* category */}
             <div className="form-control w-full my-6">
               <label htmlFor="category" className="label">
-                <span className="label-text">Category
+                <span className="label-text">
+                  Category
                   <span className="ml-1 text-xl text-[#f06548]">*</span>
                 </span>
               </label>
@@ -135,8 +137,11 @@ const UpdateMenu = () => {
             {/* price */}
             <div className="form-control w-full my-6">
               <label htmlFor="price" className="label">
-                <span className="label-text">Price
-                  <span className="ml-1 text-xl text-[#f06548]">{size?.length === 0 ? <span>*</span> : <></>}</span>
+                <span className="label-text">
+                  Price
+                  <span className="ml-1 text-xl text-[#f06548]">
+                    {size?.length === 0 ? <span>*</span> : <></>}
+                  </span>
                 </span>
               </label>
               <input
@@ -151,31 +156,43 @@ const UpdateMenu = () => {
           </div>
           <div className="mb-4">
             <p className="mb-2">Size</p>
-            <Checkbox.Group
-              onChange={SizeHandler}
-              value={size}
-            >
+            <Checkbox.Group onChange={SizeHandler} value={size}>
               <Row>
                 {sizeOptions.map((item) => {
-                  return <Col span={24} key={item.value}>
-                    <div className="flex items-center my-2">
-                      <div className="w-1/5">
-                        <Checkbox value={item.value}>{item.label}</Checkbox>
-                      </div>
-                      {size.includes(item.value) ?
-                        <div className="w-3/4">
-                          <input
-                            type="number"
-                            placeholder="Price"
-                            {...register(`${item.value}-price`, { required: true })}
-                            className="input input-bordered"
-                            onChange={(e) => SizeValueChangeHandler(item.value, e.target.value)}
-                            value={sizeValue?.find((itm) => itm.label === item.value)?.price}
-                          />
+                  return (
+                    <Col span={24} key={item.value}>
+                      <div className="flex items-center my-2">
+                        <div className="w-1/5">
+                          <Checkbox value={item.value}>{item.label}</Checkbox>
                         </div>
-                        : <></>}
-                    </div>
-                  </Col>
+                        {size.includes(item.value) ? (
+                          <div className="w-3/4">
+                            <input
+                              type="number"
+                              placeholder="Price"
+                              {...register(`${item.value}-price`, {
+                                required: true,
+                              })}
+                              className="input input-bordered"
+                              onChange={(e) =>
+                                SizeValueChangeHandler(
+                                  item.value,
+                                  e.target.value
+                                )
+                              }
+                              value={
+                                sizeValue?.find(
+                                  (itm) => itm.label === item.value
+                                )?.price
+                              }
+                            />
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </Col>
+                  );
                 })}
               </Row>
             </Checkbox.Group>

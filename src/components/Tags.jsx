@@ -34,9 +34,7 @@ const Tags = ({ toppings, setToppings, defaultValue }) => {
   const forMap = (tag) => (
     <span
       key={tag}
-      style={{
-        display: "inline-block",
-      }}
+      className="tag-content"
     >
       <Tag
         closable
@@ -57,21 +55,11 @@ const Tags = ({ toppings, setToppings, defaultValue }) => {
   };
   return (
     <>
-      <div
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        <div>{tagChild}</div>
-      </div>
+      <div className=" my-4">{tagChild}</div>
       {inputVisible ? (
         <Input
           ref={inputRef}
           type="text"
-          size="small"
-          style={{
-            width: 78,
-          }}
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleInputConfirm}

@@ -130,19 +130,16 @@ const MenuDetail = () => {
         </div>
         <div className="md:w-1/2 w-full">
           <p className="capitalize font-bold text-xl md:text-3xl mb-2">
-            {" "}
             {menuDetail.name}
           </p>
           <p className="mb-4">
-            Category:{" "}
+            Category:
             <span className="capitalize ml-2 text-darkgreen">
-              {" "}
-              {menuDetail.category}{" "}
+              {menuDetail.category?.join(", ")}
             </span>
           </p>
           {menuDetail.price ? (
             <p className="text-2xl text-darkgreen font-bold my-6">
-              {" "}
               Rs. {menuDetail.price}
             </p>
           ) : (
