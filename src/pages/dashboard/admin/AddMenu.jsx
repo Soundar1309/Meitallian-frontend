@@ -292,6 +292,7 @@ const AddMenu = () => {
             type="textarea"
             placeholder=" Recipe Details"
             name="recipe"
+            className="h-[150px]"
             onChange={handleChange}
             value={formData.recipe}
             error={formErrors?.recipe}
