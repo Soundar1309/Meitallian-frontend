@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import MenuItem from "antd/es/menu/MenuItem";
 import Modal from "./Modal";
 import Profile from "./Profile";
 
@@ -8,11 +7,10 @@ import { FaRegUser } from "react-icons/fa";
 import useCart from "../hooks/useCart";
 
 import { Menu } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../contexts/AuthProvider";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isSticky, setIsSticky] = useState(false);
   const { user } = useContext(AuthContext);
   const [cart] = useCart();
@@ -39,36 +37,18 @@ const Navbar = () => {
     };
   }, []);
 
-  const navItems = (
-    <>
-      <li>
-        <a href="/">Home</a>
-      </li>
-      <li>
-        <a href="/#/menu">Menu</a>
-      </li>
-      <li>
-        <a href="/#/about">
-          About Us
-        </a>
-      </li>
-      <li>
-        <a href="/#/Story">
-          Our Story
-        </a>
-      </li>
-      <li>
-        <a href="/#/contact">Contact us</a>
-      </li>
-    </>
-  );
+  const onClick = ({ item }) => {
+    setIsMenuOpen((prev) => !prev);
+    navigate(item?.props.title)
+  }
+
   return (
     <header
-      className={`bg-darkgreen max-w-screen-2xl h-22 mb-6 container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out`}
+      className={`bg-darkgreen navbar-wrapper max-w-screen-2xl h-22 mb-6 container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out`}
     >
       <div
         className={`navbar xl:px-24 ${isSticky
-          ? "shadow-md bg-darkgreen transition-all duration-300 ease-in-out text-white" 
+          ? "shadow-md bg-darkgreen transition-all duration-300 ease-in-out text-white"
           : ""
           }`}
       >
@@ -101,6 +81,7 @@ const Navbar = () => {
                 <Menu
                   mode="vertical"
                   items={items}
+                  onClick={onClick}
                   className="responsive-menu"
                 />
                 <div className="w-full flex items-center justify-center">
@@ -184,56 +165,59 @@ const Navbar = () => {
 };
 export default Navbar;
 
+const navItems = (
+  <>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a href="/#/menu">Menu</a>
+    </li>
+    <li>
+      <a href="/#/about">
+        About Us
+      </a>
+    </li>
+    <li>
+      <a href="/#/Story">
+        Our Story
+      </a>
+    </li>
+    <li>
+      <a href="/#/contact">Contact us</a>
+    </li>
+  </>
+);
 
 const items = [
   {
-    key: "sub1",
-    label: (
-      <a href="/" className="text-md md:text-lg">
-        Home
-      </a>
-    ),
-    children: [],
+    key: "homw",
+    label: "Home",
+    title: "",
     className: "border-b-1 border",
   },
   {
-    key: "sub2",
-    label: (
-      <a href="/#/menu" className="text-md md:text-lg">
-        Menu
-      </a>
-    ),
-    children: [],
+    key: "menu",
+    label: "Menu",
+    title: "menu",
     className: "border-b-1 border",
   },
   {
-    key: "sub3",
-    label: (
-      <a href="/#/about" className="text-md md:text-lg">
-        About Us
-      </a>
-    ),
-    children: [],
+    key: "about",
+    label: "About Us",
+    title: "about",
     className: "border-b-1 border",
   },
   {
-    key: "sub4",
-    label: (
-      <a href="/#/story" className="text-md md:text-lg">
-        Our Story
-      </a>
-    ),
-    children: [],
+    key: "story",
+    label: "Our Story",
+    title: "story",
     className: "border-b-1 border",
   },
   {
-    key: "sub5",
-    label: (
-      <a href="/#/contact" className="text-md md:text-lg">
-        Contact us
-      </a>
-    ),
-    children: [],
+    key: "contact",
+    label: "Contact us",
+    title: "contact",
     className: "",
   },
 ];
