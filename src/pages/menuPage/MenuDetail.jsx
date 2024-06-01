@@ -246,7 +246,9 @@ const MenuDetail = () => {
         </div>
       </div>
       <h4 className="mt-7 font-bold text-lg">Description</h4>
-      <p className="my-6 w-full "> {menuDetail.recipe}</p>
+      <p className="my-6 w-full "dangerouslySetInnerHTML={{
+                          __html: menuDetail.recipe,
+                        }}></p>
     </div>
   );
 };

@@ -199,7 +199,7 @@ const AddMenu = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputContainer
           label="Recipe Name"
-          type="text"
+          type="rich"
           placeholder="Recipe Name"
           name="name"
           onChange={handleChange}
@@ -289,7 +289,7 @@ const AddMenu = () => {
         <div className="mb-6">
           <InputContainer
             label=" Recipe Details"
-            type="textarea"
+            type="richtext"
             placeholder=" Recipe Details"
             name="recipe"
             className="h-[150px]"
