@@ -1,25 +1,25 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import "../../src/App.scss";
 import Footer from "../components/Footer";
-import { AuthContext } from "../contexts/AuthProvider";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { useTheme } from "../hooks/ThemeContext";
+
+import "../../src/App.scss";
 
 const Main = () => {
-  // const { loading } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
+    setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1000); 
-  }, []);
+    }, 3000);
+  }, [location?.pathname]);
 
   return (
     <div className="bg-primaryBG">
-     {loading && <LoadingSpinner />}
+      {loading && <LoadingSpinner />}
       {!loading && (
         <div className="relative">
           <Navbar />

@@ -253,3 +253,20 @@ input[type="number"] {
 .animate-ping {
   animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+.navbar-wrapper {
+  .ant-menu .ant-menu-item {
+    padding: 0px;
+    border-radius: 0px;
+  }
+
+  .ant-menu-title-content {
+    height: 100%;
+    border-radius: 0px;
+    color: black !important;
+    padding: 0px 25px;
+  }
+  .ant-menu-title-content:active {
+    background: #ccc !important;
+  }
+}
