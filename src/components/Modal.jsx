@@ -55,6 +55,7 @@ const Modal = () => {
         name: result.user?.displayName,
       };
       axiosPublic.post("/users", userInfo).then((res) => {
+        alert("Login successfully!");
         navigate("/");
         closeModal();
       });

@@ -88,7 +88,7 @@ const Navbar = () => {
                   <Link
                     to="/menu"
                     type="button"
-                    className="bg-none w-[380px] font-semibold btn rounded-none text-darkgreen border-black my-6 order_now_btn text-md md:text-lg py-2"
+                    className="bg-darkgreen w-[350px] font-semibold btn rounded-none text-white border-none my-6 order_now_btn text-md md:text-lg py-2"
                   >
                     Order Online
                   </Link>
@@ -194,30 +194,30 @@ const items = [
     key: "homw",
     label: "Home",
     title: "",
-    className: "border-b-1 border",
+    //className: "border-b-1 border",
   },
   {
     key: "menu",
     label: "Menu",
     title: "menu",
-    className: "border-b-1 border",
+    //className: "border-b-1 border",
   },
   {
     key: "about",
     label: "About Us",
     title: "about",
-    className: "border-b-1 border",
+    //className: "border-b-1 border",
   },
   {
     key: "story",
     label: "Our Story",
     title: "story",
-    className: "border-b-1 border",
+    //className: "border-b-1 border",
   },
   {
     key: "contact",
     label: "Contact us",
     title: "contact",
-    className: "",
+    //className: "",
   },
 ];

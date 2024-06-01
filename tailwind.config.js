@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       animation: {
-        spin: 'spin 1s linear infinite',
+        spin: 'blink 1s linear infinite',
       },
       font: {
         KaushanScript: "Kaushan Script",

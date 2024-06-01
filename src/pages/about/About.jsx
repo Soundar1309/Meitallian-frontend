@@ -4,14 +4,14 @@ import Aboutus from '../../components/Aboutus'
 import Testimonials from '../home/Testimonials'
 import Aboutceo from '../../components/Aboutceo'
 import Flbtn from "../../components/Flbtn"
-// import Team from '../../components/Teamsection'
+import Team from '../../components/Teams'
 
 const About = () => {
   return (
     <div>
         <Aboutus/>
         <Aboutceo/>
-        {/* <Team/> */}
+        <Team/>
         <Testimonials/>
         <Flbtn/>
     </div>

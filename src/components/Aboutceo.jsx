@@ -1,5 +1,5 @@
 import React from "react";
-import ceoImg from "../assets/ceo.png";
+import ceoImg from "../assets/Ceo.png";
 
 const Aboutceo = () => {
   return (
