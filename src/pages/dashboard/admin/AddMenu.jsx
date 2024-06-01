@@ -199,7 +199,7 @@ const AddMenu = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputContainer
           label="Recipe Name"
-          type="rich"
+          type="text"
           placeholder="Recipe Name"
           name="name"
           onChange={handleChange}
