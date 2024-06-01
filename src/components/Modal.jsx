@@ -38,7 +38,6 @@ const Modal = () => {
 
         alert("Login successful!");
         navigate("/");
-        console.log("Modal Open:", isModalOpen);
         closeModal();
       })
       .catch((error) => {
@@ -96,7 +95,7 @@ const Modal = () => {
                 type="email"
                 placeholder="email"
                 className="input input-bordered"
-                {...register("email")}
+                {...register("email", { required: true })}
               />
             </div>
 
