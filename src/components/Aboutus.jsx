@@ -12,13 +12,7 @@ const Aboutus = () => {
             Where Passion Meets Authenticity in Italian Cuisine
           </h2>
           <p className="mb-4 text-justify text-[16px]">
-            At ME ITALIAN, we live and breathe the art of Italian cooking. Our
-            journey in the food industry has been one of dedication, driven by
-            an unyielding passion for the rich and diverse flavours of Italian
-            cuisine. We are proud to introduce ME ITALIAN, a start-up
-            restaurant located in the vibrant district of South Chennai, where
-            our passion for food and commitment to delivering top-class Italian
-            dining experiences come to life. 
+            We live and breathe the art of Italian cooking. Our journey in the food industry has been one of dedication, driven by an unyielding passion for the rich and diverse flavours of Italian       cuisine. We are proud to introduce ME ITALIAN, a start-up <span className="font-bold text-black-70">QSR (Quick Service Restaurant)</span> located in the vibrant district of South Chennai, where our passion for food and commitment to delivering top-class Italian dining experiences come to life. 
             <br /> <br />
             Food is not just sustenance; its an art form. With ME ITALIAN,
             we aim to turn our culinary passion into a reality that enriches 
