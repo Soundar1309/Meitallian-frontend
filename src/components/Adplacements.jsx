@@ -15,6 +15,7 @@ const StyledCarousel = styled(Carousel)`
   }
   .carousel .control-dots {
     bottom: 1px; /* Position the dots 15px from the bottom */
+    z-index: 1;
   }
   .carousel .control-dots .dot {
     background: #2a634e; 

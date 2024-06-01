@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import About1 from "../assets/about-us.jpg"
-import About2 from "../assets/about-2.jpg"
+import About2 from "../assets/about-2.jpeg"
 
 const Aboutus = () => {
   return (
@@ -36,7 +36,7 @@ const Aboutus = () => {
             alt="office content 1"
           />
           <img
-            className="mt-4 w-full lg:mt-10 rounded-lg"
+            className="mt-4 w-full h-[350px] lg:mt-10 rounded-lg"
             src={About2}
             alt="office content 2"
           />
