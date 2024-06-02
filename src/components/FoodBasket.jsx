@@ -12,7 +12,7 @@ const FoodBasket = ({ cartItem }) => {
         </div>
         <div className="felx flex-col gap-2">
           <p className="font-bold capitalize mr-4">{cartItem.name}</p>
-          <div className="text-gray-400 text-sm">
+          <div className="text-gray-400 text-sm text-left">
             {cartItem.size && cartItem.size.length > 0 ? (
               <p className="capitalize">size: {cartItem.size}</p>
             ) : (

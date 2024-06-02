@@ -122,7 +122,7 @@ const Order = ({ isAdmin }) => {
       price: `Rs. ${order.total}`,
       status: order.status,
       description: order?.orderItems?.map((cartItem, index) => (
-        <div key={cartItem._id} className="w-1/2">
+        <div key={cartItem._id} className="w-1/3 p-2">
           <FoodBasket cartItem={cartItem} />
         </div>
       )),
@@ -159,9 +159,7 @@ const Order = ({ isAdmin }) => {
               columns={columns}
               expandable={{
                 expandedRowRender: (record) => (
-                  <div className="flex gap-4" style={{ margin: 0 }}>
-                    {record.description}
-                  </div>
+                  <div className="flex flex-wrap p-4">{record.description}</div>
                 ),
                 rowExpandable: (record) => record.name !== "Not Expandable",
               }}
