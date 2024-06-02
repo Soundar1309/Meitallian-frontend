@@ -41,33 +41,33 @@ const Menu = () => {
     setCurrentPage(1);
   };
 
-  const handleSortChange = (option) => {
-    setSortOption(option);
+  // const handleSortChange = (option) => {
+  //   setSortOption(option);
 
-    // Logic for sorting based on the selected option
-    let sortedItems = [...filteredItems];
+  //   // Logic for sorting based on the selected option
+  //   let sortedItems = [...filteredItems];
 
-    switch (option) {
-      case "A-Z":
-        sortedItems.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "Z-A":
-        sortedItems.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "low-to-high":
-        sortedItems.sort((a, b) => a.price - b.price);
-        break;
-      case "high-to-low":
-        sortedItems.sort((a, b) => b.price - a.price);
-        break;
-      default:
-        // Do nothing for the "default" case
-        break;
-    }
+  //   switch (option) {
+  //     case "A-Z":
+  //       sortedItems.sort((a, b) => a.name.localeCompare(b.name));
+  //       break;
+  //     case "Z-A":
+  //       sortedItems.sort((a, b) => b.name.localeCompare(a.name));
+  //       break;
+  //     case "low-to-high":
+  //       sortedItems.sort((a, b) => a.price - b.price);
+  //       break;
+  //     case "high-to-low":
+  //       sortedItems.sort((a, b) => b.price - a.price);
+  //       break;
+  //     default:
+  //       // Do nothing for the "default" case
+  //       break;
+  //   }
 
-    setFilteredItems(sortedItems);
-    setCurrentPage(1);
-  };
+  //   setFilteredItems(sortedItems);
+  //   setCurrentPage(1);
+  // };
 
   //   console.log(filteredItems);
   // Pagination logic

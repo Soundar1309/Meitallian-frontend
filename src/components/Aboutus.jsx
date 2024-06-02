@@ -11,7 +11,7 @@ const Aboutus = () => {
           <h2 className="mb-8 mt-16 text-2xl tracking-tight font-extrabold text-gray-900">
             Where Passion Meets Authenticity in Italian Cuisine
           </h2>
-          <p className="mb-4 text-justify text-[16px]">
+          <p className="mb-4 text-justify text-[16px] text-black">
             We live and breathe the art of Italian cooking. Our journey in the food industry has been one of dedication, driven by an unyielding passion for the rich and diverse flavours of Italian       cuisine. We are proud to introduce ME ITALIAN, a start-up <span className="font-bold text-black-70">QSR (Quick Service Restaurant)</span> located in the vibrant district of South Chennai, where our passion for food and commitment to delivering top-class Italian dining experiences come to life. 
             <br /> <br />
             Food is not just sustenance; its an art form. With ME ITALIAN,
@@ -23,12 +23,12 @@ const Aboutus = () => {
             alternatives.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-4 mt-20">
-          <img
+        <div className="mt-20">
+          {/* <img
             className="w-full rounded-lg"
             src={About1}
             alt="office content 1"
-          />
+          /> */}
           <img
             className="mt-4 w-full h-[350px] lg:mt-10 rounded-lg"
             src={About2}

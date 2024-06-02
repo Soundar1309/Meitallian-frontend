@@ -14,9 +14,9 @@ const Testimonials = () => {
             <p className="subtitle">Testimonials</p>
             <h2 className="title">What Our Customers Say About Us?</h2>
             <blockquote className="my-5 text-secondary leading-[30px]">
-              “I had the pleasure of dining at Foodi last night, and I'm still
+              “I had the pleasure of dining at meitalian italian restaurant last night, and I'm still
               raving about the experience! The attention to detail in
-              presentation and service was impeccable”
+              presentation and service was impeccable.”
             </blockquote>
            
            {/* avater */}
