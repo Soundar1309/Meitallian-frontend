@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import CheckableTag from "../../components/CheckableTag";
 import DisabledPopover from "../../components/DisablePopover";
+import Swal from "sweetalert2";
 import useCart from "../../hooks/useCart";
 import { FaShoppingBag } from "react-icons/fa";
 
@@ -12,6 +13,7 @@ const MenuDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [menuDetail, setMenuDetail] = useState([]);
+  const [currentAction, setCurrentAction] = useState("");
   const [size, setSize] = useState("");
   const [toppings, setToppings] = useState([]);
 
@@ -20,58 +22,9 @@ const MenuDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState({ error: null, message: "" });
   const { user } = useAuth();
-  const [cart, refetch] = useCart();
+  const [, refetch] = useCart();
 
-  const addToCartHandler = async (shouldNavigate) => {
-    const email = user?.email;
-    if (email) {
-      const user = await axios.get(
-        `${import.meta.env.VITE_API_URL}/users/${email}`
-      );
-      if (!user.data.mobileNumber) {
-        setIsModalOpen(true);
-        const userDataUpdate = { mobileNumber, email };
-        await axios.patch(
-          `${import.meta.env.VITE_API_URL}/users/update`,
-          userDataUpdate
-        );
-      } else {
-        setIsModalOpen(false);
-      }
-    }
-
-    if (menuDetail.size.length > 0 && !size) {
-      setError({ error: true, message: "Enter valid size" });
-      return;
-    }
-
-    const cartItem = {
-      ...menuDetail,
-      size: size,
-      toppings: toppings,
-      email: email,
-      quantity: count,
-      menuItemId: menuDetail._id,
-      price: size
-        ? menuDetail.size.find((item) => item.label === size)?.price
-        : menuDetail.price,
-    };
-
-    if (cartItem.price > 0) {
-      delete cartItem._id;
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
-        .then(() => {
-          refetch();
-          if (shouldNavigate) navigate("/process-checkout");
-        })
-        .catch((error) =>
-          setError({ error: true, message: error.response.data.message })
-        );
-    }
-  };
-
-  const buyNowHandler = async () => {
+  const ValidateModileNumber = async () => {
     const email = user?.email || "";
     if (email) {
       const user = await axios.get(
@@ -79,15 +32,66 @@ const MenuDetail = () => {
       );
       if (!user.data.mobileNumber) {
         setIsModalOpen(true);
-        const userDataUpdate = { mobileNumber, email };
-        axios.patch(
-          `${import.meta.env.VITE_API_URL}/users/update`,
-          userDataUpdate
-        );
-        addToCartHandler(true);
+        return false;
       } else {
-        addToCartHandler(true);
+        setIsModalOpen(false);
+        return true;
       }
+    }
+    return false;
+  };
+
+  const addToCartHandler = async (shouldNavigate) => {
+    setCurrentAction("Add To Cart");
+    const validMobileNumber = await ValidateModileNumber();
+    if (validMobileNumber) {
+      if (menuDetail.size.length > 0 && !size) {
+        setError({ error: true, message: "Enter valid size" });
+        return;
+      }
+      const email = user?.email || "";
+      const cartItem = {
+        ...menuDetail,
+        size: size,
+        toppings: toppings,
+        email: email,
+        quantity: count,
+        menuItemId: menuDetail._id,
+        price: size
+          ? menuDetail.size.find((item) => item.label === size)?.price
+          : menuDetail.price,
+      };
+
+      if (cartItem.price > 0) {
+        delete cartItem._id;
+        axios
+          .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
+          .then(() => {
+            refetch();
+            if (shouldNavigate) {
+              navigate("/process-checkout");
+            } else {
+              Swal.fire({
+                position: "top-center",
+                icon: "success",
+                title: `Item added to cart successfully!`,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          })
+          .catch((error) =>
+            setError({ error: true, message: error.response.data.message })
+          );
+      }
+    }
+  };
+
+  const buyNowHandler = async () => {
+    setCurrentAction("Buy Now");
+    const validMobileNumber = await ValidateModileNumber();
+    if (validMobileNumber) {
+      addToCartHandler(true);
     }
   };
 
@@ -109,8 +113,20 @@ const MenuDetail = () => {
       setError({ error: true, message: "Enter Valid Mobile Number" });
       setIsModalOpen(true);
     } else {
-      setError({ error: false, message: "" });
-      setIsModalOpen(false);
+      const email = user?.email;
+      const userDataUpdate = { mobileNumber, email };
+      axios
+        .patch(`${import.meta.env.VITE_API_URL}/users/update`, userDataUpdate)
+        .then(() => {
+          setError({ error: false, message: "" });
+          setIsModalOpen(false);
+          if (currentAction === "Add To Cart") {
+            addToCartHandler(false);
+          }
+          if (currentAction === "Buy Now") {
+            addToCartHandler(true);
+          }
+        });
     }
   };
 
