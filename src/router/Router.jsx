@@ -23,6 +23,7 @@ import PrivateRouteAdmin from "../PrivateRoute/PrivateRouteAdmin";
 import Termscondition from "../pages/terms-condition";
 import Privacypolicy from "../pages/privacy-policy";
 import Story from "../pages/about/Ourstory";
+import TrackOrder from "../pages/menuPage/TrackOrder";
 
 const router = createHashRouter([
   {
@@ -60,6 +61,10 @@ const router = createHashRouter([
       {
         path: "/process-checkout",
         element: <Payment />,
+      },
+      {
+        path: "/track-order",
+        element: <TrackOrder />,
       },
       {
         path: "/about",

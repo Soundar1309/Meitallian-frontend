@@ -13,7 +13,6 @@ const Order = ({ isAdmin }) => {
   const [loggedinUser] = useUser();
   const [order, setOrder] = useState([]);
 
-
   const GetOrder = useCallback(() => {
     let mailData =
       !isAdmin && loggedinUser?.role === "user" ? `?email=${user?.email}` : "";
@@ -21,14 +20,14 @@ const Order = ({ isAdmin }) => {
     axiosSecure
       .get(`${import.meta.env.VITE_API_URL}/order${mailData}`)
       .then((res) => {
+        console.log(res.data.orders);
         setOrder(res.data.orders);
       });
-  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin])
+  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin]);
 
   useEffect(() => {
-    GetOrder()
+    GetOrder();
   }, [GetOrder]);
-
 
   const formatDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
@@ -61,6 +60,30 @@ const Order = ({ isAdmin }) => {
     });
   };
 
+  // const columns = [
+  //   { title: "S.No", dataIndex: "sno", key: "sno" },
+  //   {
+  //     title: "Order Date",
+  //     dataIndex: "orderDate",
+  //     key: "orderDate",
+  //   },
+  //   { title: "Price", dataIndex: "price", key: "price" },
+  //   { title: "Status", dataIndex: "status", key: "status" },
+  //   {
+  //     title: "",
+  //     dataIndex: "_id",
+  //     key: "_id",
+  //     width: "10%",
+  //     render: (id) => (
+  //       <button
+  //         onClick={() => handleCancelOrder(id)}
+  //         className="btn btn-danger btn-xs"
+  //       >
+  //         Cancel Order
+  //       </button>
+  //     ),
+  //   },
+  // ];
   const columns = [
     { title: "S.No", dataIndex: "sno", key: "sno" },
     {
@@ -75,17 +98,19 @@ const Order = ({ isAdmin }) => {
       dataIndex: "_id",
       key: "_id",
       width: "10%",
-      render: (id) => (
-        <button
-          onClick={() => handleCancelOrder(id)}
-          className="btn btn-danger btn-xs"
-        >
-          Cancel Order
-        </button>
-      ),
+      render: (id, record) => {
+        return record.status === "Delivered" ||
+          record.status === "Ready" ? null : (
+          <button
+            onClick={() => handleCancelOrder(id)}
+            className="btn btn-danger btn-xs"
+          >
+            Cancel Order
+          </button>
+        );
+      },
     },
   ];
-
   let data = [];
 
   if (order?.length > 0) {
@@ -97,7 +122,9 @@ const Order = ({ isAdmin }) => {
       price: `Rs. ${order.total}`,
       status: order.status,
       description: order?.orderItems?.map((cartItem, index) => (
-        <div key={cartItem._id} className="w-1/2"><FoodBasket cartItem={cartItem} /></div>
+        <div key={cartItem._id} className="w-1/2">
+          <FoodBasket cartItem={cartItem} />
+        </div>
       )),
     }));
   }
@@ -124,8 +151,9 @@ const Order = ({ isAdmin }) => {
       <div>
         {
           <div
-            className={`overflow-x-auto order_table ${isAdmin ? "w-[1000px]" : ""
-              }`}
+            className={`overflow-x-auto order_table ${
+              isAdmin ? "w-[1000px]" : ""
+            }`}
           >
             <Table
               columns={columns}

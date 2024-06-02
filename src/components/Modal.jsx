@@ -12,6 +12,7 @@ const Modal = () => {
 
   // modal close button
   const [isModalOpen, setIsModalOpen] = useState(true);
+
   const closeModal = () => {
     setIsModalOpen(false);
     document.getElementById("my_modal_5").close();
@@ -75,7 +76,9 @@ const Modal = () => {
             method="dialog"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h3 className="font-bold text-xl text-black text-center">Welcome back</h3>
+            <h3 className="font-bold text-xl text-black text-center">
+              Welcome back
+            </h3>
 
             <div className="text-center space-x-3 mt-5">
               <button
@@ -111,13 +114,13 @@ const Modal = () => {
                 {...register("password", { required: true })}
               />
               {/* <label className="label">
-                <a
-                  href="/404"
-                  className="text-md label-text-alt link link-hover mt-2"
-                >
-                  Forgot password?
-                </a>
-              </label> */}
+          <a
+            href="/404"
+            className="text-md label-text-alt link link-hover mt-2"
+          >
+            Forgot password?
+          </a>
+        </label> */}
             </div>
 
             {/* show errors */}

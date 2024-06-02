@@ -25,7 +25,9 @@ const MenuDetail = () => {
   const addToCheckout = async (shouldNavigate) => {
     const email = user?.email;
     if (email) {
-      const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
+      const user = await axios.get(
+        `${import.meta.env.VITE_API_URL}/users/${email}`
+      );
       if (!user.data.mobileNumber) {
         setIsModalOpen(true);
         const userDataUpdate = { mobileNumber, email };
@@ -60,10 +62,12 @@ const MenuDetail = () => {
       );
   };
 
-  const buyNowHandler = async () => {
+  const BuyNowHandler = async () => {
     const email = user?.email || "";
     if (email) {
-      const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
+      const user = await axios.get(
+        `${import.meta.env.VITE_API_URL}/users/${email}`
+      );
       if (!user.data.mobileNumber) {
         setIsModalOpen(true);
         const userDataUpdate = { mobileNumber, email };
@@ -78,20 +82,11 @@ const MenuDetail = () => {
     }
   };
 
-  const handleOk = () => {
-    if (mobileNumber.length < 10) {
-      setError({ error: true, message: "Enter Valid Mobile Number" });
-      setIsModalOpen(true);
-    } else {
-      setError({ error: false, message: "" });
-      setIsModalOpen(false);
-      // setMobileNumber("");
-    }
-  };
   const sizeHandler = (e) => {
     setError({ error: false, message: "" });
     setSize(e.target.value);
   };
+
   const MobileNumberHandler = (e) => {
     setError({ error: false, message: "" });
     const EnteredMobileNumber = e.target.value;
@@ -99,7 +94,18 @@ const MenuDetail = () => {
     if (!isValid) return;
     setMobileNumber(EnteredMobileNumber);
   };
-  const handleCancel = () => {
+
+  const OpenMobileModalHandler = () => {
+    if (mobileNumber.length < 10) {
+      setError({ error: true, message: "Enter Valid Mobile Number" });
+      setIsModalOpen(true);
+    } else {
+      setError({ error: false, message: "" });
+      setIsModalOpen(false);
+    }
+  };
+
+  const CloseMobileModalHandler = () => {
     setIsModalOpen(false);
     setMobileNumber("");
   };
@@ -108,6 +114,7 @@ const MenuDetail = () => {
     setError({ error: false, message: "" });
     setCount(count + 1);
   };
+
   const decrementHandler = () => {
     setError({ error: false, message: "" });
     if (count === 1) return;
@@ -119,6 +126,7 @@ const MenuDetail = () => {
       setMenuDetail(res.data);
     });
   }, [id]);
+
   return (
     <div className="my-44 max-w-7xl mx-auto px-16">
       <div className="flex flex-col md:flex-row gap-8">
@@ -210,17 +218,20 @@ const MenuDetail = () => {
                 onClick={() => addToCheckout(false)}
                 className="btn bg-white text-dark hover:bg-green hover:text-white w-[150px]"
               >
-                <FaShoppingBag/> Add to Cart
+                <FaShoppingBag /> Add to Cart
               </button>
             ) : (
               <DisabledPopover>
-                <button className="btn opacity-50"><FaShoppingBag/>Add to Cart</button>
+                <button className="btn opacity-50">
+                  <FaShoppingBag />
+                  Add to Cart
+                </button>
               </DisabledPopover>
             )}
             {user ? (
               <button
                 className="btn bg-darkgreen text-white w-[150px]"
-                onClick={buyNowHandler}
+                onClick={BuyNowHandler}
               >
                 Buy Now
               </button>
@@ -233,8 +244,8 @@ const MenuDetail = () => {
               className="mt-48 w-1/4"
               title="Mobile Number"
               open={isModalOpen}
-              onOk={handleOk}
-              onCancel={handleCancel}
+              onOk={OpenMobileModalHandler}
+              onCancel={CloseMobileModalHandler}
             >
               <Input
                 placeholder="Enter Mobile Number"
@@ -247,9 +258,12 @@ const MenuDetail = () => {
         </div>
       </div>
       <h4 className="mt-7 font-bold text-lg">Description</h4>
-      <p className="my-6 w-full " dangerouslySetInnerHTML={{
-        __html: menuDetail.recipe,
-      }}></p>
+      <p
+        className="my-6 w-full "
+        dangerouslySetInnerHTML={{
+          __html: menuDetail.recipe,
+        }}
+      ></p>
     </div>
   );
 };
