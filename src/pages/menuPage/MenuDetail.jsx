@@ -6,6 +6,7 @@ import useAuth from "../../hooks/useAuth";
 import CheckableTag from "../../components/CheckableTag";
 import DisabledPopover from "../../components/DisablePopover";
 import useCart from "../../hooks/useCart";
+import { FaShoppingBag } from "react-icons/fa";
 
 const MenuDetail = () => {
   const { id } = useParams();
@@ -209,11 +210,11 @@ const MenuDetail = () => {
                 onClick={() => addToCheckout(false)}
                 className="btn bg-white text-dark hover:bg-green hover:text-white w-[150px]"
               >
-                Add to Cart
+                <FaShoppingBag/> Add to Cart
               </button>
             ) : (
               <DisabledPopover>
-                <button className="btn opacity-50">Add to Cart</button>
+                <button className="btn opacity-50"><FaShoppingBag/>Add to Cart</button>
               </DisabledPopover>
             )}
             {user ? (
@@ -246,9 +247,9 @@ const MenuDetail = () => {
         </div>
       </div>
       <h4 className="mt-7 font-bold text-lg">Description</h4>
-      <p className="my-6 w-full "dangerouslySetInnerHTML={{
-                          __html: menuDetail.recipe,
-                        }}></p>
+      <p className="my-6 w-full " dangerouslySetInnerHTML={{
+        __html: menuDetail.recipe,
+      }}></p>
     </div>
   );
 };

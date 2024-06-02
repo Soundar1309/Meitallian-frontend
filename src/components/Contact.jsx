@@ -78,7 +78,8 @@ const Contact = () => {
                       Phone Number
                     </h4>
                     <p className="text-base text-body-color dark:text-dark-6">
-                    <a href="tel:+">+91 8925351188</a>
+                    <a href="tel:+">+91 8925351188</a> <br />
+                    <a href="tel:+">+91 8925351199</a>
                     </p>
                   </div>
                 </div>

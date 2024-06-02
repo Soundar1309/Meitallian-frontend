@@ -35,7 +35,7 @@ const StyledCarousel = styled(Carousel)`
 const Adplacement = () => {
   return (
     <div className="justify-center pt-10">
-      <h2 className="title text-center">Special Offers</h2>
+      <h2 className="title text-center">Special Offer</h2>
       <div className="pt-10">
         <StyledCarousel
           showThumbs={false}
