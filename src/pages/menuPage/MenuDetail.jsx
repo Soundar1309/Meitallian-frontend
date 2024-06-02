@@ -22,7 +22,7 @@ const MenuDetail = () => {
   const { user } = useAuth();
   const [cart, refetch] = useCart();
 
-  const addToCheckout = async (shouldNavigate) => {
+  const addToCartHandler = async (shouldNavigate) => {
     const email = user?.email;
     if (email) {
       const user = await axios.get(
@@ -39,6 +39,12 @@ const MenuDetail = () => {
         setIsModalOpen(false);
       }
     }
+
+    if (menuDetail.size.length > 0 && !size) {
+      setError({ error: true, message: "Enter valid size" });
+      return;
+    }
+
     const cartItem = {
       ...menuDetail,
       size: size,
@@ -50,19 +56,22 @@ const MenuDetail = () => {
         ? menuDetail.size.find((item) => item.label === size)?.price
         : menuDetail.price,
     };
-    delete cartItem._id;
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
-      .then(() => {
-        refetch();
-        if (shouldNavigate) navigate("/process-checkout");
-      })
-      .catch((error) =>
-        setError({ error: true, message: error.response.data.message })
-      );
+
+    if (cartItem.price > 0) {
+      delete cartItem._id;
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
+        .then(() => {
+          refetch();
+          if (shouldNavigate) navigate("/process-checkout");
+        })
+        .catch((error) =>
+          setError({ error: true, message: error.response.data.message })
+        );
+    }
   };
 
-  const BuyNowHandler = async () => {
+  const buyNowHandler = async () => {
     const email = user?.email || "";
     if (email) {
       const user = await axios.get(
@@ -75,9 +84,9 @@ const MenuDetail = () => {
           `${import.meta.env.VITE_API_URL}/users/update`,
           userDataUpdate
         );
-        addToCheckout(true);
+        addToCartHandler(true);
       } else {
-        addToCheckout(true);
+        addToCartHandler(true);
       }
     }
   };
@@ -215,7 +224,7 @@ const MenuDetail = () => {
           <div className="flex flex-row md:gap-12 gap-4">
             {user ? (
               <button
-                onClick={() => addToCheckout(false)}
+                onClick={() => addToCartHandler(false)}
                 className="btn bg-white text-dark hover:bg-green hover:text-white w-[150px]"
               >
                 <FaShoppingBag /> Add to Cart
@@ -231,7 +240,7 @@ const MenuDetail = () => {
             {user ? (
               <button
                 className="btn bg-darkgreen text-white w-[150px]"
-                onClick={BuyNowHandler}
+                onClick={() => buyNowHandler()}
               >
                 Buy Now
               </button>

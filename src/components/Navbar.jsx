@@ -97,11 +97,11 @@ const Navbar = () => {
             </ul>
           </div>
           <a href="/" className="lg:block hidden">
-            <img src="logo-white.png" className="w-44" alt="logo" />
+            <img src="/logo-white.png" className="w-44" alt="logo" />
           </a>
         </div>
         <a href="/" className="lg:hidden block">
-          <img src="logo-white.png" className="w-44" alt="logo" />
+          <img src="/logo-white.png" className="w-44" alt="logo" />
         </a>
         <div className="navbar-center hidden lg:flex">
           <ul className="text-white hover:text-dark menu menu-horizontal px-1">

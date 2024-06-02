@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
-import avatarImg from "/images/avatar.jpg";
 import { useNavigate } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
 import useStoreManager from "../hooks/useStoreManager";
@@ -10,6 +9,7 @@ const Profile = ({ user }) => {
   const navigate = useNavigate();
   const [isAdmin, isAdminLoading] = useAdmin();
   const [isStoreManager, isStoreManagerLoading] = useStoreManager();
+
   // logout
   const handleLogout = () => {
     logOut()
@@ -36,7 +36,7 @@ const Profile = ({ user }) => {
               {user.photoURL ? (
                 <img alt="" src={user.photoURL} />
               ) : (
-                <img alt="" src={avatarImg} />
+                <img alt="" src="/images/avatar.jpg" />
               )}
             </div>
           </label>
@@ -64,7 +64,7 @@ const Profile = ({ user }) => {
             )}
 
             <li>
-              <a onClick={handleLogout}>Logout</a>
+              <button onClick={handleLogout}>Logout</button>
             </li>
           </ul>
         </div>

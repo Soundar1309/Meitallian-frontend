@@ -6,7 +6,8 @@ const useStoreManager = () => {
   const { user, loading } = useAuth();
   const axiosSecure = useAxiosSecure();
   const token = localStorage.getItem("access_token");
-  const { data: isStoreManager, isPending: isStoreManagerLoading } = useQuery({
+
+  const { refetch: refetchUseStoreManager, data: isStoreManager, isPending: isStoreManagerLoading } = useQuery({
     queryKey: [user?.email, "isStoreManager"],
     enabled: !loading,
     queryFn: async () => {
@@ -16,7 +17,7 @@ const useStoreManager = () => {
       }
     },
   });
-  return [isStoreManager, isStoreManagerLoading];
+  return [isStoreManager, isStoreManagerLoading, refetchUseStoreManager];
 };
 
 export default useStoreManager;
