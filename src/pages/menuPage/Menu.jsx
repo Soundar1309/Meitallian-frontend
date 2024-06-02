@@ -5,9 +5,8 @@ const Menu = () => {
   const [menu, setMenu] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sortOption, setSortOption] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(9); 
+  const [itemsPerPage] = useState(9);
 
   useEffect(() => {
     // Fetch data from the backend
@@ -26,10 +25,8 @@ const Menu = () => {
   }, []);
 
   const filterItems = (category) => {
-    const filtered =
-      category === "all"
-        ? menu
-        : menu.filter((item) => item.category.includes(category));
+    const filtered = category === "all" ? menu : menu.filter((item) => item.category.includes(category));
+    console.log(filtered, category, menu);
     setFilteredItems(filtered);
     setSelectedCategory(category);
     setCurrentPage(1);
@@ -41,35 +38,6 @@ const Menu = () => {
     setCurrentPage(1);
   };
 
-  const handleSortChange = (option) => {
-    setSortOption(option);
-
-    // Logic for sorting based on the selected option
-    let sortedItems = [...filteredItems];
-
-    switch (option) {
-      case "A-Z":
-        sortedItems.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "Z-A":
-        sortedItems.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "low-to-high":
-        sortedItems.sort((a, b) => a.price - b.price);
-        break;
-      case "high-to-low":
-        sortedItems.sort((a, b) => b.price - a.price);
-        break;
-      default:
-        // Do nothing for the "default" case
-        break;
-    }
-
-    setFilteredItems(sortedItems);
-    setCurrentPage(1);
-  };
-
-  //   console.log(filteredItems);
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -114,32 +82,32 @@ const Menu = () => {
               All
             </button>
             <button
-              onClick={() => filterItems("pizza")}
-              className={selectedCategory === "pizza" ? "active" : ""}
+              onClick={() => filterItems("Pizza")}
+              className={selectedCategory === "Pizza" ? "active" : ""}
             >
               Pizza
             </button>
             <button
-              onClick={() => filterItems("pasta")}
-              className={selectedCategory === "pasta" ? "active" : ""}
+              onClick={() => filterItems("Pasta")}
+              className={selectedCategory === "Pasta" ? "active" : ""}
             >
               Pasta
             </button>
             <button
-              onClick={() => filterItems("burgers")}
-              className={selectedCategory === "burgers" ? "active" : ""}
+              onClick={() => filterItems("Burger")}
+              className={selectedCategory === "Burger" ? "active" : ""}
             >
-              burgers
+              Burgers
             </button>
             <button
-              onClick={() => filterItems("dessert")}
-              className={selectedCategory === "dessert" ? "active" : ""}
+              onClick={() => filterItems("Dessert")}
+              className={selectedCategory === "Dessert" ? "active" : ""}
             >
               Desserts
             </button>
             <button
-              onClick={() => filterItems("sandwich")}
-              className={selectedCategory === "sandwich" ? "active" : ""}
+              onClick={() => filterItems("Sandwich")}
+              className={selectedCategory === "Sandwich" ? "active" : ""}
             >
               Sandwich
             </button>
