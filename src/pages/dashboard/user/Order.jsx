@@ -60,30 +60,6 @@ const Order = ({ isAdmin }) => {
     });
   };
 
-  // const columns = [
-  //   { title: "S.No", dataIndex: "sno", key: "sno" },
-  //   {
-  //     title: "Order Date",
-  //     dataIndex: "orderDate",
-  //     key: "orderDate",
-  //   },
-  //   { title: "Price", dataIndex: "price", key: "price" },
-  //   { title: "Status", dataIndex: "status", key: "status" },
-  //   {
-  //     title: "",
-  //     dataIndex: "_id",
-  //     key: "_id",
-  //     width: "10%",
-  //     render: (id) => (
-  //       <button
-  //         onClick={() => handleCancelOrder(id)}
-  //         className="btn btn-danger btn-xs"
-  //       >
-  //         Cancel Order
-  //       </button>
-  //     ),
-  //   },
-  // ];
   const columns = [
     { title: "S.No", dataIndex: "sno", key: "sno" },
     {
@@ -99,15 +75,17 @@ const Order = ({ isAdmin }) => {
       key: "_id",
       width: "10%",
       render: (id, record) => {
-        return record.status === "Delivered" ||
-          record.status === "Ready" ? null : (
+        if ((record.status === "Ready" || record.status === "Pickup" || record.status === "Delivered" || record.status === "Cancelled")) {
+          return ""
+        } else {
           <button
             onClick={() => handleCancelOrder(id)}
             className="btn btn-danger btn-xs"
           >
             Cancel Order
           </button>
-        );
+
+        }
       },
     },
   ];
@@ -151,9 +129,8 @@ const Order = ({ isAdmin }) => {
       <div>
         {
           <div
-            className={`overflow-x-auto order_table ${
-              isAdmin ? "w-[1000px]" : ""
-            }`}
+            className={`overflow-x-auto order_table ${isAdmin ? "w-[1000px]" : ""
+              }`}
           >
             <Table
               columns={columns}

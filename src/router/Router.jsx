@@ -63,10 +63,6 @@ const router = createHashRouter([
         element: <Payment />,
       },
       {
-        path: "/track-order",
-        element: <TrackOrder />,
-      },
-      {
         path: "/about",
         element: <About />,
       },

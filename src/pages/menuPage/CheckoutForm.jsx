@@ -153,15 +153,14 @@ const CheckoutForm = ({ price, cart }) => {
       } else {
         axiosSecure
           .post(
-            `${import.meta.env.VITE_API_URL}/carts/confirm?email=${
-              user?.email
+            `${import.meta.env.VITE_API_URL}/carts/confirm?email=${user?.email
             }`,
             { address: selectedAddress }
           )
           .then((res) => {
             refetch();
             setIsModalOpen(true);
-            navigate("/track-order");
+            navigate("/order");
           });
       }
     }
@@ -173,8 +172,7 @@ const CheckoutForm = ({ price, cart }) => {
     if (loggedinUser?.address) {
       const getAddressHandler = async () => {
         const selectedAddress = await axios.get(
-          `${import.meta.env.VITE_API_URL}/address/address/${
-            loggedinUser?.address
+          `${import.meta.env.VITE_API_URL}/address/address/${loggedinUser?.address
           }`
         );
         setSelectedAddress(selectedAddress.data);
