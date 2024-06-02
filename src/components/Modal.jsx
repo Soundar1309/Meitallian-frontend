@@ -4,14 +4,20 @@ import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../contexts/AuthProvider";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import useAdmin from "../hooks/useAdmin";
+import useStoreManager from "../hooks/useStoreManager";
 
 const Modal = () => {
+  const [, , refetchUseAdmin] = useAdmin();
+  const [, , refetchUseStoreManager] = useStoreManager();
+
   const [errorMessage, setErrorMessage] = useState("");
   const { signUpWithGmail, login } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
 
   // modal close button
   const [isModalOpen, setIsModalOpen] = useState(true);
+
   const closeModal = () => {
     setIsModalOpen(false);
     document.getElementById("my_modal_5").close();
@@ -54,9 +60,15 @@ const Modal = () => {
         name: result.user?.displayName,
       };
       axiosPublic.post("/users", userInfo).then((res) => {
-        alert("Login successfully!");
-        navigate("/");
         closeModal();
+        refetchUseAdmin();
+        refetchUseStoreManager();
+        navigate("/");
+      }).catch(() => {
+        closeModal();
+        refetchUseAdmin();
+        refetchUseStoreManager();
+        navigate("/");
       });
     });
   };
@@ -64,9 +76,8 @@ const Modal = () => {
   return (
     <dialog
       id="my_modal_5"
-      className={`modal ${
-        isModalOpen ? "modal-middle sm:modal-middle" : "hidden"
-      }`}
+      className={`modal ${isModalOpen ? "modal-middle sm:modal-middle" : "hidden"
+        }`}
     >
       <div className="modal-box">
         <div className="modal-action flex-col justify-center mt-0">
@@ -75,7 +86,9 @@ const Modal = () => {
             method="dialog"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h3 className="font-bold text-xl text-black text-center">Welcome back</h3>
+            <h3 className="font-bold text-xl text-black text-center">
+              Welcome back
+            </h3>
 
             <div className="text-center space-x-3 mt-5">
               <button
@@ -88,7 +101,7 @@ const Modal = () => {
 
             {/* email */}
             <div className="form-control">
-              <label className="label">
+              <label htmlFor="email" className="label">
                 <span className="label-text">Email</span>
               </label>
               <input
@@ -101,7 +114,7 @@ const Modal = () => {
 
             {/* password */}
             <div className="form-control">
-              <label className="label">
+              <label htmlFor="password" className="label">
                 <span className="label-text">Password</span>
               </label>
               <input
@@ -110,14 +123,6 @@ const Modal = () => {
                 className="input input-bordered"
                 {...register("password", { required: true })}
               />
-              {/* <label className="label">
-                <a
-                  href="/404"
-                  className="text-md label-text-alt link link-hover mt-2"
-                >
-                  Forgot password?
-                </a>
-              </label> */}
             </div>
 
             {/* show errors */}
@@ -139,16 +144,16 @@ const Modal = () => {
             </div>
 
             {/* close btn */}
-            <div
+            <button
               htmlFor="my_modal_5"
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
               onClick={() => document.getElementById("my_modal_5").close()}
             >
               ✕
-            </div>
+            </button>
 
             <p className="text-center my-2 text-black">
-              Don't have an account?
+              Don&apos;t have an account?
               <Link to="/signup" className="underline text-red ml-1">
                 Signup Now
               </Link>

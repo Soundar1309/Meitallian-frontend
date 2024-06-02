@@ -13,7 +13,6 @@ const Order = ({ isAdmin }) => {
   const [loggedinUser] = useUser();
   const [order, setOrder] = useState([]);
 
-
   const GetOrder = useCallback(() => {
     let mailData =
       !isAdmin && loggedinUser?.role === "user" ? `?email=${user?.email}` : "";
@@ -21,14 +20,14 @@ const Order = ({ isAdmin }) => {
     axiosSecure
       .get(`${import.meta.env.VITE_API_URL}/order${mailData}`)
       .then((res) => {
+        console.log(res.data.orders);
         setOrder(res.data.orders);
       });
-  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin])
+  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin]);
 
   useEffect(() => {
-    GetOrder()
+    GetOrder();
   }, [GetOrder]);
-
 
   const formatDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
@@ -75,17 +74,21 @@ const Order = ({ isAdmin }) => {
       dataIndex: "_id",
       key: "_id",
       width: "10%",
-      render: (id) => (
-        <button
-          onClick={() => handleCancelOrder(id)}
-          className="btn btn-danger btn-xs"
-        >
-          Cancel Order
-        </button>
-      ),
+      render: (id, record) => {
+        if ((record.status === "Ready" || record.status === "Pickup" || record.status === "Delivered" || record.status === "Cancelled")) {
+          return ""
+        } else {
+          <button
+            onClick={() => handleCancelOrder(id)}
+            className="btn btn-danger btn-xs"
+          >
+            Cancel Order
+          </button>
+
+        }
+      },
     },
   ];
-
   let data = [];
 
   if (order?.length > 0) {
@@ -97,7 +100,9 @@ const Order = ({ isAdmin }) => {
       price: `Rs. ${order.total}`,
       status: order.status,
       description: order?.orderItems?.map((cartItem, index) => (
-        <div key={cartItem._id} className="w-1/2"><FoodBasket cartItem={cartItem} /></div>
+        <div key={cartItem._id} className="w-1/3 p-2">
+          <FoodBasket cartItem={cartItem} />
+        </div>
       )),
     }));
   }
@@ -131,9 +136,7 @@ const Order = ({ isAdmin }) => {
               columns={columns}
               expandable={{
                 expandedRowRender: (record) => (
-                  <div className="flex gap-4" style={{ margin: 0 }}>
-                    {record.description}
-                  </div>
+                  <div className="flex flex-wrap p-4">{record.description}</div>
                 ),
                 rowExpandable: (record) => record.name !== "Not Expandable",
               }}

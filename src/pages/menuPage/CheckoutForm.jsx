@@ -138,7 +138,11 @@ const CheckoutForm = ({ price, cart }) => {
           "Your cart is empty! Please add items to your cart before checkout.",
       });
     } else {
-      if (!selectedAddress) {
+      console.log(selectedAddress);
+      if (
+        Object.keys(selectedAddress).length === 0 &&
+        selectedAddress.constructor === Object
+      ) {
         Swal.fire({
           position: "center",
           icon: "warning",
@@ -149,15 +153,14 @@ const CheckoutForm = ({ price, cart }) => {
       } else {
         axiosSecure
           .post(
-            `${import.meta.env.VITE_API_URL}/carts/confirm?email=${
-              user?.email
+            `${import.meta.env.VITE_API_URL}/carts/confirm?email=${user?.email
             }`,
             { address: selectedAddress }
           )
           .then((res) => {
-            console.log(res.data);
-            refetch(); // refetch cart
+            refetch();
             setIsModalOpen(true);
+            navigate("/order");
           });
       }
     }
@@ -169,8 +172,7 @@ const CheckoutForm = ({ price, cart }) => {
     if (loggedinUser?.address) {
       const getAddressHandler = async () => {
         const selectedAddress = await axios.get(
-          `${import.meta.env.VITE_API_URL}/address/address/${
-            loggedinUser?.address
+          `${import.meta.env.VITE_API_URL}/address/address/${loggedinUser?.address
           }`
         );
         setSelectedAddress(selectedAddress.data);
@@ -298,48 +300,6 @@ const CheckoutForm = ({ price, cart }) => {
           <p className="text-medium">Cash on Delivery</p>
         </div>
 
-        {/* <h4 className="text-lg font-semibold mt-6">Process your Payment!</h4>
-        <h5 className="font-medium">Credit/Debit Card</h5>
-        <form onSubmit={handleSubmit}>
-          <CardElement
-            options={{
-              style: {
-                base: {
-                  fontSize: "16px",
-                  color: "#424770",
-                  "::placeholder": {
-                    color: "#aab7c4",
-                  },
-                },
-                invalid: {
-                  color: "#9e2146",
-                },
-              },
-            }}
-          />
-          <button
-            type="submit"
-            disabled={!stripe || !clientSecret}
-            className="btn btn-primary btn-sm mt-5 w-full"
-          >
-            Pay
-          </button>
-        </form>
-        {cardError ? (
-          <p className="text-red text-xs italic">{cardError}</p>
-        ) : (
-          ""
-        )}
-
-        <div className="mt-5 text-center">
-          <hr />
-          <button
-            type="submit"
-            className="btn  btn-sm mt-5 bg-orange-500 text-white"
-          >
-            <FaPaypal /> Pay with Paypal
-          </button>
-        </div> */}
         <button
           className="btn bg-green w-full mt-4 text-white"
           onClick={confirmOrderHandler}

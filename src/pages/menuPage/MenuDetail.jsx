@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import CheckableTag from "../../components/CheckableTag";
 import DisabledPopover from "../../components/DisablePopover";
+import Swal from "sweetalert2";
 import useCart from "../../hooks/useCart";
 import { FaShoppingBag } from "react-icons/fa";
 
@@ -12,6 +13,7 @@ const MenuDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [menuDetail, setMenuDetail] = useState([]);
+  const [currentAction, setCurrentAction] = useState("");
   const [size, setSize] = useState("");
   const [toppings, setToppings] = useState([]);
 
@@ -20,78 +22,84 @@ const MenuDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState({ error: null, message: "" });
   const { user } = useAuth();
-  const [cart, refetch] = useCart();
+  const [, refetch] = useCart();
 
-  const addToCheckout = async (shouldNavigate) => {
-    const email = user?.email;
+  const ValidateModileNumber = async () => {
+    const email = user?.email || "";
     if (email) {
-      const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
+      const user = await axios.get(
+        `${import.meta.env.VITE_API_URL}/users/${email}`
+      );
       if (!user.data.mobileNumber) {
         setIsModalOpen(true);
-        const userDataUpdate = { mobileNumber, email };
-        await axios.patch(
-          `${import.meta.env.VITE_API_URL}/users/update`,
-          userDataUpdate
-        );
+        return false;
       } else {
         setIsModalOpen(false);
+        return true;
       }
     }
-    const cartItem = {
-      ...menuDetail,
-      size: size,
-      toppings: toppings,
-      email: email,
-      quantity: count,
-      menuItemId: menuDetail._id,
-      price: size
-        ? menuDetail.size.find((item) => item.label === size)?.price
-        : menuDetail.price,
-    };
-    delete cartItem._id;
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
-      .then(() => {
-        refetch();
-        if (shouldNavigate) navigate("/process-checkout");
-      })
-      .catch((error) =>
-        setError({ error: true, message: error.response.data.message })
-      );
+    return false;
+  };
+
+  const addToCartHandler = async (shouldNavigate) => {
+    setCurrentAction("Add To Cart");
+    const validMobileNumber = await ValidateModileNumber();
+    if (validMobileNumber) {
+      if (menuDetail.size.length > 0 && !size) {
+        setError({ error: true, message: "Enter valid size" });
+        return;
+      }
+      const email = user?.email || "";
+      const cartItem = {
+        ...menuDetail,
+        size: size,
+        toppings: toppings,
+        email: email,
+        quantity: count,
+        menuItemId: menuDetail._id,
+        price: size
+          ? menuDetail.size.find((item) => item.label === size)?.price
+          : menuDetail.price,
+      };
+
+      if (cartItem.price > 0) {
+        delete cartItem._id;
+        axios
+          .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
+          .then(() => {
+            refetch();
+            if (shouldNavigate) {
+              navigate("/process-checkout");
+            } else {
+              Swal.fire({
+                position: "top-center",
+                icon: "success",
+                title: `Item added to cart successfully!`,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          })
+          .catch((error) =>
+            setError({ error: true, message: error.response.data.message })
+          );
+      }
+    }
   };
 
   const buyNowHandler = async () => {
-    const email = user?.email || "";
-    if (email) {
-      const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
-      if (!user.data.mobileNumber) {
-        setIsModalOpen(true);
-        const userDataUpdate = { mobileNumber, email };
-        axios.patch(
-          `${import.meta.env.VITE_API_URL}/users/update`,
-          userDataUpdate
-        );
-        addToCheckout(true);
-      } else {
-        addToCheckout(true);
-      }
+    setCurrentAction("Buy Now");
+    const validMobileNumber = await ValidateModileNumber();
+    if (validMobileNumber) {
+      addToCartHandler(true);
     }
   };
 
-  const handleOk = () => {
-    if (mobileNumber.length < 10) {
-      setError({ error: true, message: "Enter Valid Mobile Number" });
-      setIsModalOpen(true);
-    } else {
-      setError({ error: false, message: "" });
-      setIsModalOpen(false);
-      // setMobileNumber("");
-    }
-  };
   const sizeHandler = (e) => {
     setError({ error: false, message: "" });
     setSize(e.target.value);
   };
+
   const MobileNumberHandler = (e) => {
     setError({ error: false, message: "" });
     const EnteredMobileNumber = e.target.value;
@@ -99,7 +107,30 @@ const MenuDetail = () => {
     if (!isValid) return;
     setMobileNumber(EnteredMobileNumber);
   };
-  const handleCancel = () => {
+
+  const OpenMobileModalHandler = () => {
+    if (mobileNumber.length < 10) {
+      setError({ error: true, message: "Enter Valid Mobile Number" });
+      setIsModalOpen(true);
+    } else {
+      const email = user?.email;
+      const userDataUpdate = { mobileNumber, email };
+      axios
+        .patch(`${import.meta.env.VITE_API_URL}/users/update`, userDataUpdate)
+        .then(() => {
+          setError({ error: false, message: "" });
+          setIsModalOpen(false);
+          if (currentAction === "Add To Cart") {
+            addToCartHandler(false);
+          }
+          if (currentAction === "Buy Now") {
+            addToCartHandler(true);
+          }
+        });
+    }
+  };
+
+  const CloseMobileModalHandler = () => {
     setIsModalOpen(false);
     setMobileNumber("");
   };
@@ -108,6 +139,7 @@ const MenuDetail = () => {
     setError({ error: false, message: "" });
     setCount(count + 1);
   };
+
   const decrementHandler = () => {
     setError({ error: false, message: "" });
     if (count === 1) return;
@@ -119,6 +151,7 @@ const MenuDetail = () => {
       setMenuDetail(res.data);
     });
   }, [id]);
+
   return (
     <div className="my-44 max-w-7xl mx-auto px-16">
       <div className="flex flex-col md:flex-row gap-8">
@@ -207,20 +240,23 @@ const MenuDetail = () => {
           <div className="flex flex-row md:gap-12 gap-4">
             {user ? (
               <button
-                onClick={() => addToCheckout(false)}
+                onClick={() => addToCartHandler(false)}
                 className="btn bg-white text-dark hover:bg-green hover:text-white w-[150px]"
               >
-                <FaShoppingBag/> Add to Cart
+                <FaShoppingBag /> Add to Cart
               </button>
             ) : (
               <DisabledPopover>
-                <button className="btn opacity-50"><FaShoppingBag/>Add to Cart</button>
+                <button className="btn opacity-50">
+                  <FaShoppingBag />
+                  Add to Cart
+                </button>
               </DisabledPopover>
             )}
             {user ? (
               <button
                 className="btn bg-darkgreen text-white w-[150px]"
-                onClick={buyNowHandler}
+                onClick={() => buyNowHandler()}
               >
                 Buy Now
               </button>
@@ -233,8 +269,8 @@ const MenuDetail = () => {
               className="mt-48 w-1/4"
               title="Mobile Number"
               open={isModalOpen}
-              onOk={handleOk}
-              onCancel={handleCancel}
+              onOk={OpenMobileModalHandler}
+              onCancel={CloseMobileModalHandler}
             >
               <Input
                 placeholder="Enter Mobile Number"
@@ -247,9 +283,12 @@ const MenuDetail = () => {
         </div>
       </div>
       <h4 className="mt-7 font-bold text-lg">Description</h4>
-      <p className="my-6 w-full " dangerouslySetInnerHTML={{
-        __html: menuDetail.recipe,
-      }}></p>
+      <p
+        className="my-6 w-full "
+        dangerouslySetInnerHTML={{
+          __html: menuDetail.recipe,
+        }}
+      ></p>
     </div>
   );
 };

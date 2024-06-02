@@ -7,9 +7,7 @@ import FoodBasket from "../../../components/FoodBasket";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 
-import {
-  FaTrashAlt,
-} from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 
 const AdminOrder = ({ isAdmin }) => {
   const axiosSecure = useAxiosSecure();
@@ -27,10 +25,10 @@ const AdminOrder = ({ isAdmin }) => {
       .then((res) => {
         setOrder(res.data.orders);
       });
-  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin])
+  }, [loggedinUser?.role, user?.email, axiosSecure, isAdmin]);
 
   useEffect(() => {
-    GetOrder()
+    GetOrder();
   }, [GetOrder]);
 
   const formatDate = (createdAt) => {
@@ -55,11 +53,19 @@ const AdminOrder = ({ isAdmin }) => {
     const locality = address?.locality || "";
     const area = address?.area || "";
     const city = address?.city || "";
-    const pincode = address?.pincode ? `<p> <span class="font-bold">Pincode</span> : ${address?.pincode}</p>` : "";
-    const landmark = address?.landmark ? `<p> <span class="font-bold">Landmark</span> : ${address?.landmark}</p>` : "";
-    const mobile = mobileNumber ? `<p> <span class="font-bold">Mobile No</span> : ${mobileNumber} </p>` : "";
+    const pincode = address?.pincode
+      ? `<p> <span class="font-bold">Pincode</span> : ${address?.pincode}</p>`
+      : "";
+    const landmark = address?.landmark
+      ? `<p> <span class="font-bold">Landmark</span> : ${address?.landmark}</p>`
+      : "";
+    const mobile = mobileNumber
+      ? `<p> <span class="font-bold">Mobile No</span> : ${mobileNumber} </p>`
+      : "";
 
-    return `${user} ${[locality, area, city].filter(Boolean).join(', ')} ${pincode}${landmark}${mobile}`;
+    return `${user} ${[locality, area, city]
+      .filter(Boolean)
+      .join(", ")} ${pincode}${landmark}${mobile}`;
   };
 
   const handleDeleteItem = (id) => {
@@ -87,7 +93,7 @@ const AdminOrder = ({ isAdmin }) => {
   };
 
   const columns = [
-    { title: "S.No", dataIndex: "sno", key: "sno" },
+    { title: "S.No", dataIndex: "sno", key: "sno", width: "5%" },
     {
       title: "Order Date",
       dataIndex: "orderDate",
@@ -98,6 +104,7 @@ const AdminOrder = ({ isAdmin }) => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      width: "25%",
       render: (text, record) => (
         <Select
           className="w-[60%]"
@@ -147,7 +154,9 @@ const AdminOrder = ({ isAdmin }) => {
       status: order.status,
       customerDetails: formatCustomerDetails(order),
       description: order?.orderItems?.map((cartItem, index) => (
-        <div key={cartItem._id} className="w-1/2"><FoodBasket cartItem={cartItem} /></div>
+        <div key={cartItem._id} className="w-1/2">
+          <FoodBasket cartItem={cartItem} />
+        </div>
       )),
     }));
   }

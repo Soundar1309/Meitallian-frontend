@@ -108,7 +108,7 @@ const Cards = ({ item }) => {
         toppings: toppings,
         quantity: count,
       };
-      console.log(cartItem);
+
       axios
         .post(`${import.meta.env.VITE_API_URL}/carts`, cartItem)
         .then((response) => {
@@ -172,9 +172,12 @@ const Cards = ({ item }) => {
           <h2 className="card-title">{item.name}</h2>
         </Link>
         <Link to={`/menu/${item._id}`}>
-        <p className="card-desc line-clamp-3"dangerouslySetInnerHTML={{
-                          __html: menuDetail.recipe,
-                        }}></p>
+          <p
+            className="card-desc line-clamp-3"
+            dangerouslySetInnerHTML={{
+              __html: menuDetail.recipe,
+            }}
+          ></p>
         </Link>
 
         <div className="card-actions justify-between items-center mt-2">
@@ -199,7 +202,9 @@ const Cards = ({ item }) => {
             </button>
           ) : (
             <DisabledPopover>
-              <button className="btn opacity-60 bg-grey-80 text-black">Add to Cart</button>
+              <button className="btn opacity-60 bg-grey-80 text-black">
+                Add to Cart
+              </button>
             </DisabledPopover>
           )}
           <Modal
