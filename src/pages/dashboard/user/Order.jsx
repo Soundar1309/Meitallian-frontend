@@ -61,30 +61,29 @@ const Order = ({ isAdmin }) => {
   };
 
   const columns = [
-    { title: "S.No", dataIndex: "sno", key: "sno" },
+    { title: "S.No", dataIndex: "sno", key: "sno", width: "5%", },
     {
       title: "Order Date",
       dataIndex: "orderDate",
       key: "orderDate",
     },
-    { title: "Price", dataIndex: "price", key: "price" },
+    { title: "Price", dataIndex: "price", key: "price", width: "20%", },
     { title: "Status", dataIndex: "status", key: "status" },
     {
       title: "",
       dataIndex: "_id",
       key: "_id",
-      width: "10%",
+      width: "15%",
       render: (id, record) => {
         if ((record.status === "Ready" || record.status === "Pickup" || record.status === "Delivered" || record.status === "Cancelled")) {
           return ""
         } else {
-          <button
+          return (<button
             onClick={() => handleCancelOrder(id)}
             className="btn btn-danger btn-xs"
           >
             Cancel Order
-          </button>
-
+          </button>)
         }
       },
     },
@@ -100,7 +99,7 @@ const Order = ({ isAdmin }) => {
       price: `Rs. ${order.total}`,
       status: order.status,
       description: order?.orderItems?.map((cartItem, index) => (
-        <div key={cartItem._id} className="w-1/3 p-2">
+        <div key={cartItem._id} className="w-full md:w-1/3 p-2">
           <FoodBasket cartItem={cartItem} />
         </div>
       )),
@@ -129,8 +128,7 @@ const Order = ({ isAdmin }) => {
       <div>
         {
           <div
-            className={`overflow-x-auto order_table ${isAdmin ? "w-[1000px]" : ""
-              }`}
+            className={`overflow-x-auto order_table ${isAdmin ? "w-[1000px]" : ""}`}
           >
             <Table
               columns={columns}
@@ -139,6 +137,9 @@ const Order = ({ isAdmin }) => {
                   <div className="flex flex-wrap p-4">{record.description}</div>
                 ),
                 rowExpandable: (record) => record.name !== "Not Expandable",
+              }}
+              scroll={{
+                x: 500
               }}
               dataSource={data}
             />

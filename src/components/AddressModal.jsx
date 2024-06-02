@@ -1,25 +1,13 @@
-import {
-  Button,
-  Checkbox,
-  Dropdown,
-  Input,
-  Menu,
-  Modal,
-  Popconfirm,
-  Popover,
-  Space,
-} from "antd";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import useAuth from "../hooks/useAuth";
+import { Modal, Popconfirm, Popover, } from "antd";
+import InputContainer from "./input/InputContainer";
 import Swal from "sweetalert2";
+
+import useAuth from "../hooks/useAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import {
-  faCheck,
-  faEllipsisVertical,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTrash, } from "@fortawesome/free-solid-svg-icons";
 
 const AddressModal = ({
   modalOpen,
@@ -37,6 +25,7 @@ const AddressModal = ({
   const [area, setArea] = useState("");
   const [city, setCity] = useState("");
   const [landmark, setLandmark] = useState("");
+  const [formErrors, setFormErrors] = useState({});
 
   const onChangeHandler = (e) => {
     const name = e.target.name;
@@ -59,6 +48,9 @@ const AddressModal = ({
     if (name === "landmark") {
       setLandmark(value);
     }
+    if (value) {
+      setFormErrors({ ...formErrors, [name]: "" });
+    }
   };
 
   const addNewAddressHandler = () => {
@@ -72,6 +64,33 @@ const AddressModal = ({
     setLandmark("");
   };
 
+  const validate = (values, imageFile) => {
+    const errors = {};
+
+    if (!values.name) {
+      errors.name = "Please enter your name";
+    }
+
+    if (!values.pincode) {
+      errors.pincode = "Please enter your pincode";
+    }
+
+    if (!values.locality) {
+      errors.locality = "Please enter your locality";
+    }
+
+    if (!values.area) {
+      errors.area = "Please enter your area";
+    }
+    if (!values.city) {
+      errors.city = "Please enter your city";
+    }
+    if (!values.landmark) {
+      errors.landmark = "Please enter your landmark";
+    }
+    return errors;
+  }
+
   const addNewAddress = async () => {
     const email = user.email;
 
@@ -84,22 +103,33 @@ const AddressModal = ({
       city,
       landmark,
     };
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/address/`, payload)
-      .then((res) => {
-        setIsNewAdderssModalOpen(false);
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "New Address has been Added.",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => console.error(error.message));
+
+    const fieldErrors = validate(payload);
+
+    if (Object.keys(fieldErrors).length > 0) {
+      setFormErrors(fieldErrors);
+      return;
+    } else {
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/address/`, payload)
+        .then((res) => {
+          setIsNewAdderssModalOpen(false);
+          GetUserAddress(email);
+          setFormErrors({});
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "New Address has been Added.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => console.error(error.message));
+    }
   };
 
   const updateAddress = () => {
+    const email = user.email;
     const revisedAddress = {
       name,
       pincode,
@@ -108,22 +138,32 @@ const AddressModal = ({
       city,
       landmark,
     };
-    axios
-      .patch(
-        `${import.meta.env.VITE_API_URL}/address/${addressId}`,
-        revisedAddress
-      )
-      .then(() => {
-        setIsNewAdderssModalOpen(false);
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Address has been updated.",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => console.error(error.message));
+
+    const fieldErrors = validate(revisedAddress);
+
+    if (Object.keys(fieldErrors).length > 0) {
+      setFormErrors(fieldErrors);
+      return;
+    } else {
+      axios
+        .patch(
+          `${import.meta.env.VITE_API_URL}/address/${addressId}`,
+          revisedAddress
+        )
+        .then(() => {
+          setIsNewAdderssModalOpen(false);
+          GetUserAddress(email);
+          setFormErrors({});
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Address has been updated.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => console.error(error.message));
+    }
   };
 
   const newAddressModalCancel = () => {
@@ -183,16 +223,21 @@ const AddressModal = ({
     });
   };
 
+
+  const GetUserAddress = useCallback((email) => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/address/${email}`)
+      .then((res) => {
+        setExistingAddress(res.data);
+      });
+  }, []);
+
   useEffect(() => {
     const email = user?.email;
     if (email && modalOpen) {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}/address/${email}`)
-        .then((res) => {
-          setExistingAddress(res.data);
-        });
+      GetUserAddress(email);
     }
-  }, [modalOpen, existingAddress, user]);
+  }, [modalOpen, user, GetUserAddress]);
 
   return (
     <Modal
@@ -215,50 +260,64 @@ const AddressModal = ({
         onOk={`${addressId}` ? updateAddress : addNewAddress}
         onCancel={newAddressModalCancel}
       >
-        <Input
+        <InputContainer
+          type="text"
           placeholder="Name"
           className="py-2 my-2"
           onChange={onChangeHandler}
           name="name"
           value={name}
+          error={formErrors.name}
         />
         <div className="flex gap-4">
-          <Input
+          <InputContainer
+            type="text"
             placeholder="Pincode"
-            className="py-2 my-2"
+            containerClassName="w-1/2"
             onChange={onChangeHandler}
             name="pincode"
             value={pincode}
+            error={formErrors.pincode}
           />
-          <Input
+          <InputContainer
+            type="text"
             placeholder="Locality (Door Number, Street)"
-            className="py-2 my-2"
+            containerClassName="w-1/2"
             onChange={onChangeHandler}
             name="locality"
             value={locality}
+            error={formErrors.locality}
           />
         </div>
-        <Input.TextArea
+        <InputContainer
+          type="textarea"
           placeholder="Address (Area )"
           className="py-2 my-2"
           onChange={onChangeHandler}
           name="area"
           value={area}
+          error={formErrors.area}
         />
         <div className="flex gap-4">
-          <Input
+          <InputContainer
+            containerClassName="w-1/2"
+            type="text"
             placeholder="City/District/Town"
-            className="py-2 my-2"
+            className=""
             onChange={onChangeHandler}
             name="city"
             value={city}
+            error={formErrors.city}
           />
-          <Input
+          <InputContainer
+            containerClassName="w-1/2"
+            type="text"
             placeholder="Landmark"
-            className="py-2 my-2"
+            className=""
             onChange={onChangeHandler}
             name="landmark"
             value={landmark}
+            error={formErrors.landmark}
           />
         </div>
       </Modal>
@@ -291,7 +350,7 @@ const AddressModal = ({
                       onConfirm={() => {
                         deleteAddressHandler(address._id);
                       }}
-                      onCancel={() => {}}
+                      onCancel={() => { }}
                       okText="Yes"
                       cancelText="No"
                     >

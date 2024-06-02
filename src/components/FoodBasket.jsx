@@ -1,6 +1,6 @@
 const FoodBasket = ({ cartItem }) => {
   return (
-    <div className="flex flex-col md:flex-row py-4 items-center shadow rounded p-2 bg-[#fff]">
+    <div className="flex flex-row py-4 items-center shadow rounded p-2 bg-[#fff]">
       <div className="flex flex-row gap-2 items-center">
         <p className="mr-2">x{cartItem.quantity}</p>
         <div className="w-[80px] h-[80px]">

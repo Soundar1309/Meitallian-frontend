@@ -42,76 +42,6 @@ const CheckoutForm = ({ price, cart }) => {
   };
   const discount = 0;
 
-  // handleSubmit btn click
-  const handleSubmit = async (event) => {
-    // Block native form submission.
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      return;
-    }
-
-    const card = elements.getElement(CardElement);
-
-    if (card == null) {
-      return;
-    }
-
-    // console.log('card: ', card)
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card,
-    });
-
-    if (error) {
-      console.log("[error]", error);
-      setcardError(error.message);
-    } else {
-      // setcardError('Success!');
-      // console.log('[PaymentMethod]', paymentMethod);
-    }
-
-    const { paymentIntent, error: confirmError } =
-      await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: card,
-          billing_details: {
-            name: user?.displayName || "anonymous",
-            email: user?.email || "unknown",
-          },
-        },
-      });
-
-    if (confirmError) {
-      console.log(confirmError);
-    }
-
-    if (paymentIntent.status === "succeeded") {
-      const transitionId = paymentIntent.id;
-      setcardError(`Your transitionId is: ${transitionId}`);
-
-      // save payment info to server
-      const paymentInfo = {
-        email: user.email,
-        transitionId: paymentIntent.id,
-        price,
-        quantity: cart.length,
-        status: "order pending",
-        itemsName: cart.map((item) => item.name),
-        cartItems: cart.map((item) => item._id),
-        menuItems: cart.map((item) => item.menuItemId),
-      };
-
-      // send payment info
-      axiosSecure.post("/payments", paymentInfo).then((res) => {
-        if (res.data) {
-          alert("Payment info sent successfully!");
-          navigate("/order");
-        }
-      });
-    }
-  };
   const basketPrice = cart.reduce((total, cartItem) => {
     return total + cartItem.price * cartItem.quantity; // Accumulate the price of each cart item
   }, 0);
@@ -204,7 +134,7 @@ const CheckoutForm = ({ price, cart }) => {
             <div>
               <p>{selectedAddress.name}</p>
               <p>{selectedAddress.locality}</p>
-              <p>{selectedAddress.address}</p>
+              <p>{selectedAddress.area}</p>
               <p>{selectedAddress.city}</p>
               <p>{selectedAddress.pincode}</p>
               <p className="py-2">{selectedAddress.landmark}</p>
