@@ -92,6 +92,7 @@ const Modal = () => {
 
             <div className="text-center space-x-3 mt-5">
               <button
+                type="button"
                 onClick={handleRegister}
                 className="w-3/4 btn btn-circle bg-white text-dark hover:bg-green hover:text-white"
               >
