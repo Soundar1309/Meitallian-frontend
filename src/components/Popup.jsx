@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Ad5 from "../assets/Ad/5.jpg"
 
 const PopupAd = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -27,19 +28,19 @@ const PopupAd = () => {
       <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
         <div className="bg-white p-4 rounded-lg shadow-lg relative max-w-lg w-full h-[95%] mx-4">
           <button
-            className="absolute top-0 right-3 text-[30px] mt-2 mr-2 text-white hover:text-gray-800"
+            className="absolute top-0 right-3 text-[30px] mt-2 mr-2 text-black hover:text-gray-800"
             onClick={closePopup} 
           >
             &times;
           </button>
           <img
-            src="../images/1.jpg"
+            src={Ad5}
             alt="Ad Image"
-            className="w-full h-[85%] rounded-md mb-4"
+            className="w-full h-[85%] rounded-md mb-4 object-contain"
           />
           <h2 className="text-xl font-bold mb-2">Special Offer!</h2>
           <p className="text-gray-700 mb-2">
-            Get <b>20%</b>off on your first order! Use code: <b>FIRST20</b>
+            Get <b>40%</b>off on all type of pizza orders!
           </p>
         </div>
       </div>

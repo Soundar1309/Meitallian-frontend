@@ -74,7 +74,11 @@ const footer = () => {
                     </li>
 
                     <li>
-                        <a href="#/contact" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Contact Us </a>
+                    <a href="#/contact" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Contact Us </a>
+                    </li>
+
+                    <li>
+                        <a href="./sitemap.xml" title="" className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"></a>
                     </li>
                 </ul>
             </div>
